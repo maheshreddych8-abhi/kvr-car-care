@@ -1,0 +1,25 @@
+{
+  "name": "KVR Car Care Workshop Owner",
+  "short_name": "KVR Owner",
+  "description": "KVR Car Care Owner & Workshop Management App - Palakaluru Road, Guntur. Job sheets, technician assignment, photo proofs and invoice generator.",
+  "start_url": "owner.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0f172a",
+  "theme_color": "#2c0924",
+  "icons": [
+    {
+      "src": "icon-owner-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-owner-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "name": "KVR Car Care Customer",
+  "short_name": "KVR Customer",
+  "description": "KVR Car Care Customer App - Palakaluru Road, Guntur. Live vehicle repair tracking, service requests and invoice downloads.",
+  "start_url": "customer.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0f172a",
+  "theme_color": "#2c0924",
+  "icons": [
+    {
+      "src": "icon-customer-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-customer-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>KVR Car Care - Customer App | Palakaluru Road, Guntur</title>
+  
+  <!-- PWA & Mobile App Support -->
+  <link rel="manifest" href="manifest-customer.json">
+  <meta name="theme-color" content="#2c0924">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="KVR Customer">
+  <link rel="apple-touch-icon" href="icon-customer-192.png">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="kvr-banner.png" type="image/png">
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col antialiased selection:bg-amber-400 selection:text-slate-950 pb-20 md:pb-6">
+
+  <!-- ================= TOP BRAND BANNER ================= -->
+  <header class="kvr-banner-box border-b border-purple-900/60 shadow-xl">
+    <div class="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
+      
+      <!-- Logo + The Animated Car on Red Line -->
+      <div class="flex items-center space-x-3">
+        <a href="index.html" class="flex flex-col select-none group">
+          <div class="flex items-baseline space-x-1.5">
+            <span class="text-3xl font-black text-amber-400 tracking-tight leading-none">KVR</span>
+            <span class="text-xs font-black tracking-widest text-white uppercase opacity-90">CAR CARE</span>
+          </div>
+
+          <!-- THE RED LINE WITH SLOW MOVING CAR (Strictly bounded) -->
+          <div class="kvr-red-line-container" title="KVR Patrol Car - Click to Honk!" onclick="window.kvrAudio.carHorn()">
+            <div class="kvr-red-bar"></div>
+            <!-- Animated SVG Car -->
+            <div class="kvr-moving-car">
+              <svg viewBox="0 0 40 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full drop-shadow">
+                <!-- Car Body -->
+                <path d="M4 14L8 6C9 4 12 3 16 3H26C29 3 32 5 34 8L38 14C39 15 40 16 40 18C40 20 38 21 36 21H5C3 21 1 19 1 17C1 15 2 14 4 14Z" fill="#ffcc00"/>
+                <!-- Cabin Window -->
+                <path d="M10 7L16 5H24L28 9L31 14H10L10 7Z" fill="#1e1b4b"/>
+                <!-- Red Racing Stripe -->
+                <rect x="2" y="14" width="37" height="2.5" fill="#e5252a"/>
+                <!-- Wheels -->
+                <circle cx="9" cy="19" r="4" fill="#0f172a" stroke="#e2e8f0" stroke-width="1.5"/>
+                <circle cx="30" cy="19" r="4" fill="#0f172a" stroke="#e2e8f0" stroke-width="1.5"/>
+                <!-- Headlight -->
+                <circle cx="38" cy="15" r="1.5" fill="#ffffff"/>
+              </svg>
+            </div>
+          </div>
+
+          <span class="text-[10px] text-amber-300/80 font-semibold tracking-wider">CUSTOMER PORTAL</span>
+        </a>
+      </div>
+
+      <!-- Quick Actions / App Switcher -->
+      <div class="flex items-center space-x-2">
+        <a href="owner.html" class="px-2.5 py-1.5 rounded-xl bg-purple-900/60 hover:bg-purple-800 text-amber-300 text-xs font-bold border border-purple-700/60 flex items-center space-x-1.5 kvr-btn" title="Switch to Owner App">
+          <span>👨‍🔧</span>
+          <span class="hidden sm:inline">Owner App</span>
+        </a>
+        <button onclick="window.kvrAudio.toggleMute(); this.innerText = window.kvrAudio.isMuted() ? '🔇' : '🔊'" class="w-8 h-8 rounded-xl bg-slate-900/80 border border-slate-700 text-sm flex items-center justify-center kvr-btn" title="Toggle Pop Sounds">
+          🔊
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Official Contact Strip -->
+    <div class="kvr-contact-strip py-1 px-4 text-xs font-extrabold flex items-center justify-between max-w-4xl mx-auto">
+      <div class="flex items-center space-x-2 truncate">
+        <span class="tracking-wider">CONTACT: Venkat Reddy</span>
+        <span class="opacity-40">•</span>
+        <span class="font-mono text-[11px]">Palakaluru Road, Guntur</span>
+      </div>
+      <div class="flex items-center space-x-3 font-mono text-[11px]">
+        <a href="tel:9346418994" class="hover:underline flex items-center space-x-1">
+          <span>📞</span><span>93464 18994</span>
+        </a>
+        <a href="tel:7036705454" class="hidden sm:flex hover:underline items-center space-x-1">
+          <span>📞</span><span>70367 05454</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- PWA Install Prompt Banner for Mobile -->
+  <div id="pwa-install-banner" class="max-w-4xl mx-auto px-4 mt-2">
+    <div class="bg-gradient-to-r from-amber-500/20 via-purple-950 to-amber-500/20 border border-amber-400/50 p-3 rounded-2xl flex items-center justify-between shadow-lg">
+      <div class="flex items-center space-x-3">
+        <img src="icon-customer-192.png" alt="App Icon" class="w-10 h-10 rounded-xl shadow border border-amber-400/40">
+        <div>
+          <div class="text-xs font-black text-amber-300">Download KVR Customer App</div>
+          <div class="text-[11px] text-slate-300">Install directly on your phone home screen!</div>
+        </div>
+      </div>
+      <button onclick="window.kvrPwa.promptInstall()" class="px-3.5 py-1.5 bg-amber-400 hover:bg-amber-300 text-slate-950 font-black rounded-xl text-xs flex items-center space-x-1 shadow kvr-btn">
+        <span>📲</span>
+        <span>Install App</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- User session banner -->
+  <div id="user-profile-bar"></div>
+
+  <!-- WhatsApp Simulation Banner (for OTP demonstration) -->
+  <div class="max-w-4xl mx-auto px-4 mt-3">
+    <div id="otp-simulation-banner" class="hidden"></div>
+  </div>
+
+  <!-- ================= MAIN APP CONTAINER ================= -->
+  <main class="max-w-4xl mx-auto w-full px-4 py-4 flex-1">
+
+    <!-- DESKTOP / TABLET NAVIGATION TABS -->
+    <nav class="hidden md:flex items-center space-x-1 bg-slate-900/80 p-1.5 rounded-2xl border border-slate-800 mb-6">
+      <button data-tab="status" class="tab-btn flex-1 py-2.5 rounded-xl font-bold text-xs flex items-center justify-center space-x-2 transition-all border border-amber-400 text-amber-400 bg-purple-950/40 kvr-btn">
+        <span>⚡</span>
+        <span>Live Status Tracker</span>
+      </button>
+      <button data-tab="request" class="tab-btn flex-1 py-2.5 rounded-xl font-bold text-xs flex items-center justify-center space-x-2 transition-all border border-transparent text-slate-400 hover:text-slate-200 kvr-btn">
+        <span>➕</span>
+        <span>Raise Service Request</span>
+      </button>
+      <button data-tab="vehicles" class="tab-btn flex-1 py-2.5 rounded-xl font-bold text-xs flex items-center justify-center space-x-2 transition-all border border-transparent text-slate-400 hover:text-slate-200 kvr-btn">
+        <span>🚗</span>
+        <span>My Vehicles</span>
+      </button>
+      <button data-tab="history" class="tab-btn flex-1 py-2.5 rounded-xl font-bold text-xs flex items-center justify-center space-x-2 transition-all border border-transparent text-slate-400 hover:text-slate-200 kvr-btn">
+        <span>📜</span>
+        <span>Invoices & History</span>
+      </button>
+      <button data-tab="contact" class="tab-btn flex-1 py-2.5 rounded-xl font-bold text-xs flex items-center justify-center space-x-2 transition-all border border-transparent text-slate-400 hover:text-slate-200 kvr-btn">
+        <span>📍</span>
+        <span>Workshop & Maps</span>
+      </button>
+    </nav>
+
+    <!-- ================= TAB 1: LIVE STATUS TRACKER ================= -->
+    <section id="tab-status" class="customer-tab-content">
+      <div id="live-status-container"></div>
+    </section>
+
+    <!-- ================= TAB 2: RAISE SERVICE REQUEST ================= -->
+    <section id="tab-request" class="customer-tab-content hidden">
+      <div class="bg-slate-900/90 rounded-3xl p-5 border border-slate-800 shadow-xl space-y-5">
+        
+        <!-- Header -->
+        <div class="border-b border-slate-800 pb-3">
+          <h2 class="text-base font-black text-white">Raise New Service Request</h2>
+          <p class="text-xs text-slate-400">Select your car, pick needed services, and submit your complaint directly to the workshop.</p>
+        </div>
+
+        <!-- Step 1: Vehicle Selection -->
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <label class="text-xs font-bold text-amber-300 uppercase tracking-wider">Step 1: Select Your Vehicle</label>
+            <button id="btn-open-add-vehicle" class="text-xs text-amber-400 hover:underline font-bold kvr-btn">
+              + Add New Car
+            </button>
+          </div>
+          <select id="request-vehicle-select" class="w-full bg-slate-950 border border-slate-800 rounded-2xl px-4 py-3 text-xs text-white font-bold focus:border-amber-400 focus:outline-none">
+            <!-- Rendered by JS -->
+          </select>
+        </div>
+
+        <!-- Step 2: Category & Services (Editable from owner catalog!) -->
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <label class="text-xs font-bold text-amber-300 uppercase tracking-wider">Step 2: Select Services Required</label>
+            <span id="selected-services-count" class="text-xs text-slate-400 font-mono">0 selected</span>
+          </div>
+          <p class="text-[11px] text-slate-400 mb-3">Live rates provided by KVR Car Care. Multi-select all that apply:</p>
+          
+          <div id="service-catalog-selection">
+            <!-- Dynamic Category Catalog rendered by JS -->
+          </div>
+        </div>
+
+        <!-- Step 3: Specific Complaint / Description -->
+        <div>
+          <label class="block text-xs font-bold text-amber-300 uppercase tracking-wider mb-2">Step 3: Vehicle Issue & Description</label>
+          <textarea id="request-complaint" rows="3" placeholder="Example: AC not cooling, sudden compressor noise, engine pickup drop..." 
+            class="w-full bg-slate-950 border border-slate-800 rounded-2xl p-3.5 text-xs text-white placeholder-slate-500 focus:border-amber-400 focus:outline-none"></textarea>
+        </div>
+
+        <!-- Estimate & Submit Bar -->
+        <div class="pt-4 border-t border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <div class="text-[11px] text-slate-400">Estimated Service Cost:</div>
+            <div id="estimated-bill-amount" class="text-xl font-black text-amber-400 font-mono">₹0</div>
+            <div class="text-[10px] text-slate-500">*Final bill may vary based on exact parts inspection</div>
+          </div>
+          <button id="btn-submit-request" class="py-3 px-6 bg-gradient-to-r from-amber-500 to-amber-400 text-slate-950 font-black rounded-2xl text-xs flex items-center justify-center space-x-2 shadow-lg kvr-btn">
+            <span>🚀</span>
+            <span>Submit Service Request</span>
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ================= TAB 3: MY VEHICLES ================= -->
+    <section id="tab-vehicles" class="customer-tab-content hidden">
+      <div class="bg-slate-900/90 rounded-3xl p-5 border border-slate-800 shadow-xl">
+        <div class="flex items-center justify-between mb-4 pb-3 border-b border-slate-800">
+          <div>
+            <h2 class="text-base font-black text-white">Registered Vehicles</h2>
+            <p class="text-xs text-slate-400">Manage your cars registered with KVR Car Care.</p>
+          </div>
+          <button onclick="document.getElementById('add-vehicle-modal').classList.remove('hidden')" class="px-4 py-2 bg-amber-400 hover:bg-amber-300 text-slate-950 font-black rounded-xl text-xs kvr-btn">
+            + Add Car
+          </button>
+        </div>
+
+        <div id="my-vehicles-list" class="space-y-3">
+          <!-- Rendered by JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= TAB 4: INVOICE HISTORY ================= -->
+    <section id="tab-history" class="customer-tab-content hidden">
+      <div class="mb-4">
+        <h2 class="text-base font-black text-white">Service & Invoice History</h2>
+        <p class="text-xs text-slate-400">View past invoices with official number (Format: KVR-DDMM-01) and download PDFs anytime.</p>
+      </div>
+
+      <div id="customer-history-container">
+        <!-- Rendered by JS -->
+      </div>
+    </section>
+
+    <!-- ================= TAB 5: WORKSHOP & NAVIGATION ================= -->
+    <section id="tab-contact" class="customer-tab-content hidden">
+      <div class="bg-slate-900/90 rounded-3xl p-5 border border-slate-800 shadow-xl space-y-5">
+        
+        <div class="flex items-center space-x-4">
+          <div class="w-14 h-14 rounded-2xl bg-amber-400/20 text-amber-400 flex items-center justify-center text-3xl">
+            🏬
+          </div>
+          <div>
+            <h2 class="text-lg font-black text-white">KVR Car Care Workshop</h2>
+            <p class="text-xs text-slate-400">Palakaluru Road, Guntur, Andhra Pradesh</p>
+            <div class="text-xs font-semibold text-amber-300 mt-0.5">Proprietor: Venkat Reddy</div>
+          </div>
+        </div>
+
+        <!-- Banner Display -->
+        <div class="rounded-2xl overflow-hidden border border-purple-900/60 shadow-lg">
+          <img src="kvr-banner.png" alt="KVR Car Care Banner" class="w-full object-cover">
+        </div>
+
+        <!-- Google Maps Navigation Button -->
+        <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <div class="text-xs font-bold text-white flex items-center space-x-1.5">
+              <span>📍</span>
+              <span>Find Us on Google Maps</span>
+            </div>
+            <div class="text-xs text-slate-400 mt-0.5">Palakaluru Road, Guntur, AP - Turn by turn live directions.</div>
+          </div>
+          <a href="https://www.google.com/maps/search/?api=1&query=KVR+Car+Care+Palakaluru+Road+Guntur+Andhra+Pradesh" target="_blank" 
+            class="px-4 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold rounded-xl text-xs flex items-center justify-center space-x-2 kvr-btn">
+            <span>🗺️</span>
+            <span>Open Google Maps</span>
+          </a>
+        </div>
+
+        <!-- Contact Cards -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 flex items-center justify-between">
+            <div>
+              <div class="text-[11px] text-slate-400">Primary Workshop Phone</div>
+              <div class="text-sm font-black font-mono text-amber-400">+91 93464 18994</div>
+            </div>
+            <a href="tel:9346418994" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-xs kvr-btn">
+              Call Now
+            </a>
+          </div>
+
+          <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 flex items-center justify-between">
+            <div>
+              <div class="text-[11px] text-slate-400">Secondary Mobile</div>
+              <div class="text-sm font-black font-mono text-amber-400">+91 70367 05454</div>
+            </div>
+            <a href="tel:7036705454" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-xs kvr-btn">
+              Call Now
+            </a>
+          </div>
+        </div>
+
+        <!-- WhatsApp Chat Button -->
+        <a href="https://wa.me/919346418994?text=Hi%20Venkat%20Reddy%20garu,%20I%20have%20an%20enquiry%20regarding%20car%20service%20at%20KVR%20Car%20Care%20Guntur." target="_blank"
+          class="w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-black rounded-2xl text-xs flex items-center justify-center space-x-2 shadow-lg kvr-btn">
+          <span>💬</span>
+          <span>Chat with Venkat Reddy on WhatsApp</span>
+        </a>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ================= MOBILE FIXED BOTTOM NAVIGATION BAR ================= -->
+  <nav class="md:hidden fixed bottom-0 inset-x-0 bg-slate-900/95 backdrop-blur border-t border-slate-800 px-2 py-2 flex items-center justify-around z-40">
+    <button data-tab="status" class="tab-btn flex flex-col items-center py-1 px-2 rounded-xl text-amber-400 font-bold kvr-btn">
+      <span class="text-lg">⚡</span>
+      <span class="text-[10px] mt-0.5">Status</span>
+    </button>
+    <button data-tab="request" class="tab-btn flex flex-col items-center py-1 px-2 rounded-xl text-slate-400 font-bold kvr-btn">
+      <span class="text-lg">➕</span>
+      <span class="text-[10px] mt-0.5">Request</span>
+    </button>
+    <button data-tab="vehicles" class="tab-btn flex flex-col items-center py-1 px-2 rounded-xl text-slate-400 font-bold kvr-btn">
+      <span class="text-lg">🚗</span>
+      <span class="text-[10px] mt-0.5">Vehicles</span>
+    </button>
+    <button data-tab="history" class="tab-btn flex flex-col items-center py-1 px-2 rounded-xl text-slate-400 font-bold kvr-btn">
+      <span class="text-lg">📜</span>
+      <span class="text-[10px] mt-0.5">History</span>
+    </button>
+    <button data-tab="contact" class="tab-btn flex flex-col items-center py-1 px-2 rounded-xl text-slate-400 font-bold kvr-btn">
+      <span class="text-lg">📍</span>
+      <span class="text-[10px] mt-0.5">Workshop</span>
+    </button>
+  </nav>
+
+  <!-- ================= ADD VEHICLE MODAL ================= -->
+  <div id="add-vehicle-modal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur flex items-center justify-center p-4 hidden">
+    <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-sm w-full p-5 shadow-2xl">
+      <div class="flex justify-between items-center mb-3">
+        <h3 class="font-black text-white text-base">Register New Car</h3>
+        <button onclick="document.getElementById('add-vehicle-modal').classList.add('hidden')" class="text-slate-400 hover:text-white font-bold">✕</button>
+      </div>
+
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="block text-slate-400 mb-1">Car Brand / Make</label>
+          <input type="text" id="new-vehicle-make" placeholder="e.g. Hyundai, Maruti, Honda" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white" />
+        </div>
+        <div>
+          <label class="block text-slate-400 mb-1">Car Model</label>
+          <input type="text" id="new-vehicle-model" placeholder="e.g. i20, Swift, City, Creta" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white" />
+        </div>
+        <div>
+          <label class="block text-slate-400 mb-1">Registration Number</label>
+          <input type="text" id="new-vehicle-reg" placeholder="e.g. AP 07 BK 4455" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white font-mono uppercase" />
+        </div>
+        <div>
+          <label class="block text-slate-400 mb-1">Fuel Type</label>
+          <select id="new-vehicle-fuel" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white">
+            <option value="Petrol">Petrol</option>
+            <option value="Diesel">Diesel</option>
+            <option value="CNG">CNG</option>
+            <option value="Electric">Electric</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="mt-4 flex space-x-2">
+        <button id="btn-save-new-vehicle" class="flex-1 py-2.5 bg-amber-400 hover:bg-amber-300 text-slate-950 font-black rounded-xl text-xs kvr-btn">
+          Save Vehicle
+        </button>
+        <button onclick="document.getElementById('add-vehicle-modal').classList.add('hidden')" class="px-3 py-2 bg-slate-800 text-slate-300 rounded-xl text-xs kvr-btn">
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= CUSTOMER LOGIN MODAL (Simulated WhatsApp OTP) ================= -->
+  <div id="customer-login-modal" class="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur flex items-center justify-center p-4 hidden">
+    <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-sm w-full p-6 shadow-2xl">
+      <div class="flex justify-between items-center mb-4">
+        <div class="flex items-center space-x-2">
+          <span class="text-xl">🔐</span>
+          <h3 class="font-black text-white text-base">Customer Login</h3>
+        </div>
+        <button onclick="document.getElementById('customer-login-modal').classList.add('hidden')" class="text-slate-400 hover:text-white font-bold">✕</button>
+      </div>
+
+      <p class="text-xs text-slate-400 mb-4">Login via your WhatsApp Mobile OTP to view live repair progress and invoice history.</p>
+
+      <div class="space-y-3 text-xs mb-4">
+        <div>
+          <label class="block text-slate-400 mb-1">Your Name</label>
+          <input type="text" id="input-login-name" value="Ramesh Kumar" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-white font-medium" />
+        </div>
+        <div>
+          <label class="block text-slate-400 mb-1">Mobile Number (WhatsApp)</label>
+          <div class="flex space-x-2">
+            <input type="tel" id="input-login-phone" value="9876543210" class="flex-1 bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-white font-mono" />
+            <button id="btn-send-otp" class="px-3 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-xs kvr-btn">
+              Get OTP
+            </button>
+          </div>
+        </div>
+        <div>
+          <label class="block text-slate-400 mb-1">Enter 4-Digit OTP</label>
+          <input type="text" id="input-login-otp" placeholder="e.g. 1234" maxlength="4" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-white font-mono text-center tracking-widest text-base font-bold" />
+        </div>
+      </div>
+
+      <button id="btn-verify-otp" class="w-full py-3 bg-amber-400 hover:bg-amber-300 text-slate-950 font-black rounded-xl text-xs kvr-btn">
+        Verify & Sign In
+      </button>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/audio.js"></script>
+  <script src="js/db.js"></script>
+  <script src="js/pdf-export.js"></script>
+  <script src="js/pwa.js"></script>
+  <script src="js/customer.js"></script>
+</body>
+</html>
