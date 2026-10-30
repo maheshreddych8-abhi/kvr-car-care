@@ -25,56 +25,57 @@ body {
 .kvr-login-car {
   display: block;
   flex: 0 0 auto;
-  width: 5rem;
-  height: 3.25rem;
+  width: 8.25rem;
+  height: 4.6rem;
   overflow: visible;
-  filter: drop-shadow(0 5px 8px rgba(0, 105, 122, 0.35));
+  filter: drop-shadow(0 5px 8px rgba(0, 109, 119, 0.35));
   animation: kvrCarFloat 3s ease-in-out infinite;
 }
 
 .kvr-login-car-large {
-  width: 6rem;
-  height: 3.8rem;
+  width: 9.5rem;
+  height: 5.3rem;
 }
 
 .kvr-login-car-body {
-  fill: #006b7a;
-  stroke: #49b7c5;
-  stroke-width: 1.5;
+  fill: #007f86;
+  stroke: #00a1a8;
+  stroke-width: 2;
   stroke-linejoin: round;
 }
 
 .kvr-login-car-window {
-  fill: #102d45;
-  stroke: #9de3eb;
-  stroke-width: 1.2;
+  fill: #122b3a;
+  stroke: #73dce3;
+  stroke-width: 1.5;
   stroke-linejoin: round;
-}
-
-.kvr-login-car-pillar {
-  fill: #49b7c5;
 }
 
 .kvr-login-car-trim {
   fill: #f5b800;
 }
 
-.kvr-login-car-grille {
-  fill: #143144;
-  stroke: #9de3eb;
-  stroke-width: 1;
+.kvr-login-car-door {
+  fill: none;
+  stroke: #005b66;
+  stroke-width: 2;
+  stroke-linecap: round;
 }
 
-.kvr-login-car-light {
-  fill: #fff3b0;
+.kvr-login-car-nameplate {
+  fill: #f8fafc;
   stroke: #f5b800;
-  stroke-width: 1;
+  stroke-width: 1.5;
 }
 
 .kvr-login-car-name {
-  fill: #ffffff;
-  font: 900 8px 'Plus Jakarta Sans', sans-serif;
-  letter-spacing: 0.4px;
+  fill: #003b46;
+  font: 900 14px 'Plus Jakarta Sans', sans-serif;
+  letter-spacing: 0.6px;
+}
+
+.kvr-login-car-light {
+  fill: #e0fbfc;
 }
 
 .kvr-login-car-wheel {
@@ -117,11 +118,11 @@ body {
   }
 }
 
-body.owner-auth-locked > :not(#owner-auth-gate):not(script) {
+body.owner-auth-locked > :not(#owner-auth-gate):not(.kvr-touch-bubble):not(script) {
   display: none !important;
 }
 
-body.customer-auth-locked > :not(#customer-login-modal):not(script) {
+body.customer-auth-locked > :not(#customer-login-modal):not(.kvr-touch-bubble):not(script) {
   display: none !important;
 }
 
