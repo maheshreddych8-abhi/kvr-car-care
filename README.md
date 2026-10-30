@@ -18,7 +18,11 @@
 
 ## 🌟 Key Features Implemented
 
-### 1. App 1: KVR Car Care Owner App (`owner.html`)
+### 1. Owner / Staff Access (`owner.html`)
+- **Login Gate:** Owner / Staff access stays disabled until real authentication and database policies are configured. The intended owner identity is `maheshch1810@gmail.com`.
+- **Owner-managed Staff:** After secure owner login is enabled, the owner will add approved staff names and mobile numbers; only those approved staff can request OTP access. This roster is not stored in local browser storage.
+- The workshop dashboard features listed below describe the prototype and are not accessible until the login gate is connected.
+- **Prototype Limitation:** App data is currently browser-local, not protected by a production database. Do not enter real customer, staff, or workshop records until backend authorization is implemented.
 - **Workshop Dashboard:** Real-time KPI counters (Total Jobs, Active In-Progress, Completed, Total Revenue in ₹).
 - **Service Request Assignment:** Assign jobs to technicians (Venkat Reddy, Suresh, Ramesh, Gopi, Raju).
 - **Work Progress Updates:** 5-step progression (`Received` ➜ `Assigned` ➜ `Work In Progress` ➜ `Issue Resolved` ➜ `Completed`) with custom workshop remarks.
@@ -33,7 +37,9 @@
 ---
 
 ### 2. App 2: KVR Car Care Customer App (`customer.html`)
-- **Mobile OTP Login via WhatsApp Simulation:** Realistic WhatsApp verification popup with 4-digit auto-fill OTP.
+- **Customer Demo Login:** The app opens on a login screen. A 4-digit demo verification code appears in the login window and can be auto-filled. This static app does not send SMS, WhatsApp, or email OTPs; real delivery requires a secure backend and messaging provider.
+- **Single Mobile App:** Install KVR Car Care once, then choose Customer or Owner / Staff from the home screen.
+- **Festival Offers:** Customer app banner links to WhatsApp to ask the workshop about current seasonal discounts.
 - **My Vehicles:** Add and manage vehicles (Brand, Model, Registration No, Fuel Type).
 - **Raise Service Request:**
   - Select registered car.
@@ -65,18 +71,19 @@
 2. Click **"uploading an existing file"** in the repository page.
 3. Drag and drop all files from this folder:
    - `index.html`
+   - `manifest.json`
    - `customer.html`
    - `owner.html`
    - `demo.html`
-   - `kvr-banner.png`
-   - `css/` (containing `style.css`)
-   - `js/` (containing `audio.js`, `db.js`, `customer.js`, `owner.js`, `pdf-export.js`)
+   - `kvr-banner.png`, `festival-offer.svg`, and the four app icons
+   - `css/` and `js/` folders (including `owner-access.js` and `pwa.js`)
+   - `sw.js`
    - `README.md`
 4. Commit the changes.
 5. In your GitHub repository, go to **Settings ➜ Pages**:
    - Under **Build and deployment > Source**, select **Deploy from a branch**.
    - Under **Branch**, select **`main`** and folder **`/(root)`**, then click **Save**.
-6. Within 1 minute, your live site will be accessible at:
+6. Install the single KVR Car Care app and choose Customer or Owner / Staff from the home screen. Within 1 minute, your live site will be accessible at:
    - **Hub:** `https://<your-username>.github.io/kvr-car-care/`
    - **Customer App:** `https://<your-username>.github.io/kvr-car-care/customer.html`
    - **Owner App:** `https://<your-username>.github.io/kvr-car-care/owner.html`

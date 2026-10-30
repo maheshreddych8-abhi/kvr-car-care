@@ -4,6 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>KVR Car Care | Multi-Brand Workshop & Customer Service Platform</title>
+  <meta name="theme-color" content="#2c0924">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="KVR Car Care">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icon-owner-192.png">
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -45,8 +50,10 @@
         </div>
       </div>
 
-      <!-- Quick Action Buttons -->
-      <div class="flex items-center space-x-2.5">
+      <!-- Role choices and quick actions -->
+      <div class="flex flex-wrap items-center justify-end gap-2">
+        <a href="owner.html" class="rounded-xl border border-purple-400/60 bg-purple-950/80 px-4 py-2.5 text-xs font-black text-white shadow-lg kvr-btn">🔐 Owner / Staff</a>
+        <a href="customer.html" class="rounded-xl bg-gradient-to-r from-amber-400 to-amber-300 px-4 py-2.5 text-xs font-black text-slate-950 shadow-lg kvr-btn">🚗 Customer</a>
         <a href="demo.html" class="px-4 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-400 text-slate-950 text-xs font-black flex items-center space-x-2 shadow-lg kvr-btn">
           <span>⚡</span>
           <span>Live Split-Screen Demo</span>
@@ -87,9 +94,9 @@
     <!-- 2 SEPARATE APP LINKS (Prominently Featured) -->
     <section>
       <div class="text-center max-w-2xl mx-auto mb-8">
-        <span class="px-3 py-1 rounded-full bg-amber-400/10 text-amber-400 text-xs font-extrabold tracking-wider border border-amber-400/20 uppercase">Dual Application Architecture</span>
-        <h2 class="text-2xl sm:text-3xl font-black text-white mt-2">Choose an Application to Launch</h2>
-        <p class="text-xs sm:text-sm text-slate-400 mt-1">Both apps communicate in real-time. Test customer request flow and owner job management seamlessly.</p>
+        <span class="px-3 py-1 rounded-full bg-amber-400/10 text-amber-400 text-xs font-extrabold tracking-wider border border-amber-400/20 uppercase">One KVR Car Care App</span>
+        <h2 class="text-2xl sm:text-3xl font-black text-white mt-2">Choose how you want to continue</h2>
+        <p class="text-xs sm:text-sm text-slate-400 mt-1">Install KVR once, then choose Customer or Owner / Staff whenever you open it.</p>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -104,9 +111,9 @@
               <span class="text-2xl">👨‍🔧</span>
             </div>
 
-            <h3 class="text-xl font-black text-white mb-2">KVR Owner & Staff App</h3>
+            <h3 class="text-xl font-black text-white mb-2">KVR Owner & Staff Access</h3>
             <p class="text-xs text-slate-300 mb-4 leading-relaxed">
-              Complete workshop management: live service request assignment, progress updates, photo uploads, labour & parts charges, automated WhatsApp invoice delivery, and service pricing catalog control.
+              Owner-only workshop tools and owner-approved staff access. Secure email/SMS sign-in must be configured before staff numbers can be added or the dashboard opened.
             </p>
 
             <div class="space-y-2 mb-6 text-xs text-slate-400">
@@ -136,7 +143,7 @@
           <div class="pt-4 border-t border-slate-800/80 flex flex-col sm:flex-row items-center gap-3">
             <a href="owner.html" class="w-full sm:flex-1 py-3 bg-gradient-to-r from-amber-500 to-amber-400 text-slate-950 font-black rounded-2xl text-xs flex items-center justify-center space-x-2 shadow-lg kvr-btn">
               <span>🚀</span>
-              <span>Launch Owner App</span>
+              <span>Owner / Staff Sign-in</span>
             </a>
             <a href="owner.html" target="_blank" class="w-full sm:w-auto px-4 py-3 bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold rounded-2xl text-xs flex items-center justify-center space-x-1 kvr-btn" title="Open in new window">
               <span>↗</span>
@@ -163,7 +170,7 @@
             <div class="space-y-2 mb-6 text-xs text-slate-400">
               <div class="flex items-center space-x-2">
                 <span class="text-emerald-400">✓</span>
-                <span><strong>WhatsApp OTP Login:</strong> Frictionless simulated mobile authentication</span>
+                <span><strong>Demo Login:</strong> On-screen test code; no SMS, WhatsApp, or email is sent</span>
               </div>
               <div class="flex items-center space-x-2">
                 <span class="text-emerald-400">✓</span>
@@ -199,52 +206,27 @@
       </div>
     </section>
 
-    <!-- MOBILE APPS DOWNLOAD & INSTALLATION SECTION -->
+    <!-- SINGLE APP DOWNLOAD & INSTALLATION SECTION -->
     <section class="bg-gradient-to-r from-purple-950/80 via-slate-900 to-amber-950/40 rounded-3xl p-6 sm:p-8 border-2 border-amber-400/40 shadow-2xl">
       <div class="text-center max-w-2xl mx-auto mb-8">
         <span class="px-3.5 py-1 rounded-full bg-amber-400 text-slate-950 text-xs font-black tracking-wider uppercase">
-          📲 Instant Mobile App Download
+          📲 One App • Two Experiences
         </span>
-        <h2 class="text-2xl sm:text-3xl font-black text-white mt-3">Install Separate Mobile Apps on Your Phone</h2>
+        <h2 class="text-2xl sm:text-3xl font-black text-white mt-3">Install KVR Car Care once</h2>
         <p class="text-xs sm:text-sm text-slate-300 mt-2">
-          Both apps are Progressive Web Apps (PWAs) and can be downloaded directly onto <strong>Android</strong> and <strong>iPhone</strong> with their own app icon, splash screen, and full offline support.
+          One home-screen icon opens this role selector. Choose <strong>Customer</strong> or <strong>Owner / Staff</strong> from the buttons at the top.
         </p>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-        
-        <!-- App 1 Card -->
-        <div class="bg-slate-950/90 rounded-2xl p-5 border border-purple-700/60 flex items-center space-x-4 shadow-xl">
-          <img src="icon-customer-192.png" alt="Customer App Icon" class="w-16 h-16 rounded-2xl shadow-lg border-2 border-amber-400/60 shrink-0">
-          <div class="flex-1">
-            <span class="text-[10px] font-black text-emerald-400 uppercase tracking-wider">For Car Owners</span>
-            <h4 class="text-base font-black text-white">KVR Customer Mobile App</h4>
-            <p class="text-xs text-slate-400 mt-0.5">Live repair tracking, request service, view photos & invoices.</p>
-            <div class="mt-3 flex items-center space-x-2">
-              <a href="customer.html" class="px-3.5 py-1.5 bg-amber-400 hover:bg-amber-300 text-slate-950 font-black rounded-xl text-xs flex items-center space-x-1 kvr-btn">
-                <span>📲</span>
-                <span>Open & Install App</span>
-              </a>
-            </div>
-          </div>
+      <div class="mb-8 flex flex-col items-center gap-4 rounded-2xl border border-slate-700 bg-slate-950/80 p-6 text-center shadow-xl sm:flex-row sm:text-left">
+        <img src="icon-owner-192.png" alt="KVR Car Care app icon" class="h-16 w-16 rounded-2xl border-2 border-amber-400/60 shadow-lg">
+        <div class="flex-1">
+          <h3 class="font-black text-white">Ready to add KVR to your home screen?</h3>
+          <p class="mt-1 text-xs text-slate-300">Install one app for both Customer and Owner / Staff access.</p>
         </div>
-
-        <!-- App 2 Card -->
-        <div class="bg-slate-950/90 rounded-2xl p-5 border border-purple-700/60 flex items-center space-x-4 shadow-xl">
-          <img src="icon-owner-192.png" alt="Owner App Icon" class="w-16 h-16 rounded-2xl shadow-lg border-2 border-purple-400/60 shrink-0">
-          <div class="flex-1">
-            <span class="text-[10px] font-black text-amber-400 uppercase tracking-wider">For Workshop & Staff</span>
-            <h4 class="text-base font-black text-white">KVR Owner & Workshop App</h4>
-            <p class="text-xs text-slate-400 mt-0.5">Manage jobs, assign techs, upload photos & generate PDF bill.</p>
-            <div class="mt-3 flex items-center space-x-2">
-              <a href="owner.html" class="px-3.5 py-1.5 bg-gradient-to-r from-purple-600 to-amber-500 hover:brightness-110 text-white font-black rounded-xl text-xs flex items-center space-x-1 kvr-btn">
-                <span>📲</span>
-                <span>Open & Install App</span>
-              </a>
-            </div>
-          </div>
-        </div>
-
+        <button type="button" onclick="window.kvrPwa.promptInstall()" class="rounded-xl bg-amber-400 px-5 py-3 text-xs font-black text-slate-950 shadow-lg kvr-btn">
+          📲 Install KVR Car Care
+        </button>
       </div>
 
       <!-- Installation Guide -->
@@ -255,7 +237,7 @@
             <span>How to Install on Android:</span>
           </div>
           <ol class="list-decimal list-inside space-y-1.5 text-slate-300">
-            <li>Open the app link in <strong>Chrome</strong> on your Android phone.</li>
+            <li>Open this KVR Car Care link in <strong>Chrome</strong> on your Android phone.</li>
             <li>Tap the <strong>"📲 Install App"</strong> banner at the top, or tap the 3 dots (⋮) in Chrome and select <strong>"Install App"</strong>.</li>
             <li>The app icon installs directly to your home screen!</li>
           </ol>
@@ -267,7 +249,7 @@
             <span>How to Install on iPhone (iOS):</span>
           </div>
           <ol class="list-decimal list-inside space-y-1.5 text-slate-300">
-            <li>Open the app link in <strong>Safari</strong> on your iPhone.</li>
+            <li>Open this KVR Car Care link in <strong>Safari</strong> on your iPhone.</li>
             <li>Tap the <strong>Share</strong> icon (⎋) at the bottom bar.</li>
             <li>Scroll down and tap <strong>"Add to Home Screen"</strong> (➕) then tap <strong>Add</strong>.</li>
           </ol>
@@ -419,5 +401,6 @@
   </footer>
 
   <script src="js/audio.js"></script>
+  <script src="js/pwa.js"></script>
 </body>
 </html>

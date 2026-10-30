@@ -6,12 +6,12 @@
   <title>KVR Car Care - Owner & Staff Workshop App | Guntur</title>
 
   <!-- PWA & Mobile App Support -->
-  <link rel="manifest" href="manifest-owner.json">
+  <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#2c0924">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="KVR Owner">
+  <meta name="apple-mobile-web-app-title" content="KVR Car Care">
   <link rel="apple-touch-icon" href="icon-owner-192.png">
 
   <script src="https://cdn.tailwindcss.com"></script>
@@ -21,7 +21,41 @@
   <link rel="stylesheet" href="css/style.css">
   <link rel="icon" href="kvr-banner.png" type="image/png">
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col antialiased selection:bg-amber-400 selection:text-slate-950">
+<body class="owner-auth-locked bg-slate-950 text-slate-100 min-h-screen flex flex-col antialiased selection:bg-amber-400 selection:text-slate-950">
+
+  <section id="owner-auth-gate" class="fixed inset-0 z-[100] flex min-h-screen items-center justify-center bg-slate-950 px-4 py-8">
+    <div class="w-full max-w-md rounded-3xl border border-purple-500/40 bg-gradient-to-b from-slate-900 to-purple-950/70 p-6 shadow-2xl sm:p-8">
+      <a href="index.html" class="mb-6 inline-flex items-center gap-2 text-xs font-bold text-slate-400 hover:text-amber-300">← KVR Car Care home</a>
+      <div class="mb-5 flex items-center gap-4">
+        <span class="otp-robot text-5xl" aria-hidden="true">🤖</span>
+        <div>
+          <p class="text-[10px] font-black uppercase tracking-[0.2em] text-amber-300">Secure workshop access</p>
+          <h1 class="mt-1 text-xl font-black text-white">Welcome to KVR</h1>
+        </div>
+      </div>
+      <p class="mb-5 text-xs leading-relaxed text-slate-300">Choose a role. Only <strong class="text-amber-300">maheshch1810@gmail.com</strong> may use Owner access. Staff can sign in only after the owner adds their mobile number.</p>
+      <div class="mb-4 grid grid-cols-2 gap-2" role="group" aria-label="Choose login role">
+        <button type="button" class="owner-role-choice rounded-xl border border-amber-400 bg-amber-400/15 px-3 py-3 text-xs font-black text-amber-200" data-role="owner" aria-pressed="true">👑 Owner</button>
+        <button type="button" class="owner-role-choice rounded-xl border border-slate-700 bg-slate-950/60 px-3 py-3 text-xs font-black text-slate-300" data-role="staff" aria-pressed="false">🧰 Staff</button>
+      </div>
+      <div id="owner-role-panel">
+        <label for="owner-login-email" class="mb-1 block text-xs font-bold text-slate-300">Registered owner email</label>
+        <input id="owner-login-email" type="email" autocomplete="username" value="maheshch1810@gmail.com" readonly class="mb-4 w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-3 text-sm text-white">
+        <label for="owner-login-otp" class="mb-1 block text-xs font-bold text-slate-300">Email verification code</label>
+        <input id="owner-login-otp" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="Enter code from email" disabled class="mb-4 w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-3 text-center font-mono text-lg tracking-[0.4em] text-white placeholder:text-slate-600">
+        <button type="button" disabled class="w-full cursor-not-allowed rounded-xl bg-slate-700 px-4 py-3 text-xs font-black text-slate-400">🔒 Email OTP setup required</button>
+      </div>
+      <div id="staff-role-panel" class="hidden">
+        <label for="staff-login-phone" class="mb-1 block text-xs font-bold text-slate-300">Mobile number approved by owner</label>
+        <input id="staff-login-phone" type="tel" inputmode="numeric" autocomplete="tel" maxlength="10" placeholder="10-digit mobile number" disabled class="mb-4 w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-3 text-sm text-white placeholder:text-slate-500">
+        <label for="staff-login-otp" class="mb-1 block text-xs font-bold text-slate-300">SMS verification code</label>
+        <input id="staff-login-otp" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="Enter code from SMS" disabled class="mb-4 w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-3 text-center font-mono text-lg tracking-[0.4em] text-white placeholder:text-slate-600">
+        <button type="button" disabled class="w-full cursor-not-allowed rounded-xl bg-slate-700 px-4 py-3 text-xs font-black text-slate-400">🔒 Staff OTP setup required</button>
+      </div>
+      <p class="mt-4 rounded-xl border border-amber-400/30 bg-amber-400/10 p-3 text-[11px] leading-relaxed text-amber-100" role="status">Owner / Staff access is disabled in this static demo: no OTP provider is configured, so it cannot send email or SMS codes. Do not enter real workshop data here. After secure authentication and database policies are configured, the owner can add approved staff numbers.</p>
+      <a href="customer.html" class="mt-4 block text-center text-xs font-bold text-amber-300 hover:underline">Go to Customer app →</a>
+    </div>
+  </section>
 
   <!-- ================= TOP BRAND BANNER ================= -->
   <header class="kvr-banner-box border-b border-purple-900/60 shadow-xl">
@@ -247,6 +281,7 @@
   <script src="js/db.js"></script>
   <script src="js/pdf-export.js"></script>
   <script src="js/pwa.js"></script>
+  <script src="js/owner-access.js"></script>
   <script src="js/owner.js"></script>
 </body>
 </html>

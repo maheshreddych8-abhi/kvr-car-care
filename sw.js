@@ -1,5 +1,5 @@
 // KVR Car Care - Progressive Web App Service Worker
-const CACHE_NAME = 'kvr-car-care-v1';
+const CACHE_NAME = 'kvr-car-care-v2';
 const ASSETS_TO_CACHE = [
   './',
   'index.html',
@@ -8,6 +8,8 @@ const ASSETS_TO_CACHE = [
   'demo.html',
   'css/style.css',
   'js/audio.js',
+  'js/pwa.js',
+  'js/owner-access.js',
   'js/db.js',
   'js/customer.js',
   'js/owner.js',
@@ -18,7 +20,9 @@ const ASSETS_TO_CACHE = [
   'icon-owner-192.png',
   'icon-owner-512.png',
   'manifest-customer.json',
-  'manifest-owner.json'
+  'manifest-owner.json',
+  'manifest.json',
+  'festival-offer.svg'
 ];
 
 self.addEventListener('install', (e) => {

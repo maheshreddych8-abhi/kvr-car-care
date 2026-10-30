@@ -6,12 +6,12 @@
   <title>KVR Car Care - Customer App | Palakaluru Road, Guntur</title>
   
   <!-- PWA & Mobile App Support -->
-  <link rel="manifest" href="manifest-customer.json">
+  <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#2c0924">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="KVR Customer">
+  <meta name="apple-mobile-web-app-title" content="KVR Car Care">
   <link rel="apple-touch-icon" href="icon-customer-192.png">
 
   <script src="https://cdn.tailwindcss.com"></script>
@@ -21,7 +21,7 @@
   <link rel="stylesheet" href="css/style.css">
   <link rel="icon" href="kvr-banner.png" type="image/png">
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col antialiased selection:bg-amber-400 selection:text-slate-950 pb-20 md:pb-6">
+<body class="customer-auth-locked bg-slate-950 text-slate-100 min-h-screen flex flex-col antialiased selection:bg-amber-400 selection:text-slate-950 pb-20 md:pb-6">
 
   <!-- ================= TOP BRAND BANNER ================= -->
   <header class="kvr-banner-box border-b border-purple-900/60 shadow-xl">
@@ -108,13 +108,24 @@
     </div>
   </div>
 
+  <section class="max-w-4xl mx-auto w-full px-4 mt-3" aria-label="Festival service offers">
+    <div class="flex items-center justify-between gap-3 rounded-2xl border border-amber-400/40 bg-gradient-to-r from-purple-950 via-slate-900 to-amber-950/70 p-3 shadow-lg">
+      <img src="festival-offer.svg" alt="Festive diya and decorations" class="h-16 w-16 shrink-0 rounded-xl object-cover" width="64" height="64">
+      <div class="min-w-0 flex-1">
+        <p class="text-[10px] font-black uppercase tracking-widest text-amber-300">Festival Special</p>
+        <p class="mt-0.5 text-xs font-bold text-white">Seasonal discounts on car care</p>
+        <p class="text-[11px] text-slate-300">Enjoy a special festival discount. Message us for details.</p>
+      </div>
+      <a href="https://wa.me/919346418994?text=Hi%2C%20please%20tell%20me%20about%20your%20current%20festival%20offers."
+         target="_blank" rel="noopener noreferrer"
+         class="shrink-0 rounded-xl bg-amber-400 px-3 py-2 text-[11px] font-black text-slate-950 kvr-btn">
+        View Offers
+      </a>
+    </div>
+  </section>
+
   <!-- User session banner -->
   <div id="user-profile-bar"></div>
-
-  <!-- WhatsApp Simulation Banner (for OTP demonstration) -->
-  <div class="max-w-4xl mx-auto px-4 mt-3">
-    <div id="otp-simulation-banner" class="hidden"></div>
-  </div>
 
   <!-- ================= MAIN APP CONTAINER ================= -->
   <main class="max-w-4xl mx-auto w-full px-4 py-4 flex-1">
@@ -376,7 +387,7 @@
     </div>
   </div>
 
-  <!-- ================= CUSTOMER LOGIN MODAL (Simulated WhatsApp OTP) ================= -->
+  <!-- ================= CUSTOMER LOGIN MODAL (Demo OTP) ================= -->
   <div id="customer-login-modal" class="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur flex items-center justify-center p-4 hidden">
     <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-sm w-full p-6 shadow-2xl">
       <div class="flex justify-between items-center mb-4">
@@ -384,10 +395,15 @@
           <span class="text-xl">🔐</span>
           <h3 class="font-black text-white text-base">Customer Login</h3>
         </div>
-        <button onclick="document.getElementById('customer-login-modal').classList.add('hidden')" class="text-slate-400 hover:text-white font-bold">✕</button>
+        <button onclick="window.kvrCustomer.closeLoginModal()" class="text-slate-400 hover:text-white font-bold" aria-label="Close customer login">✕</button>
       </div>
 
-      <p class="text-xs text-slate-400 mb-4">Login via your WhatsApp Mobile OTP to view live repair progress and invoice history.</p>
+      <div class="mb-4 flex items-center gap-3 rounded-2xl border border-purple-500/30 bg-purple-950/40 p-3">
+        <span class="otp-robot text-3xl" aria-hidden="true">🤖</span>
+        <p class="text-xs text-slate-300">Your KVR helper is ready. This demo shows a code on screen; no SMS, WhatsApp, or email is sent.</p>
+      </div>
+      <p class="text-xs text-slate-400 mb-3">Real mobile OTP and email fallback require secure authentication setup.</p>
+      <div id="otp-simulation-banner" class="hidden mb-4" role="status" aria-live="polite"></div>
 
       <div class="space-y-3 text-xs mb-4">
         <div>
@@ -395,17 +411,17 @@
           <input type="text" id="input-login-name" value="Ramesh Kumar" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-white font-medium" />
         </div>
         <div>
-          <label class="block text-slate-400 mb-1">Mobile Number (WhatsApp)</label>
+          <label class="block text-slate-400 mb-1">Mobile Number</label>
           <div class="flex space-x-2">
-            <input type="tel" id="input-login-phone" value="9876543210" class="flex-1 bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-white font-mono" />
+          <input type="tel" id="input-login-phone" inputmode="numeric" autocomplete="tel-national" value="9876543210" class="flex-1 bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-white font-mono" />
             <button id="btn-send-otp" class="px-3 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-xs kvr-btn">
-              Get OTP
+            Get Demo Code
             </button>
           </div>
         </div>
         <div>
-          <label class="block text-slate-400 mb-1">Enter 4-Digit OTP</label>
-          <input type="text" id="input-login-otp" placeholder="e.g. 1234" maxlength="4" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-white font-mono text-center tracking-widest text-base font-bold" />
+          <label class="block text-slate-400 mb-1">Enter 4-Digit Code</label>
+          <input type="text" id="input-login-otp" inputmode="numeric" autocomplete="one-time-code" placeholder="4-digit code" maxlength="4" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-white font-mono text-center tracking-widest text-base font-bold" />
         </div>
       </div>
 
