@@ -37,7 +37,7 @@
 ---
 
 ### 2. App 2: KVR Car Care Customer App (`customer.html`)
-- **Customer Email OTP Login:** Customers enter their email and verify the six-digit code sent to that address. Mobile number is optional contact information only, never an OTP destination.
+- **Customer Email OTP Login:** Customers must enter their name and email, then verify the six-digit code sent to that address. Customer login does not ask for a mobile number.
 - **Single Mobile App:** Install KVR Car Care once, then choose Customer or Owner / Staff from the home screen.
 - **Festival Offers:** Customer app banner links to WhatsApp to ask the workshop about current seasonal discounts.
 - **My Vehicles:** Add and manage vehicles (Brand, Model, Registration No, Fuel Type).

@@ -415,16 +415,12 @@
 
       <div class="space-y-3 text-xs mb-4">
         <div>
-          <label for="input-login-name" class="block text-slate-400 mb-1">Your Name (optional)</label>
-          <input type="text" id="input-login-name" autocomplete="name" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-white font-medium" />
+          <label for="input-login-name" class="block text-slate-400 mb-1">Your Name <span class="text-rose-400" aria-hidden="true">*</span></label>
+          <input type="text" id="input-login-name" autocomplete="name" required aria-required="true" placeholder="Enter your full name" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-white font-medium" />
         </div>
         <div>
           <label for="input-login-email" class="block text-slate-400 mb-1">Email address</label>
           <input type="email" id="input-login-email" inputmode="email" autocomplete="email" required placeholder="you@example.com" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-white font-medium" />
-        </div>
-        <div>
-          <label for="input-login-phone" class="block text-slate-400 mb-1">Mobile number for service contact (optional)</label>
-          <input type="tel" id="input-login-phone" inputmode="tel" autocomplete="tel" placeholder="Not used for login" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-white font-mono" />
         </div>
         <button id="btn-send-otp" type="button" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-xs kvr-btn">Send email OTP</button>
         <div id="customer-otp-entry" class="hidden">
@@ -447,7 +443,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="js/supabase-config.js"></script>
   <script src="js/email-auth.js"></script>
-  <script src="js/login-effects.js"></script>
   <script src="js/customer.js"></script>
+  <script src="js/login-effects.js"></script>
 </body>
 </html>
