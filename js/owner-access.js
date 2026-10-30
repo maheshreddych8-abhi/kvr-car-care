@@ -6,14 +6,20 @@ document.addEventListener('DOMContentLoaded', () => {
   let selectedRole = 'owner';
   const pendingEmails = { owner: '', staff: '' };
 
-  const showStatus = (message, isError = false) => {
+  const showStatus = (message, isError = false, isNotice = false) => {
     status.textContent = message;
-    status.classList.toggle('border-rose-500/50', isError);
-    status.classList.toggle('bg-rose-950/60', isError);
-    status.classList.toggle('text-rose-200', isError);
-    status.classList.toggle('border-amber-400/30', !isError);
-    status.classList.toggle('bg-amber-400/10', !isError);
-    status.classList.toggle('text-amber-100', !isError);
+    status.classList.remove('hidden');
+    status.classList.remove(
+      'border-rose-500/50', 'bg-rose-950/60', 'text-rose-200',
+      'border-amber-400/30', 'bg-amber-400/10', 'text-amber-100',
+      'border-slate-700', 'bg-slate-800', 'text-slate-200'
+    );
+    const statusClasses = isError
+      ? ['border-rose-500/50', 'bg-rose-950/60', 'text-rose-200']
+      : isNotice
+        ? ['border-slate-700', 'bg-slate-800', 'text-slate-200']
+        : ['border-amber-400/30', 'bg-amber-400/10', 'text-amber-100'];
+    status.classList.add(...statusClasses);
   };
 
   const openWorkshop = (user, role, staffMember = null) => {
@@ -73,24 +79,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const button = document.getElementById(`btn-${role}-send-otp`);
     button.disabled = true;
     button.textContent = 'Sending email OTP…';
-    let otpSent = false;
     try {
       await window.kvrEmailAuth.sendOtp(email, role === 'staff', 'workshop');
-      otpSent = true;
       pendingEmails[role] = email;
       document.getElementById(`${role}-otp-entry`).classList.remove('hidden');
       showStatus(`Email OTP requested for ${email}. Check the inbox and spam folder for the 6-digit code.`, false);
     } catch (error) {
-      const errorMessage = error?.message || '';
-      showStatus(
-        errorMessage.toLowerCase().includes('not configured')
-          ? 'Email sign-in is not set up yet. Please contact KVR Car Care.'
-          : `We could not send a sign-in code. ${errorMessage}`,
-        true
-      );
+      const message = error.message.includes('Email OTP is not configured')
+        ? 'Email sign-in is being set up. Please contact KVR Car Care.'
+        : `Could not send email OTP: ${error.message}`;
+      showStatus(message, !error.message.includes('Email OTP is not configured'), error.message.includes('Email OTP is not configured'));
     } finally {
       button.disabled = false;
-      button.textContent = otpSent ? 'Resend OTP to email' : 'Send OTP to email';
+      button.textContent = 'Resend OTP to email';
     }
   };
 

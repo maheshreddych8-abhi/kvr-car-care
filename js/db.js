@@ -408,11 +408,11 @@ class KVRDatabase {
 
     // Also register vehicle if customer provided
     this.registerCustomerVehicle({
-      customerName: newJob.customerName,
-      customerPhone: newJob.customerPhone,
-      customerEmail: newJob.customerEmail,
-      vehicleName: newJob.vehicleName,
-      vehicleReg: newJob.vehicleReg
+      customerName: data.customerName,
+      customerPhone: data.customerPhone,
+      customerEmail: data.customerEmail,
+      vehicleName: data.vehicleName,
+      vehicleReg: data.vehicleReg
     });
 
     this.notify('NEW_REQUEST', newJob);

@@ -50,15 +50,7 @@ class KVRCustomerApp {
     try {
       const user = await window.kvrEmailAuth.getCurrentUser();
       if (user) {
-        const savedName = window.kvrDB.getCustomerSession()?.name;
-        const profileName = user.user_metadata?.full_name || savedName;
-        if (profileName?.trim() && profileName.trim().toLowerCase() !== 'customer') {
-          this.completeEmailLogin(user, false);
-        } else {
-          const emailInput = document.getElementById('input-login-email');
-          if (emailInput) emailInput.value = user.email || '';
-          this.setAuthStatus('Enter your name to continue.', false);
-        }
+        this.completeEmailLogin(user, false);
       } else {
         window.kvrDB.clearCustomerSession();
       }
@@ -69,17 +61,11 @@ class KVRCustomerApp {
 
   completeEmailLogin(user, showSuccess = true) {
     const saved = window.kvrDB.getCustomerSession();
-    const name = document.getElementById('input-login-name')?.value.trim()
-      || user.user_metadata?.full_name?.trim()
-      || saved?.name?.trim()
-      || '';
-    if (!name || name.toLowerCase() === 'customer') {
-      this.setAuthStatus('Enter your name to continue.', false);
-      return;
-    }
-
     this.session = {
-      name,
+      name: document.getElementById('input-login-name')?.value.trim()
+        || user.user_metadata?.full_name
+        || saved?.name
+        || 'Customer',
       phone: '',
       email: user.email,
       authUserId: user.id,
@@ -162,16 +148,22 @@ class KVRCustomerApp {
     document.body.classList.remove('customer-auth-locked');
   }
 
-  setAuthStatus(message, success) {
+  setAuthStatus(message, success, neutral = false) {
     const status = document.getElementById('customer-auth-status');
     if (!status) return;
     status.textContent = message;
-    status.classList.remove('hidden', 'border-emerald-500/50', 'bg-emerald-950/60', 'text-emerald-200', 'border-rose-500/50', 'bg-rose-950/60', 'text-rose-200');
-    status.classList.add(
-      ...(success
-        ? ['border-emerald-500/50', 'bg-emerald-950/60', 'text-emerald-200']
-        : ['border-rose-500/50', 'bg-rose-950/60', 'text-rose-200'])
+    status.classList.remove(
+      'hidden',
+      'border-emerald-500/50', 'bg-emerald-950/60', 'text-emerald-200',
+      'border-rose-500/50', 'bg-rose-950/60', 'text-rose-200',
+      'border-slate-700', 'bg-slate-800', 'text-slate-200'
     );
+    const statusClasses = success
+      ? ['border-emerald-500/50', 'bg-emerald-950/60', 'text-emerald-200']
+      : neutral
+        ? ['border-slate-700', 'bg-slate-800', 'text-slate-200']
+        : ['border-rose-500/50', 'bg-rose-950/60', 'text-rose-200'];
+    status.classList.add(...statusClasses);
   }
 
   async requestEmailOtp() {
@@ -194,10 +186,8 @@ class KVRCustomerApp {
     const button = document.getElementById('btn-send-otp');
     button.disabled = true;
     button.textContent = 'Sending email OTP…';
-    let otpSent = false;
     try {
       await window.kvrEmailAuth.sendOtp(email, true, 'customer', { full_name: name });
-      otpSent = true;
       this.pendingEmail = email;
       document.getElementById('customer-otp-entry')?.classList.remove('hidden');
       const verifyButton = document.getElementById('btn-verify-otp');
@@ -205,16 +195,13 @@ class KVRCustomerApp {
       verifyButton.className = 'w-full py-3 bg-amber-400 hover:bg-amber-300 text-slate-950 font-black rounded-xl text-xs kvr-btn';
       this.setAuthStatus(`Email OTP requested for ${email}. Check your inbox and spam folder for the 6-digit code.`, true);
     } catch (error) {
-      const errorMessage = error?.message || '';
-      this.setAuthStatus(
-        errorMessage.toLowerCase().includes('not configured')
-          ? 'Email sign-in is not set up yet. Please contact KVR Car Care.'
-          : `We could not send a sign-in code. ${errorMessage}`,
-        false
-      );
+      const message = error.message.includes('Email OTP is not configured')
+        ? 'Email sign-in is being set up. Please contact KVR Car Care.'
+        : `Could not send email OTP: ${error.message}`;
+      this.setAuthStatus(message, false, error.message.includes('Email OTP is not configured'));
     } finally {
       button.disabled = false;
-      button.textContent = otpSent ? 'Resend email OTP' : 'Send email OTP';
+      button.textContent = 'Resend email OTP';
     }
   }
 

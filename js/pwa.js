@@ -5,7 +5,7 @@ class KVRPwaInstaller {
   constructor() {
     this.deferredPrompt = null;
     this.isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-    this.isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+    this.isStandalone = Boolean(window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone);
 
     this.init();
   }
