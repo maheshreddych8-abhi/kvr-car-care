@@ -22,6 +22,26 @@ body {
   font-family: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
+.otp-robot {
+  display: inline-flex;
+  transform-origin: 50% 80%;
+  animation: robotHello 2.4s ease-in-out infinite;
+  filter: drop-shadow(0 0 12px rgba(245, 184, 0, 0.3));
+}
+
+@keyframes robotHello {
+  0%, 100% { transform: translateY(0) rotate(-5deg); }
+  50% { transform: translateY(-5px) rotate(7deg); }
+}
+
+body.owner-auth-locked > :not(#owner-auth-gate):not(script) {
+  display: none !important;
+}
+
+body.customer-auth-locked > :not(#customer-login-modal):not(script) {
+  display: none !important;
+}
+
 /* -------------------------------------------------------------
    KVR Brand Banner & The "Slow Car Moving On Red Line" Feature
 ------------------------------------------------------------- */
