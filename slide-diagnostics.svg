@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 300" width="100%" height="100%">
+  <defs>
+    <linearGradient id="diagBg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#090d16"/>
+      <stop offset="60%" stop-color="#1e1b4b"/>
+      <stop offset="100%" stop-color="#312e81"/>
+    </linearGradient>
+  </defs>
+  <rect width="600" height="300" fill="url(#diagBg)"/>
+  
+  <!-- Hydraulic Lift Posts -->
+  <rect x="180" y="40" width="22" height="200" fill="#334155" stroke="#475569" stroke-width="2"/>
+  <rect x="440" y="40" width="22" height="200" fill="#334155" stroke="#475569" stroke-width="2"/>
+  <line x1="170" y1="165" x2="470" y2="165" stroke="#f5b800" stroke-width="8"/>
+  
+  <!-- Car Raised on Lift (Blue Car) -->
+  <g transform="translate(195, 80)">
+    <path d="M 10,75 L 30,50 L 60,25 L 140,25 L 190,50 L 230,58 L 245,75 L 245,90 L 225,90 A 16,16 0 0 1 193,90 L 75,90 A 16,16 0 0 1 43,90 L 10,90 Z" fill="#1d4ed8" stroke="#60a5fa" stroke-width="2.5"/>
+    <!-- Windows -->
+    <path d="M 65,30 L 100,30 L 100,50 L 45,50 Z" fill="#0f172a" stroke="#38bdf8" stroke-width="1"/>
+    <path d="M 106,30 L 135,30 L 175,50 L 106,50 Z" fill="#0f172a" stroke="#38bdf8" stroke-width="1"/>
+    <!-- KVR Nameplate -->
+    <rect x="80" y="58" width="50" height="18" rx="3" fill="#0f172a" stroke="#f5b800" stroke-width="1.5"/>
+    <text x="105" y="71" font-family="sans-serif" font-size="12" font-weight="900" fill="#ffffff" text-anchor="middle">KVR</text>
+    <circle cx="59" cy="90" r="14" fill="#0f172a" stroke="#cbd5e1" stroke-width="2.5"/>
+    <circle cx="209" cy="90" r="14" fill="#0f172a" stroke="#cbd5e1" stroke-width="2.5"/>
+  </g>
+  
+  <!-- Diagnostic Scanner Screen on Trolley -->
+  <g transform="translate(45, 120)">
+    <rect x="0" y="0" width="75" height="110" rx="6" fill="#1e293b" stroke="#38bdf8" stroke-width="2"/>
+    <rect x="8" y="10" width="59" height="42" rx="4" fill="#020617" stroke="#22c55e" stroke-width="1"/>
+    <polyline points="14,35 26,24 38,40 50,18 62,32" fill="none" stroke="#22c55e" stroke-width="2"/>
+    <text x="37" y="48" font-family="sans-serif" font-size="6" fill="#22c55e" text-anchor="middle">ENGINE: 100% OK</text>
+    <rect x="12" y="60" width="51" height="8" rx="2" fill="#3b82f6"/>
+    <rect x="12" y="74" width="51" height="8" rx="2" fill="#f5b800"/>
+    <line x1="75" y1="35" x2="195" y2="120" stroke="#f5b800" stroke-width="2" stroke-dasharray="4"/>
+  </g>
+  
+  <rect x="20" y="20" width="280" height="34" rx="8" fill="#0f172a" opacity="0.9" stroke="#f5b800" stroke-width="1.5"/>
+  <text x="32" y="42" font-family="sans-serif" font-size="13" font-weight="900" fill="#f5b800">🔍 COMPUTERIZED SCANNING BAY</text>
+  
+  <rect x="360" y="245" width="220" height="30" rx="6" fill="#1e293b" opacity="0.95" stroke="#38bdf8" stroke-width="1"/>
+  <text x="470" y="265" font-family="sans-serif" font-size="11" font-weight="bold" fill="#38bdf8" text-anchor="middle">Multi-Brand Diagnostics Station</text>
+</svg>

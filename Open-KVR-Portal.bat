@@ -1,0 +1,3 @@
+@echo off
+echo Starting KVR Car Care Portal...
+start "" "%~dp0index.html"

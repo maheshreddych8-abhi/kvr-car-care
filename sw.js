@@ -1,39 +1,43 @@
 // KVR Car Care - Progressive Web App Service Worker
-const CACHE_NAME = 'kvr-car-care-v18';
+const CACHE_NAME = 'kvr-car-care-v35-blue-car';
 const ASSETS_TO_CACHE = [
   './',
   'index.html',
   'customer.html',
   'owner.html',
+  '404.html',
   'demo.html',
   'css/style.css',
   'js/audio.js',
   'js/pwa.js',
-  'js/owner-access.js?v=otp-entry-4',
-  'js/email-auth.js?v=email-only-6',
-  'js/supabase-config.js?v=project-vgtskzdhoqwdugdojyfk',
+  'js/email-auth.js',
+  'js/supabase-config.js',
   'js/touch-bubbles.js',
   'js/db.js',
-  'js/customer.js?v=email-only-3',
+  'js/customer.js',
   'js/owner.js',
   'js/pdf-export.js',
   'kvr-banner.png',
+  'slide-ac-bay.svg',
+  'slide-diagnostics.svg',
+  'slide-detailing.svg',
+  'icon-192.png',
+  'icon-512.png',
   'icon-customer-192.png',
   'icon-customer-512.png',
   'icon-owner-192.png',
   'icon-owner-512.png',
-  'manifest-customer.json',
-  'manifest-owner.json',
   'manifest.json',
-  'festival-offer.svg',
-  'supabase-staff-schema.sql'
+  'manifest-customer.json',
+  'manifest-owner.json'
 ];
 
 self.addEventListener('install', (e) => {
+  self.skipWaiting();
   e.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
       return cache.addAll(ASSETS_TO_CACHE);
-    }).then(() => self.skipWaiting())
+    })
   );
 });
 
@@ -55,20 +59,39 @@ self.addEventListener('fetch', (e) => {
   const requestUrl = new URL(e.request.url);
   if (e.request.method !== 'GET' || requestUrl.origin !== self.location.origin) return;
 
-  // Keep auth and other third-party requests out of the offline cache.
+  // Never cache Supabase auth requests or external APIs
+  if (requestUrl.pathname.includes('/auth/') || requestUrl.hash.includes('access_token')) {
+    return;
+  }
+
+  // Network first for HTML, Cache fallback for offline
+  if (e.request.mode === 'navigate' || requestUrl.pathname.endsWith('.html') || requestUrl.pathname === '/') {
+    e.respondWith(
+      fetch(e.request)
+        .then((res) => {
+          if (res.ok) {
+            const resClone = res.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(e.request, resClone));
+          }
+          return res;
+        })
+        .catch(() => caches.match(e.request).then((res) => res || caches.match('./index.html')))
+    );
+    return;
+  }
+
+  // Stale-while-revalidate for assets
   e.respondWith(
-    fetch(e.request)
-      .then((res) => {
-        if (res.ok) {
-          const resClone = res.clone();
+    caches.match(e.request).then((cachedResponse) => {
+      const fetchPromise = fetch(e.request).then((networkResponse) => {
+        if (networkResponse.ok) {
+          const resClone = networkResponse.clone();
           caches.open(CACHE_NAME).then((cache) => cache.put(e.request, resClone));
         }
-        return res;
-      })
-      .catch(async (error) => {
-        const cached = await caches.match(e.request);
-        if (cached) return cached;
-        throw error;
-      })
+        return networkResponse;
+      }).catch(() => cachedResponse);
+
+      return cachedResponse || fetchPromise;
+    })
   );
 });
