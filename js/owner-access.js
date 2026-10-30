@@ -73,16 +73,24 @@ document.addEventListener('DOMContentLoaded', () => {
     const button = document.getElementById(`btn-${role}-send-otp`);
     button.disabled = true;
     button.textContent = 'Sending email OTP…';
+    let otpSent = false;
     try {
       await window.kvrEmailAuth.sendOtp(email, role === 'staff', 'workshop');
+      otpSent = true;
       pendingEmails[role] = email;
       document.getElementById(`${role}-otp-entry`).classList.remove('hidden');
       showStatus(`Email OTP requested for ${email}. Check the inbox and spam folder for the 6-digit code.`, false);
     } catch (error) {
-      showStatus(`Could not send email OTP: ${error.message}`, true);
+      const errorMessage = error?.message || '';
+      showStatus(
+        errorMessage.toLowerCase().includes('not configured')
+          ? 'Email sign-in is not set up yet. Please contact KVR Car Care.'
+          : `We could not send a sign-in code. ${errorMessage}`,
+        true
+      );
     } finally {
       button.disabled = false;
-      button.textContent = 'Resend OTP to email';
+      button.textContent = otpSent ? 'Resend OTP to email' : 'Send OTP to email';
     }
   };
 
