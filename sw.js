@@ -1,5 +1,5 @@
 // KVR Car Care - Progressive Web App Service Worker
-const CACHE_NAME = 'kvr-car-care-v13';
+const CACHE_NAME = 'kvr-car-care-v14';
 const ASSETS_TO_CACHE = [
   './',
   'index.html',
@@ -11,7 +11,7 @@ const ASSETS_TO_CACHE = [
   'js/pwa.js',
   'js/owner-access.js?v=otp-entry-4',
   'js/email-auth.js?v=otp-channel-2',
-  'js/supabase-config.js',
+  'js/supabase-config.js?v=project-vgtskzdhoqwdugdojyfk',
   'js/touch-bubbles.js',
   'js/db.js',
   'js/customer.js?v=otp-channel-2',
