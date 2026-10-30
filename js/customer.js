@@ -3,11 +3,13 @@
 
 class KVRCustomerApp {
   constructor() {
-    this.session = window.kvrDB.getCustomerSession() || {
-      name: "Ramesh Kumar",
-      phone: "9876543210",
-      isLoggedIn: true
-    };
+    const savedSession = window.kvrDB.getCustomerSession();
+    this.session = savedSession?.authMethod === 'demo-otp' && savedSession.isLoggedIn
+      ? savedSession
+      : { name: '', phone: '', isLoggedIn: false };
+    if (savedSession && !this.session.isLoggedIn) {
+      window.kvrDB.clearCustomerSession();
+    }
     this.activeTab = 'status'; // 'request', 'status', 'history', 'contact'
     this.selectedServices = new Set();
     this.simulatedOtp = null;
@@ -45,6 +47,10 @@ class KVRCustomerApp {
     this.renderLiveStatus();
     this.renderHistory();
     this.setupListeners();
+    if (!this.session.isLoggedIn) {
+      document.body.classList.add('customer-auth-locked');
+      this.openLoginModal();
+    }
   }
 
   setTab(tab) {
@@ -104,27 +110,34 @@ class KVRCustomerApp {
   }
 
   closeLoginModal() {
+    if (!this.session.isLoggedIn) return;
     const modal = document.getElementById('customer-login-modal');
     if (modal) modal.classList.add('hidden');
+    document.body.classList.remove('customer-auth-locked');
   }
 
-  sendWhatsAppOtp(phone) {
+  generateDemoOtp() {
     this.simulatedOtp = Math.floor(1000 + Math.random() * 9000).toString();
+    const otpInput = document.getElementById('input-login-otp');
+    if (otpInput) otpInput.value = '';
     const banner = document.getElementById('otp-simulation-banner');
     if (banner) {
       banner.classList.remove('hidden');
       banner.innerHTML = `
-        <div class="bg-emerald-950/90 border border-emerald-500/60 p-3 rounded-xl flex items-center justify-between">
+        <div class="bg-emerald-950/90 border border-emerald-500/60 p-3 rounded-xl">
           <div class="flex items-center space-x-2">
             <span class="text-2xl">💬</span>
             <div class="text-left">
-              <div class="text-xs text-emerald-300 font-bold">KVR Car Care WhatsApp Verification</div>
-              <div class="text-xs text-slate-200">Your one-time login OTP is: <span class="font-mono text-base font-extrabold text-amber-300">${this.simulatedOtp}</span></div>
+              <div class="text-xs text-emerald-300 font-bold">Demo verification code</div>
+              <div class="text-xs text-slate-200">Use this code to continue. No message was sent.</div>
             </div>
           </div>
-          <button id="btn-autofill-otp" class="px-3 py-1 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold rounded-lg text-xs kvr-btn">
-            Auto-Fill
-          </button>
+          <div class="mt-3 flex items-center justify-between gap-3">
+            <span class="font-mono text-xl font-extrabold tracking-[0.3em] text-amber-300" aria-label="Demo code">${this.simulatedOtp}</span>
+            <button id="btn-autofill-otp" type="button" class="px-3 py-2 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold rounded-lg text-xs kvr-btn">
+              Use this code
+            </button>
+          </div>
         </div>
       `;
       document.getElementById('btn-autofill-otp')?.addEventListener('click', () => {
@@ -140,7 +153,8 @@ class KVRCustomerApp {
       this.session = {
         name: name || "Customer",
         phone: phone.replace(/\D/g, ''),
-        isLoggedIn: true
+        isLoggedIn: true,
+        authMethod: 'demo-otp'
       };
       window.kvrDB.setCustomerSession(this.session);
       this.closeLoginModal();
@@ -151,7 +165,7 @@ class KVRCustomerApp {
       window.kvrAudio.success();
       this.showToast(`Logged in successfully as ${this.session.name}!`, 'success');
     } else {
-      alert('Invalid OTP. Please check the WhatsApp banner and try again.');
+      alert('Invalid demo code. Use the code shown in this login window and try again.');
     }
   }
 
@@ -159,7 +173,9 @@ class KVRCustomerApp {
   renderVehiclesList() {
     const selectEl = document.getElementById('request-vehicle-select');
     const myVehiclesContainer = document.getElementById('my-vehicles-list');
-    const vehicles = window.kvrDB.getVehicles(this.session.phone);
+    const vehicles = this.session.isLoggedIn
+      ? window.kvrDB.getVehicles(this.session.phone)
+      : [];
 
     if (selectEl) {
       if (vehicles.length === 0) {
@@ -323,7 +339,9 @@ class KVRCustomerApp {
     const container = document.getElementById('live-status-container');
     if (!container) return;
 
-    const customerJobs = window.kvrDB.getJobsByPhone(this.session.phone);
+    const customerJobs = this.session.isLoggedIn
+      ? window.kvrDB.getJobsByPhone(this.session.phone)
+      : [];
     if (customerJobs.length === 0) {
       container.innerHTML = `
         <div class="text-center py-12 px-4 bg-slate-900/60 rounded-3xl border border-slate-800">
@@ -537,7 +555,9 @@ class KVRCustomerApp {
     const container = document.getElementById('customer-history-container');
     if (!container) return;
 
-    const customerJobs = window.kvrDB.getJobsByPhone(this.session.phone);
+    const customerJobs = this.session.isLoggedIn
+      ? window.kvrDB.getJobsByPhone(this.session.phone)
+      : [];
 
     if (customerJobs.length === 0) {
       container.innerHTML = `<div class="p-8 text-center text-slate-400 text-xs">No service records found.</div>`;
@@ -713,11 +733,12 @@ class KVRCustomerApp {
     // OTP verification triggers
     document.getElementById('btn-send-otp')?.addEventListener('click', () => {
       const phone = document.getElementById('input-login-phone')?.value.trim();
-      if (!phone || phone.length < 10) {
+      const digits = phone?.replace(/\D/g, '') || '';
+      if (!/^[6-9]\d{9}$/.test(digits)) {
         alert('Please enter a valid 10-digit mobile number');
         return;
       }
-      this.sendWhatsAppOtp(phone);
+      this.generateDemoOtp();
     });
 
     document.getElementById('btn-verify-otp')?.addEventListener('click', () => {

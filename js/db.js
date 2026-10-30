@@ -351,6 +351,7 @@ class KVRDatabase {
 
   getJobsByPhone(phone) {
     const clean = (phone || '').replace(/\D/g, '');
+    if (clean.length < 10) return [];
     const jobs = this.getJobs();
     return jobs.filter(j => (j.customerPhone || '').replace(/\D/g, '').endsWith(clean.slice(-10)));
   }

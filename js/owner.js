@@ -4,12 +4,11 @@
 
 class KVROwnerApp {
   constructor() {
-    this.session = window.kvrDB.getOwnerSession() || {
-      name: "Venkat Reddy",
-      role: "Owner / Master Technician",
-      phone: "9346418994",
-      isLoggedIn: true
-    };
+    if (!window.kvrSecureAuth || !window.kvrSecureAuth.isOwnerSession()) {
+      throw new Error('Secure owner authentication is not configured.');
+    }
+
+    this.session = window.kvrDB.getOwnerSession();
     this.activeTab = 'jobs'; // 'jobs', 'pricing', 'customers', 'reports'
     this.statusFilter = 'ALL';
     this.searchQuery = '';
@@ -947,5 +946,5 @@ Feedback: Reply to this message with your rating!`;
 
 // Global Owner App instance
 document.addEventListener('DOMContentLoaded', () => {
-  window.kvrOwner = new KVROwnerApp();
+  window.kvrOwner = null;
 });

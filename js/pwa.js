@@ -115,7 +115,7 @@ class KVRPwaInstaller {
         <div class="w-14 h-14 mx-auto rounded-2xl bg-amber-400/20 text-amber-400 flex items-center justify-center text-3xl mb-3">
           📱
         </div>
-        <h3 class="font-black text-white text-base mb-1">Download & Install Mobile App</h3>
+        <h3 class="font-black text-white text-base mb-1">Install KVR Car Care</h3>
         <p class="text-xs text-slate-300 mb-4">Install as a standalone app on your mobile phone:</p>
 
         <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 text-left text-xs space-y-3 mb-4">
@@ -129,7 +129,7 @@ class KVRPwaInstaller {
           </div>
           <div class="flex items-start space-x-2.5">
             <span class="w-5 h-5 rounded-full bg-amber-400 text-slate-950 flex items-center justify-center font-bold text-[11px] shrink-0">3</span>
-            <span class="text-slate-300">The app installs directly on your phone with its own custom icon!</span>
+            <span class="text-slate-300">One KVR Car Care icon opens the Customer / Owner role chooser.</span>
           </div>
         </div>
 
