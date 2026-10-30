@@ -177,13 +177,20 @@ class KVRCustomerApp {
     }
 
     const button = document.getElementById('btn-send-otp');
+    const verifyButton = document.getElementById('btn-verify-otp');
+    const previousPendingEmail = this.pendingEmail;
     button.disabled = true;
     button.textContent = 'Sending email OTP…';
+    if (previousPendingEmail !== email) {
+      this.pendingEmail = null;
+      document.getElementById('customer-otp-entry')?.classList.add('hidden');
+      verifyButton.disabled = true;
+      verifyButton.className = 'w-full py-3 bg-slate-700 text-slate-400 font-black rounded-xl text-xs cursor-not-allowed';
+    }
     try {
       await window.kvrEmailAuth.sendOtp(email, true, 'customer', { full_name: name });
       this.pendingEmail = email;
       document.getElementById('customer-otp-entry')?.classList.remove('hidden');
-      const verifyButton = document.getElementById('btn-verify-otp');
       verifyButton.disabled = false;
       verifyButton.className = 'w-full py-3 bg-amber-400 hover:bg-amber-300 text-slate-950 font-black rounded-xl text-xs kvr-btn';
       this.setAuthStatus(`Email OTP requested for ${email}. Check your inbox and spam folder for the 6-digit code.`, true);
@@ -191,7 +198,7 @@ class KVRCustomerApp {
       this.setAuthStatus(`Could not send email OTP: ${error.message}`, false);
     } finally {
       button.disabled = false;
-      button.textContent = 'Resend email OTP';
+      button.textContent = this.pendingEmail === email ? 'Resend email OTP' : 'Send email OTP';
     }
   }
 
