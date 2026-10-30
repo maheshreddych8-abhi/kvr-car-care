@@ -77,12 +77,17 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const button = document.getElementById(`btn-${role}-send-otp`);
+    const otpEntry = document.getElementById(`${role}-otp-entry`);
+    const verifyButton = document.getElementById(`btn-${role}-verify-otp`);
+    otpEntry.classList.remove('hidden');
+    verifyButton.disabled = pendingEmails[role] !== email;
     button.disabled = true;
     button.textContent = 'Sending email OTP…';
     try {
       await window.kvrEmailAuth.sendOtp(email, role === 'staff', 'workshop');
       pendingEmails[role] = email;
-      document.getElementById(`${role}-otp-entry`).classList.remove('hidden');
+      verifyButton.disabled = false;
+      verifyButton.className = 'w-full rounded-xl bg-amber-400 px-4 py-3 text-xs font-black text-slate-950';
       showStatus(`Email OTP requested for ${email}. Check the inbox and spam folder for the 6-digit code.`, false);
     } catch (error) {
       const message = error.message.includes('Email OTP is not configured')
@@ -91,7 +96,7 @@ document.addEventListener('DOMContentLoaded', () => {
       showStatus(message, !error.message.includes('Email OTP is not configured'), error.message.includes('Email OTP is not configured'));
     } finally {
       button.disabled = false;
-      button.textContent = 'Resend OTP to email';
+      button.textContent = pendingEmails[role] === email ? 'Resend OTP to email' : 'Send OTP to email';
     }
   };
 
