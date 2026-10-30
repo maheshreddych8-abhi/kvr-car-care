@@ -62,7 +62,7 @@ Email OTP delivery is not available until a Supabase project and email delivery 
 
 1. Create a Supabase project. In `js/supabase-config.js`, set its Project URL and **public anon/publishable key**. Never put a service-role key in browser code.
 2. In Supabase Authentication > SMTP Settings, enable custom SMTP and configure the business sender. For Gmail, use `smtp.gmail.com`, port `465` (SSL) or `587` (STARTTLS), and `kvrcarcare11@gmail.com` as the sender address and SMTP username. Use a Google App Password as the SMTP password and enter it only in the Supabase dashboard; never add it to this repository or share it in chat. Gmail may impose sending limits.
-3. In Supabase Authentication > Email Templates, set the subject to `Your KVR Car Care sign-in code` and use this body for the email OTP template:
+3. In Supabase Authentication > Email Templates, configure both **Confirm sign up** and **Magic Link** to send an OTP instead of a confirmation link. Set the subject to `Your KVR Car Care sign-in code` and use this body in both templates:
 
    ```html
    <p>Dear Customer!</p>
@@ -73,8 +73,8 @@ Email OTP delivery is not available until a Supabase project and email delivery 
    <p>Thank you,<br>KVR Car Care</p>
    ```
 
-   The `{{ .Token }}` variable is required so the email contains the six-digit code. Supabase's default email sender is restricted and rate-limited; custom SMTP is required for customer delivery.
-4. Add the GitHub Pages site URL to Supabase Authentication's allowed site/redirect URLs. Customer, Owner, and Staff sign in by email OTP; no Twilio account or phone provider is needed.
+   The `{{ .Token }}` variable is required so the email contains the six-digit code. Do not use `{{ .ConfirmationURL }}` for this code-entry flow; it sends a link and may redirect users away from the app.
+4. In Supabase Authentication > URL Configuration, set the Site URL to `https://maheshreddych8-abhi.github.io/kvr-car-care` and add `https://maheshreddych8-abhi.github.io/kvr-car-care/**` to the allowed Redirect URLs. The app also requests the current GitHub Pages app page as the email redirect, so confirmation links cannot fall back to `localhost`.
 5. Create the owner account `maheshch1810@gmail.com` in Supabase Auth; the app rejects other owner emails. Owner and Staff login remain email OTP only.
 6. Run `supabase-staff-schema.sql` in the Supabase SQL Editor. Publish the public Project URL/key and files. Customers can then self-register by email OTP; the owner can add staff after signing in.
 
