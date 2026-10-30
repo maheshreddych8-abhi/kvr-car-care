@@ -33,26 +33,32 @@
           <h1 class="mt-1 text-xl font-black text-white">Welcome to KVR</h1>
         </div>
       </div>
-      <p class="mb-5 text-xs leading-relaxed text-slate-300">Choose a role. Only <strong class="text-amber-300">maheshch1810@gmail.com</strong> may use Owner access. Staff can sign in only after the owner adds their mobile number.</p>
+      <p class="mb-5 text-xs leading-relaxed text-slate-300">Email OTP is the only sign-in method. Enter your email, request a code, then verify it. Owner access is limited to the registered address.</p>
       <div class="mb-4 grid grid-cols-2 gap-2" role="group" aria-label="Choose login role">
         <button type="button" class="owner-role-choice rounded-xl border border-amber-400 bg-amber-400/15 px-3 py-3 text-xs font-black text-amber-200" data-role="owner" aria-pressed="true">👑 Owner</button>
         <button type="button" class="owner-role-choice rounded-xl border border-slate-700 bg-slate-950/60 px-3 py-3 text-xs font-black text-slate-300" data-role="staff" aria-pressed="false">🧰 Staff</button>
       </div>
       <div id="owner-role-panel">
-        <label for="owner-login-email" class="mb-1 block text-xs font-bold text-slate-300">Registered owner email</label>
-        <input id="owner-login-email" type="email" autocomplete="username" value="maheshch1810@gmail.com" readonly class="mb-4 w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-3 text-sm text-white">
-        <label for="owner-login-otp" class="mb-1 block text-xs font-bold text-slate-300">Email verification code</label>
-        <input id="owner-login-otp" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="Enter code from email" disabled class="mb-4 w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-3 text-center font-mono text-lg tracking-[0.4em] text-white placeholder:text-slate-600">
-        <button type="button" disabled class="w-full cursor-not-allowed rounded-xl bg-slate-700 px-4 py-3 text-xs font-black text-slate-400">🔒 Email OTP setup required</button>
+        <label for="owner-login-email" class="mb-1 block text-xs font-bold text-slate-300">Owner email</label>
+        <input id="owner-login-email" type="email" autocomplete="username" placeholder="Enter registered owner email" class="mb-3 w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-3 text-sm text-white">
+        <button type="button" id="btn-owner-send-otp" class="w-full rounded-xl bg-purple-600 px-4 py-3 text-xs font-black text-white">Send OTP to email</button>
+        <div id="owner-otp-entry" class="mt-4 hidden">
+          <label for="owner-login-otp" class="mb-1 block text-xs font-bold text-slate-300">Email verification code</label>
+          <input id="owner-login-otp" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="Enter 6-digit email code" class="mb-3 w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-3 text-center font-mono text-lg tracking-[0.4em] text-white placeholder:text-slate-600">
+          <button type="button" id="btn-owner-verify-otp" class="w-full rounded-xl bg-amber-400 px-4 py-3 text-xs font-black text-slate-950">Verify OTP & Sign In</button>
+        </div>
       </div>
       <div id="staff-role-panel" class="hidden">
-        <label for="staff-login-phone" class="mb-1 block text-xs font-bold text-slate-300">Mobile number approved by owner</label>
-        <input id="staff-login-phone" type="tel" inputmode="numeric" autocomplete="tel" maxlength="10" placeholder="10-digit mobile number" disabled class="mb-4 w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-3 text-sm text-white placeholder:text-slate-500">
-        <label for="staff-login-otp" class="mb-1 block text-xs font-bold text-slate-300">SMS verification code</label>
-        <input id="staff-login-otp" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="Enter code from SMS" disabled class="mb-4 w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-3 text-center font-mono text-lg tracking-[0.4em] text-white placeholder:text-slate-600">
-        <button type="button" disabled class="w-full cursor-not-allowed rounded-xl bg-slate-700 px-4 py-3 text-xs font-black text-slate-400">🔒 Staff OTP setup required</button>
+        <label for="staff-login-email" class="mb-1 block text-xs font-bold text-slate-300">Email approved by owner</label>
+        <input id="staff-login-email" type="email" autocomplete="username" placeholder="Enter your approved email" class="mb-3 w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-3 text-sm text-white">
+        <button type="button" id="btn-staff-send-otp" class="w-full rounded-xl bg-purple-600 px-4 py-3 text-xs font-black text-white">Send OTP to email</button>
+        <div id="staff-otp-entry" class="mt-4 hidden">
+          <label for="staff-login-otp" class="mb-1 block text-xs font-bold text-slate-300">Email verification code</label>
+          <input id="staff-login-otp" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="Enter 6-digit email code" class="mb-3 w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-3 text-center font-mono text-lg tracking-[0.4em] text-white placeholder:text-slate-600">
+          <button type="button" id="btn-staff-verify-otp" class="w-full rounded-xl bg-amber-400 px-4 py-3 text-xs font-black text-slate-950">Verify OTP & Sign In</button>
+        </div>
       </div>
-      <p class="mt-4 rounded-xl border border-amber-400/30 bg-amber-400/10 p-3 text-[11px] leading-relaxed text-amber-100" role="status">Owner / Staff access is disabled in this static demo: no OTP provider is configured, so it cannot send email or SMS codes. Do not enter real workshop data here. After secure authentication and database policies are configured, the owner can add approved staff numbers.</p>
+      <p id="owner-auth-status" class="mt-4 rounded-xl border border-amber-400/30 bg-amber-400/10 p-3 text-[11px] leading-relaxed text-amber-100" role="status" aria-live="polite">Email OTP requires Supabase configuration. No code has been sent yet.</p>
       <a href="customer.html" class="mt-4 block text-center text-xs font-bold text-amber-300 hover:underline">Go to Customer app →</a>
     </div>
   </section>
@@ -102,6 +108,7 @@
         <button onclick="window.kvrAudio.toggleMute(); this.innerText = window.kvrAudio.isMuted() ? '🔇' : '🔊'" class="w-8 h-8 rounded-xl bg-slate-900/80 border border-slate-700 text-sm flex items-center justify-center kvr-btn" title="Toggle Pop Sounds">
           🔊
         </button>
+        <button id="btn-owner-logout" class="rounded-xl border border-slate-700 bg-slate-900 px-3 py-1.5 text-xs font-bold text-slate-200 kvr-btn">Sign out</button>
       </div>
 
     </div>
@@ -191,13 +198,16 @@
       <button data-tab="jobs" class="owner-nav-btn px-4 py-2 rounded-xl text-xs font-black transition-all bg-amber-400 text-slate-950 kvr-btn">
         📋 Service Job Board
       </button>
-      <button data-tab="pricing" class="owner-nav-btn px-4 py-2 rounded-xl text-xs font-semibold text-slate-300 hover:bg-slate-800 transition-all kvr-btn">
+      <button data-tab="pricing" class="owner-nav-btn owner-only-control px-4 py-2 rounded-xl text-xs font-semibold text-slate-300 hover:bg-slate-800 transition-all kvr-btn">
         🏷️ Pricing & Services Manager
       </button>
-      <button data-tab="customers" class="owner-nav-btn px-4 py-2 rounded-xl text-xs font-semibold text-slate-300 hover:bg-slate-800 transition-all kvr-btn">
+      <button data-tab="customers" class="owner-nav-btn owner-only-control px-4 py-2 rounded-xl text-xs font-semibold text-slate-300 hover:bg-slate-800 transition-all kvr-btn">
         👥 Registered Customers
       </button>
-      <button data-tab="reports" class="owner-nav-btn px-4 py-2 rounded-xl text-xs font-semibold text-slate-300 hover:bg-slate-800 transition-all kvr-btn">
+      <button data-tab="staff" class="owner-nav-btn px-4 py-2 rounded-xl text-xs font-semibold text-slate-300 hover:bg-slate-800 transition-all kvr-btn owner-only-control">
+        🧰 Staff Access
+      </button>
+      <button data-tab="reports" class="owner-nav-btn owner-only-control px-4 py-2 rounded-xl text-xs font-semibold text-slate-300 hover:bg-slate-800 transition-all kvr-btn">
         📊 Reports & Analytics
       </button>
     </nav>
@@ -260,6 +270,10 @@
       </div>
     </section>
 
+    <section id="tab-staff" class="owner-tab-content hidden">
+      <div id="staff-manager-container"></div>
+    </section>
+
     <!-- ================= TAB 4: REPORTS & ANALYTICS ================= -->
     <section id="tab-reports" class="owner-tab-content hidden">
       <div id="reports-container">
@@ -281,6 +295,9 @@
   <script src="js/db.js"></script>
   <script src="js/pdf-export.js"></script>
   <script src="js/pwa.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-config.js"></script>
+  <script src="js/email-auth.js"></script>
   <script src="js/owner-access.js"></script>
   <script src="js/owner.js"></script>
 </body>

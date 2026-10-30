@@ -1,5 +1,5 @@
 // KVR Car Care - Progressive Web App Service Worker
-const CACHE_NAME = 'kvr-car-care-v3';
+const CACHE_NAME = 'kvr-car-care-v4';
 const ASSETS_TO_CACHE = [
   './',
   'index.html',
@@ -10,6 +10,8 @@ const ASSETS_TO_CACHE = [
   'js/audio.js',
   'js/pwa.js',
   'js/owner-access.js',
+  'js/email-auth.js',
+  'js/supabase-config.js',
   'js/db.js',
   'js/customer.js',
   'js/owner.js',
@@ -22,7 +24,8 @@ const ASSETS_TO_CACHE = [
   'manifest-customer.json',
   'manifest-owner.json',
   'manifest.json',
-  'festival-offer.svg'
+  'festival-offer.svg',
+  'supabase-staff-schema.sql'
 ];
 
 self.addEventListener('install', (e) => {
@@ -48,16 +51,23 @@ self.addEventListener('activate', (e) => {
 });
 
 self.addEventListener('fetch', (e) => {
-  // Network first, falling back to cache
+  const requestUrl = new URL(e.request.url);
+  if (e.request.method !== 'GET' || requestUrl.origin !== self.location.origin) return;
+
+  // Keep auth and other third-party requests out of the offline cache.
   e.respondWith(
     fetch(e.request)
       .then((res) => {
-        const resClone = res.clone();
-        caches.open(CACHE_NAME).then((cache) => {
-          cache.put(e.request, resClone);
-        });
+        if (res.ok) {
+          const resClone = res.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(e.request, resClone));
+        }
         return res;
       })
-      .catch(() => caches.match(e.request))
+      .catch(async (error) => {
+        const cached = await caches.match(e.request);
+        if (cached) return cached;
+        throw error;
+      })
   );
 });

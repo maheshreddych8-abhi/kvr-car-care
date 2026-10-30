@@ -11,7 +11,7 @@
 | :--- | :--- | :--- |
 | **Portal Hub** | [`index.html`](./index.html) | Main gateway, feature catalog & launchpad |
 | **App 1: Owner & Workshop App** | [`owner.html`](./owner.html) | Workshop staff, job board, photo upload, pricing & invoice |
-| **App 2: Customer App** | [`customer.html`](./customer.html) | Car owners, OTP login, live status, invoice history & feedback |
+| **App 2: Customer App** | [`customer.html`](./customer.html) | Car owners, email OTP login, live status, invoice history & feedback |
 | **Live Split-Screen Studio** | [`demo.html`](./demo.html) | Test Customer & Owner apps side-by-side in real-time |
 
 ---
@@ -19,8 +19,8 @@
 ## 🌟 Key Features Implemented
 
 ### 1. Owner / Staff Access (`owner.html`)
-- **Login Gate:** Owner / Staff access stays disabled until real authentication and database policies are configured. The intended owner identity is `maheshch1810@gmail.com`.
-- **Owner-managed Staff:** After secure owner login is enabled, the owner will add approved staff names and mobile numbers; only those approved staff can request OTP access. This roster is not stored in local browser storage.
+- **Email OTP Login:** Owner manually enters the email address, requests a six-digit email OTP, and verifies it to sign in. Owner access is restricted to `maheshch1810@gmail.com`.
+- **Owner-managed Staff:** Once configured, the owner can add a staff member's name, email and mobile number. Staff sign in with email OTP; their mobile number is contact-only.
 - The workshop dashboard features listed below describe the prototype and are not accessible until the login gate is connected.
 - **Prototype Limitation:** App data is currently browser-local, not protected by a production database. Do not enter real customer, staff, or workshop records until backend authorization is implemented.
 - **Workshop Dashboard:** Real-time KPI counters (Total Jobs, Active In-Progress, Completed, Total Revenue in ₹).
@@ -37,7 +37,7 @@
 ---
 
 ### 2. App 2: KVR Car Care Customer App (`customer.html`)
-- **Customer Demo Login:** The app opens on a login screen. A 4-digit demo verification code appears in the login window and can be auto-filled. This static app does not send SMS, WhatsApp, or email OTPs; real delivery requires a secure backend and messaging provider.
+- **Customer Email OTP Login:** Customers enter their email and verify the six-digit code sent to that address. Mobile number is optional contact information only, never an OTP destination.
 - **Single Mobile App:** Install KVR Car Care once, then choose Customer or Owner / Staff from the home screen.
 - **Festival Offers:** Customer app banner links to WhatsApp to ask the workshop about current seasonal discounts.
 - **My Vehicles:** Add and manage vehicles (Brand, Model, Registration No, Fuel Type).
@@ -56,11 +56,25 @@
 
 ---
 
+## Configure Email OTP
+
+Email delivery is not available until a Supabase project and email provider are configured. The site does not generate or display pretend OTPs.
+
+1. In `js/supabase-config.js`, set the Supabase Project URL and **public anon/publishable key**. Never use a service-role key in browser code.
+2. In Supabase Authentication, enable Email OTP and set the email template to include `{{ .Token }}` so users receive a code they can enter in the app. Configure production SMTP and add the GitHub Pages site URL to the allowed redirect/site URLs.
+3. Create the owner account `maheshch1810@gmail.com` in Supabase Auth. The app will reject other owner emails.
+4. Run `supabase-staff-schema.sql` in the Supabase SQL Editor. Owner-only RLS policies protect the staff roster; authenticated staff can read only their own approved record.
+5. Publish the configured public URL/key and files. Customers can then self-register by email OTP; the owner can add staff names, email addresses and contact mobile numbers after signing in.
+
+The workshop jobs, invoices and customer data are still stored in browser local storage. Email OTP gates the UI, but this prototype is not a substitute for server-side authorization/RLS on workshop data. Avoid entering sensitive production records until that data is moved behind protected backend policies.
+
+---
+
 ### 3. Special Visual & Tactile Requirements Met
 - **Branding & Visual Identity:** Styled according to the official KVR Car Care banner (Deep Burgundy `#2C0924`, Amber Yellow `#F5B800`, Bold White).
 - **Slow Car Moving Only Between the Red Line:** Right below "KVR", an animated micro car glides back and forth strictly bounded between the ends of the signature red line! Click the car anytime to honk the horn.
 - **UI Touch Animations & Pop Sound:** Integrated procedural Web Audio API sound synthesizer (`audio.js`) providing tactile "bubble pop" sounds on button taps, success chimes on submissions, alert arpeggios on new requests, and playful car horns. Includes an instant mute toggle.
-- **Zero-Build, Zero-Dependency Architecture:** 100% static HTML5, CSS3, and JavaScript (ES6) ready for instant deployment on GitHub Pages or local preview in any browser.
+- **Zero-Build Static Architecture:** HTML5, CSS3, and JavaScript (ES6), with Supabase JS loaded from its CDN for email authentication.
 
 ---
 
@@ -76,7 +90,8 @@
    - `owner.html`
    - `demo.html`
    - `kvr-banner.png`, `festival-offer.svg`, and the four app icons
-   - `css/` and `js/` folders (including `owner-access.js` and `pwa.js`)
+   - `css/` and `js/` folders (including `email-auth.js`, `owner-access.js`, `pwa.js`, and `supabase-config.js`)
+   - `supabase-staff-schema.sql`
    - `sw.js`
    - `README.md`
 4. Commit the changes.
