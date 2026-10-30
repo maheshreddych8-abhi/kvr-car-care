@@ -37,7 +37,7 @@
 ---
 
 ### 2. App 2: KVR Car Care Customer App (`customer.html`)
-- **Customer Email OTP Login:** Customers must enter their name and email, then verify the six-digit code sent to that address. Customer login does not ask for a mobile number.
+- **Customer Email OTP Login:** Customers must enter their name and email and verify the six-digit code sent to that address. No mobile number is requested at login.
 - **Single Mobile App:** Install KVR Car Care once, then choose Customer or Owner / Staff from the home screen.
 - **Festival Offers:** Customer app banner links to WhatsApp to ask the workshop about current seasonal discounts.
 - **My Vehicles:** Add and manage vehicles (Brand, Model, Registration No, Fuel Type).
@@ -60,7 +60,7 @@
 
 Email delivery is not available until a Supabase project and email provider are configured. The site does not generate or display pretend OTPs.
 
-1. In `js/supabase-config.js`, set the Supabase Project URL and **public anon/publishable key**. Never use a service-role key in browser code.
+1. In `js/supabase-config.js`, set the Supabase Project URL and **public anon/publishable key**. Until these are set, email OTP cannot be sent. Never use a service-role key in browser code.
 2. In Supabase Authentication, enable Email OTP and set the email template to include `{{ .Token }}` so users receive a code they can enter in the app. Configure production SMTP and add the GitHub Pages site URL to the allowed redirect/site URLs.
 3. Create the owner account `maheshch1810@gmail.com` in Supabase Auth. The app will reject other owner emails.
 4. Run `supabase-staff-schema.sql` in the Supabase SQL Editor. Owner-only RLS policies protect the staff roster; authenticated staff can read only their own approved record.
@@ -73,7 +73,7 @@ The workshop jobs, invoices and customer data are still stored in browser local 
 ### 3. Special Visual & Tactile Requirements Met
 - **Branding & Visual Identity:** Styled according to the official KVR Car Care banner (Deep Burgundy `#2C0924`, Amber Yellow `#F5B800`, Bold White).
 - **Slow Car Moving Only Between the Red Line:** Right below "KVR", an animated micro car glides back and forth strictly bounded between the ends of the signature red line! Click the car anytime to honk the horn.
-- **UI Touch Animations & Pop Sound:** Integrated procedural Web Audio API sound synthesizer (`audio.js`) providing tactile "bubble pop" sounds on button taps, success chimes on submissions, alert arpeggios on new requests, and playful car horns. Includes an instant mute toggle.
+- **UI Touch Animations & Pop Sound:** App-wide touch bubbles work on the portal, Customer and Owner screens, and the split-screen demo. The procedural Web Audio API (`audio.js`) also provides button pops, success chimes, alert arpeggios, and car horns, with an instant mute toggle.
 - **Zero-Build Static Architecture:** HTML5, CSS3, and JavaScript (ES6), with Supabase JS loaded from its CDN for email authentication.
 
 ---
