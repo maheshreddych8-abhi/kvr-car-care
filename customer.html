@@ -421,19 +421,32 @@
           <label for="input-login-name" class="block text-slate-400 mb-1">Your Name <span class="text-rose-400">*</span></label>
           <input type="text" id="input-login-name" autocomplete="name" required maxlength="80" placeholder="Enter your full name" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-white font-medium" />
         </div>
-        <div>
+        <fieldset class="space-y-2">
+          <legend class="block text-slate-400 mb-1">Choose how to receive your code</legend>
+          <div class="grid grid-cols-3 gap-2" role="group" aria-label="OTP delivery method">
+            <button type="button" class="customer-otp-channel rounded-xl border border-amber-400 bg-amber-400/15 px-2 py-2 text-[11px] font-bold text-amber-200" data-channel="email" aria-pressed="true">Email</button>
+            <button type="button" class="customer-otp-channel rounded-xl border border-slate-700 bg-slate-950/60 px-2 py-2 text-[11px] font-bold text-slate-300" data-channel="sms" aria-pressed="false">SMS</button>
+            <button type="button" class="customer-otp-channel rounded-xl border border-slate-700 bg-slate-950/60 px-2 py-2 text-[11px] font-bold text-slate-300" data-channel="whatsapp" aria-pressed="false">WhatsApp</button>
+          </div>
+        </fieldset>
+        <div id="customer-email-field">
           <label for="input-login-email" class="block text-slate-400 mb-1">Email address</label>
           <input type="email" id="input-login-email" inputmode="email" autocomplete="email" required placeholder="you@example.com" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-white font-medium" />
         </div>
+        <div id="customer-phone-field" class="hidden">
+          <label for="input-login-phone" class="block text-slate-400 mb-1">Mobile number</label>
+          <input type="tel" id="input-login-phone" inputmode="tel" autocomplete="tel" placeholder="10-digit mobile number" maxlength="16" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-white font-medium" />
+          <p class="mt-1 text-[10px] text-slate-500">India country code +91 is added for 10-digit numbers.</p>
+        </div>
         <button id="btn-send-otp" type="button" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-xs kvr-btn">Send email OTP</button>
         <div id="customer-otp-entry" class="hidden">
-          <label for="input-login-otp" class="block text-slate-400 mb-1">Enter the 6-digit code from your email</label>
+          <label id="customer-otp-label" for="input-login-otp" class="block text-slate-400 mb-1">Enter the 6-digit code from your email</label>
           <input type="text" id="input-login-otp" inputmode="numeric" autocomplete="one-time-code" placeholder="6-digit code" maxlength="6" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-white font-mono text-center tracking-widest text-base font-bold" />
         </div>
       </div>
 
       <button id="btn-verify-otp" disabled class="w-full py-3 bg-slate-700 text-slate-400 font-black rounded-xl text-xs cursor-not-allowed">
-        Verify email OTP
+        Verify OTP
       </button>
     </div>
   </div>
@@ -445,8 +458,8 @@
   <script src="js/pwa.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="js/supabase-config.js"></script>
-  <script src="js/email-auth.js"></script>
+  <script src="js/email-auth.js?v=otp-channel-1"></script>
   <script src="js/touch-bubbles.js"></script>
-  <script src="js/customer.js?v=otp-entry-1"></script>
+  <script src="js/customer.js?v=otp-channel-1"></script>
 </body>
 </html>

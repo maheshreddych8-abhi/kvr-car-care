@@ -11,7 +11,7 @@
 | :--- | :--- | :--- |
 | **Portal Hub** | [`index.html`](./index.html) | Main gateway, feature catalog & launchpad |
 | **App 1: Owner & Workshop App** | [`owner.html`](./owner.html) | Workshop staff, job board, photo upload, pricing & invoice |
-| **App 2: Customer App** | [`customer.html`](./customer.html) | Car owners, email OTP login, live status, invoice history & feedback |
+| **App 2: Customer App** | [`customer.html`](./customer.html) | Car owners, email/SMS/WhatsApp OTP login, live status, invoice history & feedback |
 | **Live Split-Screen Studio** | [`demo.html`](./demo.html) | Test Customer & Owner apps side-by-side in real-time |
 
 ---
@@ -37,7 +37,7 @@
 ---
 
 ### 2. App 2: KVR Car Care Customer App (`customer.html`)
-- **Customer Email OTP Login:** Customers must enter their name and email and verify the six-digit code sent to that address. No mobile number is requested at login.
+- **Customer OTP Login:** Customers enter their name and choose email, SMS, or WhatsApp to receive a six-digit code. Phone sign-in uses an Indian mobile number.
 - **Single Mobile App:** Install KVR Car Care once, then choose Customer or Owner / Staff from the home screen.
 - **Festival Offers:** Customer app banner links to WhatsApp to ask the workshop about current seasonal discounts.
 - **My Vehicles:** Add and manage vehicles (Brand, Model, Registration No, Fuel Type).
@@ -56,17 +56,29 @@
 
 ---
 
-## Configure Email OTP
+## Configure Customer and Owner OTP
 
-Email delivery is not available until a Supabase project and email provider are configured. The site does not generate or display pretend OTPs.
+OTP delivery is not available until a Supabase project and the selected delivery provider are configured. The site does not generate or display pretend OTPs. A sender email address by itself does not connect the app to an email service.
 
-1. In `js/supabase-config.js`, set the Supabase Project URL and **public anon/publishable key**. Until these are set, email OTP cannot be sent. Never use a service-role key in browser code.
-2. In Supabase Authentication, enable Email OTP and set the email template to include `{{ .Token }}` so users receive a code they can enter in the app. Configure production SMTP and add the GitHub Pages site URL to the allowed redirect/site URLs.
-3. Create the owner account `maheshch1810@gmail.com` in Supabase Auth. The app will reject other owner emails.
-4. Run `supabase-staff-schema.sql` in the Supabase SQL Editor. Owner-only RLS policies protect the staff roster; authenticated staff can read only their own approved record.
-5. Publish the configured public URL/key and files. Customers can then self-register by email OTP; the owner can add staff names, email addresses and contact mobile numbers after signing in.
+1. Create a Supabase project. In `js/supabase-config.js`, set its Project URL and **public anon/publishable key**. Never put a service-role key in browser code.
+2. In Supabase Authentication > SMTP Settings, enable custom SMTP and configure the business sender. For Gmail, use `smtp.gmail.com`, port `465` (SSL) or `587` (STARTTLS), and `kvrcarcare11@gmail.com` as the sender address and SMTP username. Use a Google App Password as the SMTP password and enter it only in the Supabase dashboard; never add it to this repository or share it in chat. Gmail may impose sending limits.
+3. In Supabase Authentication > Email Templates, set the subject to `Your KVR Car Care sign-in code` and use this body for the email OTP template:
 
-The workshop jobs, invoices and customer data are still stored in browser local storage. Email OTP gates the UI, but this prototype is not a substitute for server-side authorization/RLS on workshop data. Avoid entering sensitive production records until that data is moved behind protected backend policies.
+   ```html
+   <p>Dear Customer!</p>
+   <p>Welcome to KVR CAR CARE! Please use the OTP below to log in and enjoy our services:</p>
+   <p style="font-size: 24px; font-weight: bold; letter-spacing: 4px;">{{ .Token }}</p>
+   <p>If you did not request this code, please ignore this email.</p>
+   <p>Have a great day!</p>
+   <p>Thank you,<br>KVR Car Care</p>
+   ```
+
+   The `{{ .Token }}` variable is required so the email contains the six-digit code. Supabase's default email sender is restricted and rate-limited; custom SMTP is required for customer delivery.
+4. To enable the Customer app's SMS and WhatsApp choices, enable Phone sign-in in Supabase Authentication and configure a supported phone provider. WhatsApp OTP requires Twilio or Twilio Verify configured for WhatsApp. Add the GitHub Pages site URL to Supabase Authentication's allowed site/redirect URLs. Indian SMS delivery may require TRAI DLT registration and approved templates; verify the provider's country-specific requirements and costs.
+5. Create the owner account `maheshch1810@gmail.com` in Supabase Auth; the app rejects other owner emails. Owner and Staff login remain email OTP only.
+6. Run `supabase-staff-schema.sql` in the Supabase SQL Editor. Publish the public Project URL/key and files. Customers can then self-register by email, SMS, or WhatsApp OTP; the owner can add staff after signing in.
+
+The workshop jobs, invoices and customer data are still stored in browser local storage. OTP gates the UI, but this prototype is not a substitute for server-side authorization/RLS on workshop data. Avoid entering sensitive production records until that data is moved behind protected backend policies.
 
 ---
 
