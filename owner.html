@@ -57,7 +57,7 @@
         <div id="owner-otp-entry" class="mt-4 hidden">
           <label for="owner-login-otp" class="mb-1 block text-xs font-bold text-slate-300">Email verification code</label>
           <input id="owner-login-otp" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="Enter 6-digit email code" class="mb-3 w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-3 text-center font-mono text-lg tracking-[0.4em] text-white placeholder:text-slate-600">
-          <button type="button" id="btn-owner-verify-otp" class="w-full rounded-xl bg-amber-400 px-4 py-3 text-xs font-black text-slate-950">Verify OTP & Sign In</button>
+          <button type="button" id="btn-owner-verify-otp" disabled class="w-full rounded-xl bg-slate-700 px-4 py-3 text-xs font-black text-slate-400 disabled:cursor-not-allowed">Verify OTP & Sign In</button>
         </div>
       </div>
       <div id="staff-role-panel" class="hidden">
@@ -67,7 +67,7 @@
         <div id="staff-otp-entry" class="mt-4 hidden">
           <label for="staff-login-otp" class="mb-1 block text-xs font-bold text-slate-300">Email verification code</label>
           <input id="staff-login-otp" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="Enter 6-digit email code" class="mb-3 w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-3 text-center font-mono text-lg tracking-[0.4em] text-white placeholder:text-slate-600">
-          <button type="button" id="btn-staff-verify-otp" class="w-full rounded-xl bg-amber-400 px-4 py-3 text-xs font-black text-slate-950">Verify OTP & Sign In</button>
+          <button type="button" id="btn-staff-verify-otp" disabled class="w-full rounded-xl bg-slate-700 px-4 py-3 text-xs font-black text-slate-400 disabled:cursor-not-allowed">Verify OTP & Sign In</button>
         </div>
       </div>
       <p id="owner-auth-status" class="mt-4 hidden rounded-xl border border-amber-400/30 bg-amber-400/10 p-3 text-[11px] leading-relaxed text-amber-100" role="status" aria-live="polite"></p>
