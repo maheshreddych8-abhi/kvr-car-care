@@ -1,5 +1,5 @@
 // KVR Car Care - Progressive Web App Service Worker
-const CACHE_NAME = 'kvr-car-care-v17';
+const CACHE_NAME = 'kvr-car-care-v18';
 const ASSETS_TO_CACHE = [
   './',
   'index.html',
