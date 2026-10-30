@@ -4,11 +4,12 @@
 
 class KVROwnerApp {
   constructor() {
-    if (!window.kvrSecureAuth || !window.kvrSecureAuth.isOwnerSession()) {
+    if (!window.kvrSecureAuth || !window.kvrSecureAuth.isWorkshopSession()) {
       throw new Error('Secure owner authentication is not configured.');
     }
 
     this.session = window.kvrDB.getOwnerSession();
+    this.isOwner = window.kvrSecureAuth.isOwnerSession();
     this.activeTab = 'jobs'; // 'jobs', 'pricing', 'customers', 'reports'
     this.statusFilter = 'ALL';
     this.searchQuery = '';
@@ -38,12 +39,21 @@ class KVROwnerApp {
 
     this.renderStats();
     this.renderJobsList();
-    this.renderPricingManager();
-    this.renderCustomers();
+    if (this.isOwner) {
+      this.renderPricingManager();
+      this.renderCustomers();
+      this.renderStaffManager();
+    } else {
+      document.querySelectorAll('.owner-only-control').forEach(button => button.classList.add('hidden'));
+    }
     this.setupListeners();
   }
 
   setTab(tab) {
+    if (!this.isOwner && tab !== 'jobs') {
+      this.showToast('This section is available to the owner only.');
+      return;
+    }
     this.activeTab = tab;
     document.querySelectorAll('.owner-tab-content').forEach(el => el.classList.add('hidden'));
     const target = document.getElementById(`tab-${tab}`);
@@ -59,9 +69,10 @@ class KVROwnerApp {
       }
     });
 
-    if (tab === 'pricing') this.renderPricingManager();
-    if (tab === 'customers') this.renderCustomers();
-    if (tab === 'reports') this.renderReports();
+    if (this.isOwner && tab === 'pricing') this.renderPricingManager();
+    if (this.isOwner && tab === 'customers') this.renderCustomers();
+    if (this.isOwner && tab === 'staff') this.renderStaffManager();
+    if (this.isOwner && tab === 'reports') this.renderReports();
   }
 
   showToast(message, type = 'info') {
@@ -830,6 +841,107 @@ Feedback: Reply to this message with your rating!`;
         }).join('')}
       </div>
     `;
+  }
+
+  async renderStaffManager() {
+    const container = document.getElementById('staff-manager-container');
+    if (!container || !this.isOwner) return;
+
+    container.innerHTML = `
+      <div class="mb-5">
+        <h2 class="text-base font-black text-white">Owner-managed Staff Access</h2>
+        <p class="mt-1 text-xs text-slate-400">Add each staff member's name, email and mobile number. Staff sign in with email OTP; the mobile is kept for contact only.</p>
+      </div>
+      <form id="staff-add-form" class="mb-5 grid grid-cols-1 gap-3 rounded-2xl border border-slate-800 bg-slate-900/90 p-4 md:grid-cols-3">
+        <input id="staff-name" required maxlength="100" placeholder="Staff full name" class="rounded-xl border border-slate-700 bg-slate-950 px-3 py-2.5 text-xs text-white">
+        <input id="staff-email" required type="email" placeholder="Staff email for OTP" class="rounded-xl border border-slate-700 bg-slate-950 px-3 py-2.5 text-xs text-white">
+        <input id="staff-mobile" required type="tel" inputmode="numeric" maxlength="10" pattern="[6-9][0-9]{9}" placeholder="10-digit mobile (contact only)" class="rounded-xl border border-slate-700 bg-slate-950 px-3 py-2.5 text-xs text-white">
+        <button type="submit" class="rounded-xl bg-amber-400 px-4 py-2.5 text-xs font-black text-slate-950">Add approved staff</button>
+        <p id="staff-manager-status" class="hidden text-xs md:col-span-2" role="status" aria-live="polite"></p>
+      </form>
+      <div id="staff-list" class="space-y-2"><p class="text-xs text-slate-400">Loading staff list…</p></div>
+    `;
+
+    container.querySelector('#staff-add-form').addEventListener('submit', event => {
+      event.preventDefault();
+      this.addStaffMember();
+    });
+    container.querySelector('#staff-list').addEventListener('click', event => {
+      const button = event.target.closest('[data-staff-id]');
+      if (button) this.toggleStaffMember(button.dataset.staffId, button.dataset.active !== 'true');
+    });
+
+    await this.loadStaffMembers();
+  }
+
+  setStaffManagerStatus(message, isError = false) {
+    const status = document.getElementById('staff-manager-status');
+    if (!status) return;
+    status.textContent = message;
+    status.classList.remove('hidden', 'text-rose-300', 'text-emerald-300');
+    status.classList.add(isError ? 'text-rose-300' : 'text-emerald-300');
+  }
+
+  async loadStaffMembers() {
+    const list = document.getElementById('staff-list');
+    if (!list) return;
+    try {
+      const staff = await window.kvrEmailAuth.listStaff();
+      list.innerHTML = staff.length
+        ? staff.map(member => `
+            <article class="flex flex-col gap-3 rounded-2xl border border-slate-800 bg-slate-900/80 p-4 sm:flex-row sm:items-center">
+              <div class="min-w-0 flex-1">
+                <h3 class="truncate text-sm font-bold text-white">${this.escapeHtml(member.full_name)}</h3>
+                <p class="mt-1 break-all text-xs text-slate-300">${this.escapeHtml(member.email)}</p>
+                <p class="mt-1 text-xs text-slate-400">Mobile: ${this.escapeHtml(member.mobile)} · ${member.active ? 'Approved' : 'Disabled'}</p>
+              </div>
+              <button type="button" data-staff-id="${this.escapeHtml(member.id)}" data-active="${member.active}" class="rounded-lg px-3 py-2 text-xs font-bold ${member.active ? 'bg-rose-950 text-rose-200' : 'bg-emerald-950 text-emerald-200'}">
+                ${member.active ? 'Disable access' : 'Enable access'}
+              </button>
+            </article>
+          `).join('')
+        : '<p class="rounded-xl border border-slate-800 bg-slate-900/70 p-4 text-xs text-slate-400">No staff members yet. Add a name, email and mobile number above.</p>';
+    } catch (error) {
+      list.innerHTML = `<p class="rounded-xl border border-rose-500/30 bg-rose-950/30 p-4 text-xs text-rose-200">Could not load staff. Apply the staff access SQL schema in Supabase, then try again. ${this.escapeHtml(error.message)}</p>`;
+    }
+  }
+
+  async addStaffMember() {
+    const name = document.getElementById('staff-name').value.trim();
+    const email = document.getElementById('staff-email').value.trim().toLowerCase();
+    const mobile = document.getElementById('staff-mobile').value.replace(/\D/g, '');
+    if (!name || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || !/^[6-9]\d{9}$/.test(mobile)) {
+      this.setStaffManagerStatus('Enter a staff name, valid email, and valid 10-digit mobile number.', true);
+      return;
+    }
+    try {
+      await window.kvrEmailAuth.addStaff({ full_name: name, email, mobile });
+      document.getElementById('staff-add-form').reset();
+      this.setStaffManagerStatus('Staff member approved. They can now sign in with an email OTP.');
+      await this.loadStaffMembers();
+    } catch (error) {
+      this.setStaffManagerStatus(`Could not add staff: ${error.message}`, true);
+    }
+  }
+
+  async toggleStaffMember(id, active) {
+    try {
+      await window.kvrEmailAuth.setStaffActive(id, active);
+      await this.loadStaffMembers();
+      this.showToast(active ? 'Staff email access enabled.' : 'Staff email access disabled.');
+    } catch (error) {
+      this.setStaffManagerStatus(`Could not update staff access: ${error.message}`, true);
+    }
+  }
+
+  escapeHtml(value) {
+    return String(value ?? '').replace(/[&<>"']/g, character => ({
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#39;'
+    })[character]);
   }
 
   // --- Reports & Analytics Tab with CSV Export ---

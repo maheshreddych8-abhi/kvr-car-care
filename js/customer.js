@@ -3,16 +3,10 @@
 
 class KVRCustomerApp {
   constructor() {
-    const savedSession = window.kvrDB.getCustomerSession();
-    this.session = savedSession?.authMethod === 'demo-otp' && savedSession.isLoggedIn
-      ? savedSession
-      : { name: '', phone: '', isLoggedIn: false };
-    if (savedSession && !this.session.isLoggedIn) {
-      window.kvrDB.clearCustomerSession();
-    }
+    this.session = { name: '', phone: '', email: '', isLoggedIn: false };
     this.activeTab = 'status'; // 'request', 'status', 'history', 'contact'
     this.selectedServices = new Set();
-    this.simulatedOtp = null;
+    this.pendingEmail = null;
     this.activeJobId = null;
 
     this.init();
@@ -47,9 +41,49 @@ class KVRCustomerApp {
     this.renderLiveStatus();
     this.renderHistory();
     this.setupListeners();
-    if (!this.session.isLoggedIn) {
-      document.body.classList.add('customer-auth-locked');
-      this.openLoginModal();
+    document.body.classList.add('customer-auth-locked');
+    this.openLoginModal();
+    this.restoreSession();
+  }
+
+  async restoreSession() {
+    try {
+      const user = await window.kvrEmailAuth.getCurrentUser();
+      if (user) {
+        this.completeEmailLogin(user, false);
+      } else {
+        window.kvrDB.clearCustomerSession();
+      }
+    } catch (error) {
+      this.setAuthStatus(`Could not check your email sign-in: ${error.message}`, false);
+    }
+  }
+
+  completeEmailLogin(user, showSuccess = true) {
+    const saved = window.kvrDB.getCustomerSession();
+    this.session = {
+      name: document.getElementById('input-login-name')?.value.trim()
+        || user.user_metadata?.full_name
+        || saved?.name
+        || 'Customer',
+      phone: document.getElementById('input-login-phone')?.value.trim()
+        || saved?.phone
+        || '',
+      email: user.email,
+      authUserId: user.id,
+      authMethod: 'email-otp',
+      isLoggedIn: true
+    };
+    window.kvrDB.setCustomerSession(this.session);
+    document.body.classList.remove('customer-auth-locked');
+    document.getElementById('customer-login-modal')?.classList.add('hidden');
+    this.renderHeader();
+    this.renderVehiclesList();
+    this.renderLiveStatus();
+    this.renderHistory();
+    if (showSuccess) {
+      window.kvrAudio.success();
+      this.showToast(`Signed in as ${this.session.email}`, 'success');
     }
   }
 
@@ -91,7 +125,7 @@ class KVRCustomerApp {
         <div class="flex items-center justify-between text-xs bg-slate-900/60 backdrop-blur px-4 py-2 border-b border-slate-800">
           <div class="flex items-center space-x-2">
             <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
-            <span class="text-slate-300">Welcome, <strong class="text-white">${this.session.name}</strong> (${this.session.phone})</span>
+            <span class="text-slate-300">Welcome, <strong class="text-white">${this.session.name}</strong> (${this.session.email})</span>
           </div>
           <button id="btn-customer-logout" class="text-amber-400 hover:text-amber-300 underline font-medium kvr-btn">
             Switch User / Logout
@@ -99,7 +133,7 @@ class KVRCustomerApp {
         </div>
       `;
       document.getElementById('btn-customer-logout')?.addEventListener('click', () => {
-        this.openLoginModal();
+        this.signOut();
       });
     }
   }
@@ -116,56 +150,77 @@ class KVRCustomerApp {
     document.body.classList.remove('customer-auth-locked');
   }
 
-  generateDemoOtp() {
-    this.simulatedOtp = Math.floor(1000 + Math.random() * 9000).toString();
-    const otpInput = document.getElementById('input-login-otp');
-    if (otpInput) otpInput.value = '';
-    const banner = document.getElementById('otp-simulation-banner');
-    if (banner) {
-      banner.classList.remove('hidden');
-      banner.innerHTML = `
-        <div class="bg-emerald-950/90 border border-emerald-500/60 p-3 rounded-xl">
-          <div class="flex items-center space-x-2">
-            <span class="text-2xl">💬</span>
-            <div class="text-left">
-              <div class="text-xs text-emerald-300 font-bold">Demo verification code</div>
-              <div class="text-xs text-slate-200">Use this code to continue. No message was sent.</div>
-            </div>
-          </div>
-          <div class="mt-3 flex items-center justify-between gap-3">
-            <span class="font-mono text-xl font-extrabold tracking-[0.3em] text-amber-300" aria-label="Demo code">${this.simulatedOtp}</span>
-            <button id="btn-autofill-otp" type="button" class="px-3 py-2 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold rounded-lg text-xs kvr-btn">
-              Use this code
-            </button>
-          </div>
-        </div>
-      `;
-      document.getElementById('btn-autofill-otp')?.addEventListener('click', () => {
-        const otpInput = document.getElementById('input-login-otp');
-        if (otpInput) otpInput.value = this.simulatedOtp;
-        window.kvrAudio.pop();
-      });
+  setAuthStatus(message, success) {
+    const status = document.getElementById('customer-auth-status');
+    if (!status) return;
+    status.textContent = message;
+    status.classList.remove('hidden', 'border-emerald-500/50', 'bg-emerald-950/60', 'text-emerald-200', 'border-rose-500/50', 'bg-rose-950/60', 'text-rose-200');
+    status.classList.add(
+      ...(success
+        ? ['border-emerald-500/50', 'bg-emerald-950/60', 'text-emerald-200']
+        : ['border-rose-500/50', 'bg-rose-950/60', 'text-rose-200'])
+    );
+  }
+
+  async requestEmailOtp() {
+    const emailInput = document.getElementById('input-login-email');
+    const email = emailInput?.value.trim().toLowerCase();
+    if (!emailInput?.checkValidity() || !email) {
+      this.setAuthStatus('Enter a valid email address.', false);
+      emailInput?.focus();
+      return;
+    }
+
+    const button = document.getElementById('btn-send-otp');
+    button.disabled = true;
+    button.textContent = 'Sending email OTP…';
+    try {
+      await window.kvrEmailAuth.sendOtp(email, true);
+      this.pendingEmail = email;
+      document.getElementById('customer-otp-entry')?.classList.remove('hidden');
+      const verifyButton = document.getElementById('btn-verify-otp');
+      verifyButton.disabled = false;
+      verifyButton.className = 'w-full py-3 bg-amber-400 hover:bg-amber-300 text-slate-950 font-black rounded-xl text-xs kvr-btn';
+      this.setAuthStatus(`Email OTP requested for ${email}. Check your inbox and spam folder for the 6-digit code.`, true);
+    } catch (error) {
+      this.setAuthStatus(`Could not send email OTP: ${error.message}`, false);
+    } finally {
+      button.disabled = false;
+      button.textContent = 'Resend email OTP';
     }
   }
 
-  verifyLogin(phone, name, otp) {
-    if (this.simulatedOtp && otp === this.simulatedOtp) {
-      this.session = {
-        name: name || "Customer",
-        phone: phone.replace(/\D/g, ''),
-        isLoggedIn: true,
-        authMethod: 'demo-otp'
-      };
-      window.kvrDB.setCustomerSession(this.session);
-      this.closeLoginModal();
-      this.renderHeader();
-      this.renderVehiclesList();
-      this.renderLiveStatus();
-      this.renderHistory();
-      window.kvrAudio.success();
-      this.showToast(`Logged in successfully as ${this.session.name}!`, 'success');
-    } else {
-      alert('Invalid demo code. Use the code shown in this login window and try again.');
+  async verifyEmailOtp() {
+    const token = document.getElementById('input-login-otp')?.value.trim() || '';
+    if (!this.pendingEmail) {
+      this.setAuthStatus('Request an email code before verifying.', false);
+      return;
+    }
+    if (!/^\d{6}$/.test(token)) {
+      this.setAuthStatus('Enter the 6-digit code sent to your email.', false);
+      return;
+    }
+    const button = document.getElementById('btn-verify-otp');
+    button.disabled = true;
+    button.textContent = 'Verifying…';
+    try {
+      const user = await window.kvrEmailAuth.verifyOtp(this.pendingEmail, token);
+      this.completeEmailLogin(user);
+    } catch (error) {
+      this.setAuthStatus(`Email code verification failed: ${error.message}`, false);
+    } finally {
+      button.disabled = false;
+      button.textContent = 'Verify email OTP';
+    }
+  }
+
+  async signOut() {
+    try {
+      await window.kvrEmailAuth.signOut();
+      window.kvrDB.clearCustomerSession();
+      window.location.reload();
+    } catch (error) {
+      this.showToast(`Could not sign out: ${error.message}`);
     }
   }
 
@@ -730,23 +785,8 @@ class KVRCustomerApp {
       this.showToast(`Vehicle ${reg} registered!`, 'success');
     });
 
-    // OTP verification triggers
-    document.getElementById('btn-send-otp')?.addEventListener('click', () => {
-      const phone = document.getElementById('input-login-phone')?.value.trim();
-      const digits = phone?.replace(/\D/g, '') || '';
-      if (!/^[6-9]\d{9}$/.test(digits)) {
-        alert('Please enter a valid 10-digit mobile number');
-        return;
-      }
-      this.generateDemoOtp();
-    });
-
-    document.getElementById('btn-verify-otp')?.addEventListener('click', () => {
-      const phone = document.getElementById('input-login-phone')?.value.trim();
-      const name = document.getElementById('input-login-name')?.value.trim() || "Customer";
-      const otp = document.getElementById('input-login-otp')?.value.trim();
-      this.verifyLogin(phone, name, otp);
-    });
+    document.getElementById('btn-send-otp')?.addEventListener('click', () => this.requestEmailOtp());
+    document.getElementById('btn-verify-otp')?.addEventListener('click', () => this.verifyEmailOtp());
   }
 }
 
