@@ -27,26 +27,25 @@
     <div class="w-full max-w-md rounded-3xl border border-purple-500/40 bg-gradient-to-b from-slate-900 to-purple-950/70 p-6 shadow-2xl sm:p-8">
       <a href="index.html" class="mb-6 inline-flex items-center gap-2 text-xs font-bold text-slate-400 hover:text-amber-300">← KVR Car Care home</a>
       <div class="mb-5 flex items-center gap-4">
-        <svg class="kvr-login-car kvr-login-car-large" viewBox="0 0 120 76" role="img" aria-label="Peacock-blue Mahindra Scorpio-style KVR Car Care SUV">
-          <path class="kvr-login-car-body" d="M8 48l5-12 8-4 4-18 7-7h42l9 5 8 19 15 3 7 11v9H8z"/>
-          <path class="kvr-login-car-window" d="M29 12h19v18H25l3-14zm23 0h19l7 5 6 13H52z"/>
-          <path class="kvr-login-car-trim" d="M12 47h96v4H12zM22 35h72v2H22z"/>
-          <path class="kvr-login-car-door" d="M48 33v18m25-18v18"/>
-          <rect class="kvr-login-car-name-plate" x="49" y="38" width="23" height="12" rx="2"/>
-          <text class="kvr-login-car-name" x="60.5" y="47" text-anchor="middle">KVR</text>
-          <circle class="kvr-login-car-wheel" cx="30" cy="56" r="9"/>
-          <circle class="kvr-login-car-wheel" cx="89" cy="56" r="9"/>
-          <circle class="kvr-login-car-hub" cx="30" cy="56" r="3.5"/>
-          <circle class="kvr-login-car-hub" cx="89" cy="56" r="3.5"/>
-          <path class="kvr-login-car-grille" d="M102 39h8v8h-8z"/>
-          <path class="kvr-login-car-lamp" d="M106 34h6v4h-6z"/>
+        <svg class="kvr-login-car kvr-login-car-large" viewBox="0 0 180 100" role="img" aria-label="Peacock-blue KVR Car Care SUV">
+          <path class="kvr-login-car-body" d="M13 68 18 53l12-5 8-27q2-7 10-7h53q9 0 14 8l13 22 17 7q8 3 9 11v12H12V68Z"/>
+          <path class="kvr-login-car-window" d="m44 25 6-4h23v23H38l6-19Zm35-4h19q8 0 12 7l9 16H79V21Z"/>
+          <path class="kvr-login-car-trim" d="M31 49h99l12 6H28z"/>
+          <path class="kvr-login-car-door" d="M77 47v25m38-25v25M82 57h11"/>
+          <rect class="kvr-login-car-nameplate" x="71" y="54" width="38" height="16" rx="3"/>
+          <text class="kvr-login-car-name" x="90" y="66" text-anchor="middle">KVR</text>
+          <circle class="kvr-login-car-wheel" cx="48" cy="74" r="14"/>
+          <circle class="kvr-login-car-wheel" cx="130" cy="74" r="14"/>
+          <circle class="kvr-login-car-hub" cx="48" cy="74" r="5"/>
+          <circle class="kvr-login-car-hub" cx="130" cy="74" r="5"/>
+          <path class="kvr-login-car-light" d="m14 60 14-4-3 8H14zm132-3 13 5v4h-13z"/>
         </svg>
         <div>
           <p class="text-[10px] font-black uppercase tracking-[0.2em] text-amber-300">Secure workshop access</p>
           <h1 class="mt-1 text-xl font-black text-white">Welcome to KVR</h1>
         </div>
       </div>
-      <p class="mb-5 text-xs leading-relaxed text-slate-300">Email OTP is the only sign-in method. Enter your email, request a code, then verify it. Owner access is limited to the registered address.</p>
+      <p class="mb-5 text-center text-sm italic leading-relaxed text-slate-200">“Welcome to KVR Car Care — trusted service for every journey.”</p>
       <div class="mb-4 grid grid-cols-2 gap-2" role="group" aria-label="Choose login role">
         <button type="button" class="owner-role-choice rounded-xl border border-amber-400 bg-amber-400/15 px-3 py-3 text-xs font-black text-amber-200" data-role="owner" aria-pressed="true">👑 Owner</button>
         <button type="button" class="owner-role-choice rounded-xl border border-slate-700 bg-slate-950/60 px-3 py-3 text-xs font-black text-slate-300" data-role="staff" aria-pressed="false">🧰 Staff</button>
@@ -71,7 +70,7 @@
           <button type="button" id="btn-staff-verify-otp" class="w-full rounded-xl bg-amber-400 px-4 py-3 text-xs font-black text-slate-950">Verify OTP & Sign In</button>
         </div>
       </div>
-      <p id="owner-auth-status" class="mt-4 rounded-xl border border-amber-400/30 bg-amber-400/10 p-3 text-[11px] leading-relaxed text-amber-100" role="status" aria-live="polite">Email OTP requires Supabase configuration. No code has been sent yet.</p>
+      <p id="owner-auth-status" class="mt-4 hidden rounded-xl border border-amber-400/30 bg-amber-400/10 p-3 text-[11px] leading-relaxed text-amber-100" role="status" aria-live="polite"></p>
       <a href="customer.html" class="mt-4 block text-center text-xs font-bold text-amber-300 hover:underline">Go to Customer app →</a>
     </div>
   </section>

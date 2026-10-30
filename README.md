@@ -73,7 +73,7 @@ The workshop jobs, invoices and customer data are still stored in browser local 
 ### 3. Special Visual & Tactile Requirements Met
 - **Branding & Visual Identity:** Styled according to the official KVR Car Care banner (Deep Burgundy `#2C0924`, Amber Yellow `#F5B800`, Bold White).
 - **Slow Car Moving Only Between the Red Line:** Right below "KVR", an animated micro car glides back and forth strictly bounded between the ends of the signature red line! Click the car anytime to honk the horn.
-- **UI Touch Animations & Pop Sound:** App-wide touch bubbles work on the portal, Customer and Owner screens, and the split-screen demo. The procedural Web Audio API (`audio.js`) also provides button pops, success chimes, alert arpeggios, and car horns, with an instant mute toggle.
+- **UI Touch Animations & Pop Sound:** Integrated procedural Web Audio API sound synthesizer (`audio.js`) providing tactile "bubble pop" sounds on button taps, success chimes on submissions, alert arpeggios on new requests, and playful car horns. Includes an instant mute toggle.
 - **Zero-Build Static Architecture:** HTML5, CSS3, and JavaScript (ES6), with Supabase JS loaded from its CDN for email authentication.
 
 ---
