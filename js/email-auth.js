@@ -38,16 +38,24 @@ class KVREmailAuth {
     if (error) throw error;
   }
 
-  async verifyOtp(email, token, scope = 'customer') {
+  async sendPhoneOtp(phone, channel = 'sms', shouldCreateUser = true, scope = 'customer', userMetadata = {}) {
     const client = this.requireClient(scope);
-    const { data, error } = await client.auth.verifyOtp({
-      email,
-      token,
-      type: 'email'
+    const { error } = await client.auth.signInWithOtp({
+      phone,
+      options: { channel, shouldCreateUser, data: userMetadata }
     });
     if (error) throw error;
+  }
+
+  async verifyOtp(identifier, token, scope = 'customer', method = 'email') {
+    const client = this.requireClient(scope);
+    const credentials = method === 'phone'
+      ? { phone: identifier, token, type: 'sms' }
+      : { email: identifier, token, type: 'email' };
+    const { data, error } = await client.auth.verifyOtp(credentials);
+    if (error) throw error;
     if (!data.user || !data.session) {
-      throw new Error('Email code verification did not return an authenticated session.');
+      throw new Error('Code verification did not return an authenticated session.');
     }
     return data.user;
   }

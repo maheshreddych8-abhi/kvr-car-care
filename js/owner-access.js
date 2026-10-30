@@ -91,7 +91,7 @@ document.addEventListener('DOMContentLoaded', () => {
       showStatus(`Email OTP requested for ${email}. Check the inbox and spam folder for the 6-digit code.`, false);
     } catch (error) {
       const message = error.message.includes('Email OTP is not configured')
-        ? 'Email sign-in is being set up. Please contact KVR Car Care.'
+        ? 'We cannot send a sign-in code right now. Please contact KVR Car Care.'
         : `Could not send email OTP: ${error.message}`;
       showStatus(message, !error.message.includes('Email OTP is not configured'), error.message.includes('Email OTP is not configured'));
     } finally {

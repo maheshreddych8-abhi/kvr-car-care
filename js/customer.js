@@ -6,7 +6,8 @@ class KVRCustomerApp {
     this.session = { name: '', phone: '', email: '', isLoggedIn: false };
     this.activeTab = 'status'; // 'request', 'status', 'history', 'contact'
     this.selectedServices = new Set();
-    this.pendingEmail = null;
+    this.loginChannel = 'email';
+    this.pendingLogin = null;
     this.activeJobId = null;
 
     this.init();
@@ -14,7 +15,7 @@ class KVRCustomerApp {
 
   init() {
     // Pick the most recent active job for this customer
-    const customerJobs = window.kvrDB.getJobsByEmail(this.session.email);
+    const customerJobs = this.getCustomerJobs();
     if (customerJobs.length > 0) {
       this.activeJobId = customerJobs[0].id;
     }
@@ -25,7 +26,7 @@ class KVRCustomerApp {
       if (action === 'JOB_STATUS_CHANGED' || action === 'PHOTO_ADDED' || action === 'CHARGES_UPDATED' || action === 'JOBS_UPDATED') {
         this.renderLiveStatus();
         this.renderHistory();
-        if (action === 'JOB_STATUS_CHANGED' && data.job && data.job.customerEmail === this.session.email) {
+        if (action === 'JOB_STATUS_CHANGED' && data.job && this.matchesCustomerJob(data.job)) {
           window.kvrAudio.success();
           this.showToast(`Status Updated: ${data.job.status}`);
         }
@@ -50,7 +51,7 @@ class KVRCustomerApp {
     try {
       const user = await window.kvrEmailAuth.getCurrentUser();
       if (user) {
-        this.completeEmailLogin(user, false);
+        this.completeCustomerLogin(user, false);
       } else {
         window.kvrDB.clearCustomerSession();
       }
@@ -59,17 +60,19 @@ class KVRCustomerApp {
     }
   }
 
-  completeEmailLogin(user, showSuccess = true) {
+  completeCustomerLogin(user, showSuccess = true) {
     const saved = window.kvrDB.getCustomerSession();
+    const email = user.email || '';
+    const phone = user.phone || '';
     this.session = {
       name: document.getElementById('input-login-name')?.value.trim()
         || user.user_metadata?.full_name
         || saved?.name
         || 'Customer',
-      phone: '',
-      email: user.email,
+      phone,
+      email,
       authUserId: user.id,
-      authMethod: 'email-otp',
+      authMethod: email ? 'email-otp' : 'phone-otp',
       isLoggedIn: true
     };
     window.kvrDB.setCustomerSession(this.session);
@@ -81,7 +84,7 @@ class KVRCustomerApp {
     this.renderHistory();
     if (showSuccess) {
       window.kvrAudio.success();
-      this.showToast(`Signed in as ${this.session.email}`, 'success');
+      this.showToast(`Signed in as ${this.session.email || this.session.phone}`, 'success');
     }
   }
 
@@ -123,7 +126,7 @@ class KVRCustomerApp {
         <div class="flex items-center justify-between text-xs bg-slate-900/60 backdrop-blur px-4 py-2 border-b border-slate-800">
           <div class="flex items-center space-x-2">
             <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
-            <span class="text-slate-300">Welcome, <strong class="text-white">${this.session.name}</strong> (${this.session.email})</span>
+            <span class="text-slate-300">Welcome, <strong class="text-white">${this.session.name}</strong> (${this.session.email || this.session.phone})</span>
           </div>
           <button id="btn-customer-logout" class="text-amber-400 hover:text-amber-300 underline font-medium kvr-btn">
             Switch User / Logout
@@ -166,7 +169,43 @@ class KVRCustomerApp {
     status.classList.add(...statusClasses);
   }
 
-  async requestEmailOtp() {
+  normalizePhoneNumber(value) {
+    const compact = value.trim().replace(/[\s()-]/g, '');
+    if (/^[6-9]\d{9}$/.test(compact)) return `+91${compact}`;
+    if (/^91[6-9]\d{9}$/.test(compact)) return `+${compact}`;
+    if (/^\+91[6-9]\d{9}$/.test(compact)) return compact;
+    return null;
+  }
+
+  setLoginChannel(channel) {
+    this.loginChannel = channel;
+    this.pendingLogin = null;
+    const isEmail = channel === 'email';
+    const methodLabel = channel === 'email' ? 'email' : channel === 'sms' ? 'SMS' : 'WhatsApp';
+    document.getElementById('customer-email-field').classList.toggle('hidden', !isEmail);
+    document.getElementById('customer-phone-field').classList.toggle('hidden', isEmail);
+    document.getElementById('input-login-email').required = isEmail;
+    document.getElementById('input-login-phone').required = !isEmail;
+    document.getElementById('customer-otp-entry').classList.add('hidden');
+    const verifyButton = document.getElementById('btn-verify-otp');
+    verifyButton.disabled = true;
+    verifyButton.className = 'w-full py-3 bg-slate-700 text-slate-400 font-black rounded-xl text-xs cursor-not-allowed';
+    document.getElementById('input-login-otp').value = '';
+    document.getElementById('btn-send-otp').textContent = `Send ${methodLabel} OTP`;
+    document.getElementById('customer-otp-label').textContent = `Enter the 6-digit code from your ${isEmail ? 'email' : channel === 'sms' ? 'SMS' : 'WhatsApp message'}`;
+    document.querySelectorAll('.customer-otp-channel').forEach(button => {
+      const selected = button.dataset.channel === channel;
+      button.setAttribute('aria-pressed', String(selected));
+      button.classList.toggle('border-amber-400', selected);
+      button.classList.toggle('bg-amber-400/15', selected);
+      button.classList.toggle('text-amber-200', selected);
+      button.classList.toggle('border-slate-700', !selected);
+      button.classList.toggle('bg-slate-950/60', !selected);
+      button.classList.toggle('text-slate-300', !selected);
+    });
+  }
+
+  async requestCustomerOtp() {
     const nameInput = document.getElementById('input-login-name');
     const name = nameInput?.value.trim() || '';
     if (!name) {
@@ -175,60 +214,94 @@ class KVRCustomerApp {
       return;
     }
 
-    const emailInput = document.getElementById('input-login-email');
-    const email = emailInput?.value.trim().toLowerCase();
-    if (!emailInput?.checkValidity() || !email) {
-      this.setAuthStatus('Enter a valid email address.', false);
-      emailInput?.focus();
-      return;
+    const channel = this.loginChannel;
+    let identifier;
+    if (channel === 'email') {
+      const emailInput = document.getElementById('input-login-email');
+      identifier = emailInput?.value.trim().toLowerCase();
+      if (!emailInput?.checkValidity() || !identifier) {
+        this.setAuthStatus('Enter a valid email address.', false);
+        emailInput?.focus();
+        return;
+      }
+    } else {
+      const phoneInput = document.getElementById('input-login-phone');
+      identifier = this.normalizePhoneNumber(phoneInput?.value || '');
+      if (!identifier) {
+        this.setAuthStatus('Enter a valid Indian mobile number with 10 digits.', false);
+        phoneInput?.focus();
+        return;
+      }
     }
 
     const button = document.getElementById('btn-send-otp');
     const otpEntry = document.getElementById('customer-otp-entry');
     const verifyButton = document.getElementById('btn-verify-otp');
     otpEntry?.classList.remove('hidden');
-    verifyButton.disabled = this.pendingEmail !== email;
+    verifyButton.disabled = this.pendingLogin?.channel !== channel || this.pendingLogin?.identifier !== identifier;
     button.disabled = true;
-    button.textContent = 'Sending email OTP…';
+    const methodLabel = channel === 'email' ? 'email' : channel === 'sms' ? 'SMS' : 'WhatsApp';
+    button.textContent = `Sending ${methodLabel} OTP…`;
     try {
-      await window.kvrEmailAuth.sendOtp(email, true, 'customer', { full_name: name });
-      this.pendingEmail = email;
+      if (channel === 'email') {
+        await window.kvrEmailAuth.sendOtp(identifier, true, 'customer', { full_name: name });
+      } else {
+        await window.kvrEmailAuth.sendPhoneOtp(identifier, channel, true, 'customer', { full_name: name });
+      }
+      this.pendingLogin = { channel, identifier };
       verifyButton.disabled = false;
       verifyButton.className = 'w-full py-3 bg-amber-400 hover:bg-amber-300 text-slate-950 font-black rounded-xl text-xs kvr-btn';
-      this.setAuthStatus(`Email OTP requested for ${email}. Check your inbox and spam folder for the 6-digit code.`, true);
+      const location = channel === 'email' ? 'email inbox and spam folder' : channel === 'sms' ? 'SMS messages' : 'WhatsApp messages';
+      this.setAuthStatus(`${methodLabel} OTP requested for ${identifier}. Check your ${location} for the 6-digit code.`, true);
     } catch (error) {
-      const message = error.message.includes('Email OTP is not configured')
-        ? 'Email sign-in is being set up. Please contact KVR Car Care.'
-        : `Could not send email OTP: ${error.message}`;
-      this.setAuthStatus(message, false, error.message.includes('Email OTP is not configured'));
+      const notConfigured = error.message.includes('OTP is not configured');
+      const message = notConfigured
+        ? `${methodLabel} sign-in is unavailable: authentication has not been configured.`
+        : `Could not send ${methodLabel} OTP: ${error.message}`;
+      this.setAuthStatus(message, false, notConfigured);
     } finally {
       button.disabled = false;
-      button.textContent = this.pendingEmail === email ? 'Resend email OTP' : 'Send email OTP';
+      const pendingMatches = this.pendingLogin?.channel === channel && this.pendingLogin?.identifier === identifier;
+      button.textContent = `${pendingMatches ? 'Resend' : 'Send'} ${methodLabel} OTP`;
     }
   }
 
-  async verifyEmailOtp() {
+  async verifyCustomerOtp() {
     const token = document.getElementById('input-login-otp')?.value.trim() || '';
-    if (!this.pendingEmail) {
-      this.setAuthStatus('Request an email code before verifying.', false);
+    if (!this.pendingLogin) {
+      this.setAuthStatus('Request a sign-in code before verifying.', false);
       return;
     }
     if (!/^\d{6}$/.test(token)) {
-      this.setAuthStatus('Enter the 6-digit code sent to your email.', false);
+      this.setAuthStatus('Enter the 6-digit code you received.', false);
       return;
     }
     const button = document.getElementById('btn-verify-otp');
     button.disabled = true;
     button.textContent = 'Verifying…';
     try {
-      const user = await window.kvrEmailAuth.verifyOtp(this.pendingEmail, token);
-      this.completeEmailLogin(user);
+      const method = this.pendingLogin.channel === 'email' ? 'email' : 'phone';
+      const user = await window.kvrEmailAuth.verifyOtp(this.pendingLogin.identifier, token, 'customer', method);
+      this.completeCustomerLogin(user);
     } catch (error) {
-      this.setAuthStatus(`Email code verification failed: ${error.message}`, false);
+      this.setAuthStatus(`Code verification failed: ${error.message}`, false);
     } finally {
       button.disabled = false;
-      button.textContent = 'Verify email OTP';
+      button.textContent = 'Verify OTP';
     }
+  }
+
+  getCustomerJobs() {
+    if (!this.session.isLoggedIn) return [];
+    return this.session.email
+      ? window.kvrDB.getJobsByEmail(this.session.email)
+      : window.kvrDB.getJobsByPhone(this.session.phone);
+  }
+
+  matchesCustomerJob(job) {
+    if (this.session.email) return (job.customerEmail || '').trim().toLowerCase() === this.session.email.toLowerCase();
+    const phone = (this.session.phone || '').replace(/\D/g, '').slice(-10);
+    return Boolean(phone) && (job.customerPhone || '').replace(/\D/g, '').endsWith(phone);
   }
 
   async signOut() {
@@ -246,7 +319,9 @@ class KVRCustomerApp {
     const selectEl = document.getElementById('request-vehicle-select');
     const myVehiclesContainer = document.getElementById('my-vehicles-list');
     const vehicles = this.session.isLoggedIn
-      ? window.kvrDB.getVehiclesByEmail(this.session.email)
+      ? this.session.email
+        ? window.kvrDB.getVehiclesByEmail(this.session.email)
+        : window.kvrDB.getVehicles(this.session.phone)
       : [];
 
     if (selectEl) {
@@ -412,9 +487,7 @@ class KVRCustomerApp {
     const container = document.getElementById('live-status-container');
     if (!container) return;
 
-    const customerJobs = this.session.isLoggedIn
-      ? window.kvrDB.getJobsByEmail(this.session.email)
-      : [];
+    const customerJobs = this.getCustomerJobs();
     if (customerJobs.length === 0) {
       container.innerHTML = `
         <div class="text-center py-12 px-4 bg-slate-900/60 rounded-3xl border border-slate-800">
@@ -628,9 +701,7 @@ class KVRCustomerApp {
     const container = document.getElementById('customer-history-container');
     if (!container) return;
 
-    const customerJobs = this.session.isLoggedIn
-      ? window.kvrDB.getJobsByEmail(this.session.email)
-      : [];
+    const customerJobs = this.getCustomerJobs();
 
     if (customerJobs.length === 0) {
       container.innerHTML = `<div class="p-8 text-center text-slate-400 text-xs">No service records found.</div>`;
@@ -804,8 +875,11 @@ class KVRCustomerApp {
       this.showToast(`Vehicle ${reg} registered!`, 'success');
     });
 
-    document.getElementById('btn-send-otp')?.addEventListener('click', () => this.requestEmailOtp());
-    document.getElementById('btn-verify-otp')?.addEventListener('click', () => this.verifyEmailOtp());
+    document.querySelectorAll('.customer-otp-channel').forEach(button => {
+      button.addEventListener('click', () => this.setLoginChannel(button.dataset.channel));
+    });
+    document.getElementById('btn-send-otp')?.addEventListener('click', () => this.requestCustomerOtp());
+    document.getElementById('btn-verify-otp')?.addEventListener('click', () => this.verifyCustomerOtp());
   }
 }
 
