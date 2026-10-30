@@ -29,11 +29,14 @@ class KVREmailAuth {
     return this.clients[scope];
   }
 
-  async sendOtp(email, shouldCreateUser = true, scope = 'customer') {
+  async sendOtp(email, shouldCreateUser = true, scope = 'customer', userData) {
     const client = this.requireClient(scope);
     const { error } = await client.auth.signInWithOtp({
       email,
-      options: { shouldCreateUser }
+      options: {
+        shouldCreateUser,
+        ...(userData ? { data: userData } : {})
+      }
     });
     if (error) throw error;
   }

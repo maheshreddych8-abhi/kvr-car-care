@@ -66,9 +66,7 @@ class KVRCustomerApp {
         || user.user_metadata?.full_name
         || saved?.name
         || 'Customer',
-      phone: document.getElementById('input-login-phone')?.value.trim()
-        || saved?.phone
-        || '',
+      phone: saved?.phone || '',
       email: user.email,
       authUserId: user.id,
       authMethod: 'email-otp',
@@ -163,8 +161,15 @@ class KVRCustomerApp {
   }
 
   async requestEmailOtp() {
+    const nameInput = document.getElementById('input-login-name');
     const emailInput = document.getElementById('input-login-email');
+    const name = nameInput?.value.trim();
     const email = emailInput?.value.trim().toLowerCase();
+    if (!name) {
+      this.setAuthStatus('Enter your name to continue.', false);
+      nameInput?.focus();
+      return;
+    }
     if (!emailInput?.checkValidity() || !email) {
       this.setAuthStatus('Enter a valid email address.', false);
       emailInput?.focus();
@@ -175,7 +180,7 @@ class KVRCustomerApp {
     button.disabled = true;
     button.textContent = 'Sending email OTP…';
     try {
-      await window.kvrEmailAuth.sendOtp(email, true);
+      await window.kvrEmailAuth.sendOtp(email, true, 'customer', { full_name: name });
       this.pendingEmail = email;
       document.getElementById('customer-otp-entry')?.classList.remove('hidden');
       const verifyButton = document.getElementById('btn-verify-otp');
