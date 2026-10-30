@@ -74,7 +74,7 @@ Email OTP delivery is not available until a Supabase project and email delivery 
    ```
 
    The `{{ .Token }}` variable is required so the email contains the six-digit code. Do not use `{{ .ConfirmationURL }}` for this code-entry flow; it sends a link and may redirect users away from the app.
-4. In Supabase Authentication > URL Configuration, set the Site URL to `https://maheshreddych8-abhi.github.io/kvr-car-care` and add `https://maheshreddych8-abhi.github.io/kvr-car-care/**` to the allowed Redirect URLs. The app also requests the current GitHub Pages app page as the email redirect, so confirmation links cannot fall back to `localhost`.
+4. In Supabase Authentication > URL Configuration, set the Site URL to `https://maheshreddych8-abhi.github.io/kvr-car-care` and add `https://maheshreddych8-abhi.github.io/kvr-car-care/**` to the allowed Redirect URLs. Customer and workshop auth requests explicitly redirect to the GitHub Pages Customer or Owner app, even if the request starts from a local copy.
 5. Create the owner account `maheshch1810@gmail.com` in Supabase Auth; the app rejects other owner emails. Owner and Staff login remain email OTP only.
 6. Run `supabase-staff-schema.sql` in the Supabase SQL Editor. Publish the public Project URL/key and files. Customers can then self-register by email OTP; the owner can add staff after signing in.
 
