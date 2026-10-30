@@ -25,39 +25,55 @@ body {
 .kvr-login-car {
   display: block;
   flex: 0 0 auto;
-  width: 4.5rem;
-  height: 3rem;
+  width: 5rem;
+  height: 3.25rem;
   overflow: visible;
-  filter: drop-shadow(0 5px 8px rgba(245, 184, 0, 0.22));
+  filter: drop-shadow(0 5px 8px rgba(0, 105, 122, 0.35));
   animation: kvrCarFloat 3s ease-in-out infinite;
 }
 
 .kvr-login-car-large {
-  width: 5.5rem;
-  height: 3.75rem;
+  width: 6rem;
+  height: 3.8rem;
 }
 
 .kvr-login-car-body {
-  fill: #ffcc00;
-  stroke: #f5b800;
+  fill: #006b7a;
+  stroke: #49b7c5;
   stroke-width: 1.5;
   stroke-linejoin: round;
 }
 
 .kvr-login-car-window {
-  fill: #1e1b4b;
-  stroke: #f8fafc;
-  stroke-width: 1;
+  fill: #102d45;
+  stroke: #9de3eb;
+  stroke-width: 1.2;
   stroke-linejoin: round;
 }
 
-.kvr-login-car-stripe {
-  fill: #e5252a;
+.kvr-login-car-pillar {
+  fill: #49b7c5;
+}
+
+.kvr-login-car-trim {
+  fill: #f5b800;
+}
+
+.kvr-login-car-grille {
+  fill: #143144;
+  stroke: #9de3eb;
+  stroke-width: 1;
+}
+
+.kvr-login-car-light {
+  fill: #fff3b0;
+  stroke: #f5b800;
+  stroke-width: 1;
 }
 
 .kvr-login-car-name {
-  fill: #2c0924;
-  font: 900 9px 'Plus Jakarta Sans', sans-serif;
+  fill: #ffffff;
+  font: 900 8px 'Plus Jakarta Sans', sans-serif;
   letter-spacing: 0.4px;
 }
 
