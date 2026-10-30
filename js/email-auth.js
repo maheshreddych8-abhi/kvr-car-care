@@ -31,9 +31,16 @@ class KVREmailAuth {
 
   async sendOtp(email, shouldCreateUser = true, scope = 'customer', userMetadata = {}) {
     const client = this.requireClient(scope);
+    const emailRedirectTo = /^https?:$/.test(window.location.protocol)
+      ? `${window.location.origin}${window.location.pathname}`
+      : undefined;
     const { error } = await client.auth.signInWithOtp({
       email,
-      options: { shouldCreateUser, data: userMetadata }
+      options: {
+        shouldCreateUser,
+        data: userMetadata,
+        ...(emailRedirectTo ? { emailRedirectTo } : {})
+      }
     });
     if (error) throw error;
   }
