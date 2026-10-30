@@ -11,6 +11,8 @@ class KVRPwaInstaller {
   }
 
   init() {
+    this.updateInstallVisibility();
+
     // Register Service Worker
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
@@ -29,9 +31,9 @@ class KVRPwaInstaller {
 
     window.addEventListener('appinstalled', () => {
       this.deferredPrompt = null;
+      this.isStandalone = true;
       console.log('KVR App installed successfully');
-      const banner = document.getElementById('pwa-install-banner');
-      if (banner) banner.remove();
+      this.updateInstallVisibility();
     });
 
     // Check if on iOS and not standalone
@@ -43,6 +45,7 @@ class KVRPwaInstaller {
   }
 
   showInstallUI() {
+    this.updateInstallVisibility();
     if (this.isStandalone) return;
     const banner = document.getElementById('pwa-install-banner');
     if (banner) {
@@ -51,19 +54,30 @@ class KVRPwaInstaller {
   }
 
   async promptInstall() {
+    if (this.isStandalone) return;
     if (this.deferredPrompt) {
       this.deferredPrompt.prompt();
       const { outcome } = await this.deferredPrompt.userChoice;
       console.log(`User response to install: ${outcome}`);
       this.deferredPrompt = null;
-      const banner = document.getElementById('pwa-install-banner');
-      if (banner) banner.classList.add('hidden');
+      if (outcome === 'accepted') {
+        this.isStandalone = true;
+        this.updateInstallVisibility();
+      }
     } else if (this.isIOS) {
       this.openIOSGuideModal();
     } else {
       // Browser instructions modal
       this.openGeneralInstallGuide();
     }
+  }
+
+  updateInstallVisibility() {
+    ['pwa-install-banner', 'pwa-install-card', 'pwa-install-top-button'].forEach((id) => {
+      const element = document.getElementById(id);
+      if (!element) return;
+      element.classList.toggle('hidden', this.isStandalone);
+    });
   }
 
   showIOSInstallHint() {

@@ -356,6 +356,12 @@ class KVRDatabase {
     return jobs.filter(j => (j.customerPhone || '').replace(/\D/g, '').endsWith(clean.slice(-10)));
   }
 
+  getJobsByEmail(email) {
+    const normalizedEmail = (email || '').trim().toLowerCase();
+    if (!normalizedEmail) return [];
+    return this.getJobs().filter(job => (job.customerEmail || '').trim().toLowerCase() === normalizedEmail);
+  }
+
   saveJobs(jobs) {
     localStorage.setItem(KVR_STORAGE_KEYS.JOBS, JSON.stringify(jobs));
     this.notify('JOBS_UPDATED', jobs);
@@ -372,6 +378,7 @@ class KVRDatabase {
       id: newId,
       customerName: data.customerName || "Customer",
       customerPhone: data.customerPhone || "",
+      customerEmail: (data.customerEmail || "").trim().toLowerCase(),
       vehicleName: data.vehicleName || "Vehicle",
       vehicleReg: data.vehicleReg || "AP 07 XX 0000",
       category: data.category || "GENERAL SERVICE",
@@ -401,10 +408,11 @@ class KVRDatabase {
 
     // Also register vehicle if customer provided
     this.registerCustomerVehicle({
-      customerName: data.customerName,
-      customerPhone: data.customerPhone,
-      vehicleName: data.vehicleName,
-      vehicleReg: data.vehicleReg
+      customerName: newJob.customerName,
+      customerPhone: newJob.customerPhone,
+      customerEmail: newJob.customerEmail,
+      vehicleName: newJob.vehicleName,
+      vehicleReg: newJob.vehicleReg
     });
 
     this.notify('NEW_REQUEST', newJob);
@@ -527,17 +535,32 @@ class KVRDatabase {
     }
   }
 
-  registerCustomerVehicle({ customerName, customerPhone, vehicleName, vehicleReg, fuel = 'Petrol', year = '2022' }) {
-    if (!customerPhone || !vehicleReg) return;
+  getVehiclesByEmail(email) {
+    const normalizedEmail = (email || '').trim().toLowerCase();
+    if (!normalizedEmail) return [];
+    try {
+      const vehicles = JSON.parse(localStorage.getItem(KVR_STORAGE_KEYS.VEHICLES)) || [];
+      return vehicles.filter(vehicle => (vehicle.customerEmail || '').trim().toLowerCase() === normalizedEmail);
+    } catch {
+      return [];
+    }
+  }
+
+  registerCustomerVehicle({ customerName, customerPhone = '', customerEmail = '', vehicleName, vehicleReg, fuel = 'Petrol', year = '2022' }) {
+    const normalizedEmail = customerEmail.trim().toLowerCase();
+    if ((!customerPhone && !normalizedEmail) || !vehicleReg) return;
 
     // Customer register
     const customers = this.getCustomers();
     const cleanPhone = customerPhone.replace(/\D/g, '').slice(-10);
-    const existingCust = customers.find(c => (c.phone || '').replace(/\D/g, '').endsWith(cleanPhone));
+    const existingCust = customers.find(c => normalizedEmail
+      ? (c.email || '').trim().toLowerCase() === normalizedEmail
+      : (c.phone || '').replace(/\D/g, '').endsWith(cleanPhone));
     if (!existingCust) {
       customers.push({
         name: customerName,
         phone: customerPhone,
+        email: normalizedEmail,
         vehicle: vehicleName,
         reg: vehicleReg
       });
@@ -546,11 +569,17 @@ class KVRDatabase {
 
     // Vehicle register
     const vehicles = this.getVehicles();
-    const existingVeh = vehicles.find(v => v.reg.toUpperCase().replace(/\s/g, '') === vehicleReg.toUpperCase().replace(/\s/g, ''));
+    const existingVeh = vehicles.find(v =>
+      v.reg.toUpperCase().replace(/\s/g, '') === vehicleReg.toUpperCase().replace(/\s/g, '')
+      && (normalizedEmail
+        ? (v.customerEmail || '').trim().toLowerCase() === normalizedEmail
+        : (v.customerPhone || '').replace(/\D/g, '').slice(-10) === cleanPhone)
+    );
     if (!existingVeh) {
       vehicles.push({
         id: 'v-' + Date.now().toString(36),
         customerPhone: customerPhone,
+        customerEmail: normalizedEmail,
         make: vehicleName.split(' ')[0] || 'Car',
         model: vehicleName,
         reg: vehicleReg,
