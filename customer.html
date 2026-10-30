@@ -399,7 +399,16 @@
       </div>
 
       <div class="mb-4 flex items-center gap-3 rounded-2xl border border-purple-500/30 bg-purple-950/40 p-3">
-        <img src="icon-customer-192.png" alt="KVR Customer app logo" class="h-14 w-14 shrink-0 rounded-xl">
+        <svg class="kvr-login-car" viewBox="0 0 96 64" role="img" aria-label="KVR Car Care car">
+          <path class="kvr-login-car-body" d="M12 38l7-17c2-5 6-8 12-8h32c7 0 12 3 16 9l8 13c4 2 6 5 6 9v5H7v-5c0-3 2-5 5-6z"/>
+          <path class="kvr-login-car-window" d="M25 22c1-3 3-5 7-5h12v14H20l5-9zm23-5h14c5 0 9 2 12 7l4 7H48V17z"/>
+          <path class="kvr-login-car-stripe" d="M10 39h76v5H10z"/>
+          <text class="kvr-login-car-name" x="48" y="38" text-anchor="middle">KVR</text>
+          <circle class="kvr-login-car-wheel" cx="25" cy="48" r="8"/>
+          <circle class="kvr-login-car-wheel" cx="73" cy="48" r="8"/>
+          <circle class="kvr-login-car-hub" cx="25" cy="48" r="3"/>
+          <circle class="kvr-login-car-hub" cx="73" cy="48" r="3"/>
+        </svg>
         <p class="text-xs text-slate-300">Sign in with a one-time code sent to your email. No mobile OTP is used.</p>
       </div>
       <p id="customer-auth-status" class="hidden mb-4 rounded-xl border p-3 text-xs" role="status" aria-live="polite"></p>
@@ -438,6 +447,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="js/supabase-config.js"></script>
   <script src="js/email-auth.js"></script>
+  <script src="js/login-effects.js"></script>
   <script src="js/customer.js"></script>
 </body>
 </html>

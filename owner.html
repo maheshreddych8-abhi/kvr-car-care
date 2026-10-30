@@ -27,7 +27,16 @@
     <div class="w-full max-w-md rounded-3xl border border-purple-500/40 bg-gradient-to-b from-slate-900 to-purple-950/70 p-6 shadow-2xl sm:p-8">
       <a href="index.html" class="mb-6 inline-flex items-center gap-2 text-xs font-bold text-slate-400 hover:text-amber-300">← KVR Car Care home</a>
       <div class="mb-5 flex items-center gap-4">
-        <img src="icon-owner-192.png" alt="KVR Owner app logo" class="h-16 w-16 shrink-0 rounded-2xl">
+        <svg class="kvr-login-car kvr-login-car-large" viewBox="0 0 96 64" role="img" aria-label="KVR Car Care car">
+          <path class="kvr-login-car-body" d="M12 38l7-17c2-5 6-8 12-8h32c7 0 12 3 16 9l8 13c4 2 6 5 6 9v5H7v-5c0-3 2-5 5-6z"/>
+          <path class="kvr-login-car-window" d="M25 22c1-3 3-5 7-5h12v14H20l5-9zm23-5h14c5 0 9 2 12 7l4 7H48V17z"/>
+          <path class="kvr-login-car-stripe" d="M10 39h76v5H10z"/>
+          <text class="kvr-login-car-name" x="48" y="38" text-anchor="middle">KVR</text>
+          <circle class="kvr-login-car-wheel" cx="25" cy="48" r="8"/>
+          <circle class="kvr-login-car-wheel" cx="73" cy="48" r="8"/>
+          <circle class="kvr-login-car-hub" cx="25" cy="48" r="3"/>
+          <circle class="kvr-login-car-hub" cx="73" cy="48" r="3"/>
+        </svg>
         <div>
           <p class="text-[10px] font-black uppercase tracking-[0.2em] text-amber-300">Secure workshop access</p>
           <h1 class="mt-1 text-xl font-black text-white">Welcome to KVR</h1>
@@ -298,6 +307,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="js/supabase-config.js"></script>
   <script src="js/email-auth.js"></script>
+  <script src="js/login-effects.js"></script>
   <script src="js/owner-access.js"></script>
   <script src="js/owner.js"></script>
 </body>
