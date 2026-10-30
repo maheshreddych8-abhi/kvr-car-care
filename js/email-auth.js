@@ -61,9 +61,9 @@ class KVREmailAuth {
   async getCurrentUser(scope = 'customer') {
     const client = this.clients[scope];
     if (!client) return null;
-    const { data, error } = await client.auth.getUser();
+    const { data, error } = await client.auth.getSession();
     if (error) throw error;
-    return data.user;
+    return data.session?.user || null;
   }
 
   async isApprovedStaff(email) {
