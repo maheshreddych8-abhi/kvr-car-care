@@ -31,15 +31,14 @@ class KVREmailAuth {
 
   async sendOtp(email, shouldCreateUser = true, scope = 'customer', userMetadata = {}) {
     const client = this.requireClient(scope);
-    const emailRedirectTo = /^https?:$/.test(window.location.protocol)
-      ? `${window.location.origin}${window.location.pathname}`
-      : undefined;
+    const appPath = scope === 'workshop' ? 'owner.html' : 'customer.html';
+    const emailRedirectTo = `https://maheshreddych8-abhi.github.io/kvr-car-care/${appPath}`;
     const { error } = await client.auth.signInWithOtp({
       email,
       options: {
         shouldCreateUser,
         data: userMetadata,
-        ...(emailRedirectTo ? { emailRedirectTo } : {})
+        emailRedirectTo
       }
     });
     if (error) throw error;
