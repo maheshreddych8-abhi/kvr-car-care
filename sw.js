@@ -10,7 +10,7 @@ const ASSETS_TO_CACHE = [
   'js/audio.js',
   'js/pwa.js',
   'js/owner-access.js?v=otp-entry-4',
-  'js/email-auth.js?v=email-only-5',
+  'js/email-auth.js?v=email-only-6',
   'js/supabase-config.js?v=project-vgtskzdhoqwdugdojyfk',
   'js/touch-bubbles.js',
   'js/db.js',
