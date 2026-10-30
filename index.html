@@ -981,6 +981,414 @@
 
             <h3 class="text-xl font-black text-white mb-2">KVR Car Care Customer App</h3>
             <p class="text-xs text-slate-300 mb-4 leading-relaxed">
+              Mobile-first experience for car owners: sign in with an email OTP, register vehicles, raise service requests with category selection, view live repair status, photo proofs, and instant invoice download.
+            </p>
+
+            <div class="space-y-2 mb-6 text-xs text-slate-400">
+              <div class="flex items-center space-x-2">
+                <span class="text-emerald-400">✓</span>
+                <span><strong>Email OTP sign-in:</strong> Receive a six-digit code by email; no paid SMS provider is required</span>
+              </div>
+              <div class="flex items-center space-x-2">
+                <span class="text-emerald-400">✓</span>
+                <span><strong>Raise Request:</strong> Select AC, Engine, Detailing with live owner rates</span>
+              </div>
+              <div class="flex items-center space-x-2">
+                <span class="text-emerald-400">✓</span>
+                <span><strong>Live Status Stepper:</strong> Real-time progress updates with audio chime</span>
+              </div>
+              <div class="flex items-center space-x-2">
+                <span class="text-emerald-400">✓</span>
+                <span><strong>Workshop Photo Proofs:</strong> Inspect parts & work in progress</span>
+              </div>
+              <div class="flex items-center space-x-2">
+                <span class="text-emerald-400">✓</span>
+                <span><strong>WhatsApp Feedback:</strong> 5-star rating link directly to Venkat Reddy</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="pt-4 border-t border-slate-800/80 flex flex-col sm:flex-row items-center gap-3">
+            <a href="customer.html" class="w-full sm:flex-1 py-3 bg-gradient-to-r from-emerald-500 to-teal-400 text-slate-950 font-black rounded-2xl text-xs flex items-center justify-center space-x-2 shadow-lg kvr-btn">
+              <span>🚀</span>
+              <span>Launch Customer App</span>
+            </a>
+            <a href="customer.html" target="_blank" class="w-full sm:w-auto px-4 py-3 bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold rounded-2xl text-xs flex items-center justify-center space-x-1 kvr-btn" title="Open in new window">
+              <span>↗</span>
+              <span>New Window</span>
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SINGLE APP DOWNLOAD & INSTALLATION SECTION -->
+    <section id="pwa-install-card" class="bg-gradient-to-r from-purple-950/80 via-slate-900 to-amber-950/40 rounded-3xl p-6 sm:p-8 border-2 border-amber-400/40 shadow-2xl">
+      <div class="text-center max-w-2xl mx-auto mb-8">
+        <span class="px-3.5 py-1 rounded-full bg-amber-400 text-slate-950 text-xs font-black tracking-wider uppercase">
+          📲 One App • Two Experiences
+        </span>
+        <h2 class="text-2xl sm:text-3xl font-black text-white mt-3">Install KVR Car Care once</h2>
+        <p class="text-xs sm:text-sm text-slate-300 mt-2">
+          One home-screen icon opens this role selector. Choose <strong>Customer</strong> or <strong>Owner / Staff</strong> from the buttons at the top.
+        </p>
+      </div>
+
+      <div class="mb-8 flex flex-col items-center gap-4 rounded-2xl border border-slate-700 bg-slate-950/80 p-6 text-center shadow-xl sm:flex-row sm:text-left">
+        <img src="icon-owner-192.png" alt="KVR Car Care app icon" class="h-16 w-16 rounded-2xl border-2 border-amber-400/60 shadow-lg">
+        <div class="flex-1">
+          <h3 class="font-black text-white">Ready to add KVR to your home screen?</h3>
+          <p class="mt-1 text-xs text-slate-300">Install one app for both Customer and Owner / Staff access.</p>
+        </div>
+        <button type="button" onclick="window.kvrPwa.promptInstall()" class="rounded-xl bg-amber-400 px-5 py-3 text-xs font-black text-slate-950 shadow-lg kvr-btn">
+          📲 Install KVR Car Care
+        </button>
+      </div>
+
+      <!-- Installation Guide -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+        <div class="bg-slate-950/70 p-4 rounded-2xl border border-slate-800">
+          <div class="font-black text-amber-400 text-sm mb-2 flex items-center space-x-2">
+            <span>🤖</span>
+            <span>How to Install on Android:</span>
+          </div>
+          <ol class="list-decimal list-inside space-y-1.5 text-slate-300">
+            <li>Open this KVR Car Care link in <strong>Chrome</strong> on your Android phone.</li>
+            <li>Tap the <strong>"📲 Install App"</strong> banner at the top, or tap the 3 dots (⋮) in Chrome and select <strong>"Install App"</strong>.</li>
+            <li>The app icon installs directly to your home screen!</li>
+          </ol>
+        </div>
+
+        <div class="bg-slate-950/70 p-4 rounded-2xl border border-slate-800">
+          <div class="font-black text-amber-400 text-sm mb-2 flex items-center space-x-2">
+            <span>🍏</span>
+            <span>How to Install on iPhone (iOS):</span>
+          </div>
+          <ol class="list-decimal list-inside space-y-1.5 text-slate-300">
+            <li>Open this KVR Car Care link in <strong>Safari</strong> on your iPhone.</li>
+            <li>Tap the <strong>Share</strong> icon (⎋) at the bottom bar.</li>
+            <li>Scroll down and tap <strong>"Add to Home Screen"</strong> (➕) then tap <strong>Add</strong>.</li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- LIVE DUAL-SCREEN TESTING HERO BANNER -->
+    <section class="bg-slate-900/90 rounded-3xl p-6 border border-slate-800 shadow-xl flex flex-col md:flex-row items-center justify-between gap-6">
+      <div class="space-y-2">
+        <div class="flex items-center space-x-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></span>
+          <span class="text-xs font-bold text-amber-400 uppercase tracking-wider">Real-Time Reactive Sync Engine</span>
+        </div>
+        <h3 class="text-lg sm:text-xl font-black text-white">Want to test both apps simultaneously?</h3>
+        <p class="text-xs text-slate-400 max-w-xl">
+          Use the <strong>Live Split-Screen Studio</strong>: Open the Customer App on the left and Owner App on the right. When you raise a request or update status, see the instant cross-tab live synchronization!
+        </p>
+      </div>
+
+      <a href="demo.html" class="px-6 py-3.5 bg-gradient-to-r from-amber-400 to-amber-300 text-slate-950 font-black rounded-2xl text-xs flex items-center space-x-2 shadow-xl shrink-0 kvr-btn">
+        <span>⚡ Open Split-Screen Studio</span>
+        <span>→</span>
+      </a>
+    </section>
+
+    <!-- CATEGORIES & APPROXIMATE PRICING CATALOG (Owner Editable) -->
+    <section class="bg-slate-900/90 rounded-3xl p-6 border border-slate-800 shadow-xl">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6 pb-4 border-b border-slate-800">
+        <div>
+          <span class="text-xs font-bold text-amber-400 uppercase tracking-wider">Workshop Services & Tariffs</span>
+          <h3 class="text-lg font-black text-white">KVR Car Care Category Tariffs</h3>
+          <p class="text-xs text-slate-400">All prices below can be dynamically modified by the workshop owner in the Owner App.</p>
+        </div>
+        <a href="owner.html" class="text-xs font-bold text-amber-400 hover:underline flex items-center space-x-1">
+          <span>⚙️ Modify Prices in Owner App</span>
+          <span>→</span>
+        </a>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        
+        <!-- AC -->
+        <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800">
+          <div class="text-xs font-black text-amber-300 uppercase tracking-wider mb-2 flex items-center space-x-1.5">
+            <span>❄️</span><span>Air Conditioning</span>
+          </div>
+          <div class="space-y-1 text-xs">
+            <div class="flex justify-between text-slate-300"><span>AC Checkup</span> <strong class="font-mono text-amber-400">₹499</strong></div>
+            <div class="flex justify-between text-slate-300"><span>AC Gas Refill</span> <strong class="font-mono text-amber-400">₹1,500</strong></div>
+            <div class="flex justify-between text-slate-300"><span>Filter Replace</span> <strong class="font-mono text-amber-400">₹700</strong></div>
+            <div class="flex justify-between text-slate-300"><span>Compressor Repair</span> <strong class="font-mono text-amber-400">₹4,500</strong></div>
+            <div class="flex justify-between text-slate-300"><span>Compressor Unit</span> <strong class="font-mono text-amber-400">₹12,000</strong></div>
+            <div class="flex justify-between text-slate-300"><span>Cooling Coil Clean</span> <strong class="font-mono text-amber-400">₹1,000</strong></div>
+          </div>
+        </div>
+
+        <!-- ENGINE -->
+        <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800">
+          <div class="text-xs font-black text-amber-300 uppercase tracking-wider mb-2 flex items-center space-x-1.5">
+            <span>🔧</span><span>Engine Services</span>
+          </div>
+          <div class="space-y-1 text-xs">
+            <div class="flex justify-between text-slate-300"><span>Diagnostics OBD</span> <strong class="font-mono text-amber-400">₹700</strong></div>
+            <div class="flex justify-between text-slate-300"><span>Tune Up</span> <strong class="font-mono text-amber-400">₹2,000</strong></div>
+            <div class="flex justify-between text-slate-300"><span>Engine Service</span> <strong class="font-mono text-amber-400">₹4,000</strong></div>
+            <div class="flex justify-between text-slate-300"><span>Engine Overhaul</span> <strong class="font-mono text-amber-400">₹35,000</strong></div>
+          </div>
+        </div>
+
+        <!-- GENERAL SERVICE & BATTERY -->
+        <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800">
+          <div class="text-xs font-black text-amber-300 uppercase tracking-wider mb-2 flex items-center space-x-1.5">
+            <span>⚙️</span><span>General & Battery</span>
+          </div>
+          <div class="space-y-1 text-xs">
+            <div class="flex justify-between text-slate-300"><span>Basic Service</span> <strong class="font-mono text-amber-400">₹2,500</strong></div>
+            <div class="flex justify-between text-slate-300"><span>Full Service</span> <strong class="font-mono text-amber-400">₹5,500</strong></div>
+            <div class="flex justify-between text-slate-300"><span>Premium Service</span> <strong class="font-mono text-amber-400">₹8,500</strong></div>
+            <div class="flex justify-between text-slate-300"><span>Battery Check</span> <strong class="font-mono text-amber-400">₹250</strong></div>
+            <div class="flex justify-between text-slate-300"><span>Battery Maint.</span> <strong class="font-mono text-amber-400">₹500</strong></div>
+            <div class="flex justify-between text-slate-300"><span>Battery Replace</span> <strong class="font-mono text-amber-400">₹4,500+</strong></div>
+          </div>
+        </div>
+
+        <!-- DETAILING & BODY -->
+        <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800">
+          <div class="text-xs font-black text-amber-300 uppercase tracking-wider mb-2 flex items-center space-x-1.5">
+            <span>✨</span><span>Detailing & Body</span>
+          </div>
+          <div class="space-y-1 text-xs">
+            <div class="flex justify-between text-slate-300"><span>Car Wash</span> <strong class="font-mono text-amber-400">₹500</strong></div>
+            <div class="flex justify-between text-slate-300"><span>Interior Steam</span> <strong class="font-mono text-amber-400">₹1,500</strong></div>
+            <div class="flex justify-between text-slate-300"><span>Detailing Package</span> <strong class="font-mono text-amber-400">₹5,000</strong></div>
+            <div class="flex justify-between text-slate-300"><span>Ceramic 9H</span> <strong class="font-mono text-amber-400">₹15,000</strong></div>
+            <div class="flex justify-between text-slate-300"><span>Dent Repair</span> <strong class="font-mono text-amber-400">₹1,500</strong></div>
+            <div class="flex justify-between text-slate-300"><span>Painting/Panel</span> <strong class="font-mono text-amber-400">₹2,000</strong></div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- GITHUB PAGES PUBLISHING INSTRUCTIONS -->
+    <section class="bg-slate-900/90 rounded-3xl p-6 border border-slate-800 shadow-xl">
+      <div class="flex items-center space-x-2 text-xs font-bold text-amber-400 uppercase tracking-wider mb-2">
+        <span>📦</span>
+        <span>GitHub Pages Ready Deployment</span>
+      </div>
+      <h3 class="text-lg font-black text-white">Publish to GitHub Pages in 3 Simple Steps</h3>
+      <p class="text-xs text-slate-400 mt-1 mb-4">
+        This entire solution has zero build steps and is 100% static client-side ready for free GitHub Pages hosting.
+      </p>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+        <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800">
+          <div class="font-black text-amber-400 text-sm mb-1">Step 1: Create Repo</div>
+          <p class="text-slate-400">Create a new repository on GitHub named <code class="text-white bg-slate-900 px-1 rounded">kvr-car-care</code>.</p>
+        </div>
+
+        <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800">
+          <div class="font-black text-amber-400 text-sm mb-1">Step 2: Push Files</div>
+          <p class="text-slate-400">Upload or push all files from this directory to your repository's <code class="text-white bg-slate-900 px-1 rounded">main</code> branch.</p>
+        </div>
+
+        <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800">
+          <div class="font-black text-amber-400 text-sm mb-1">Step 3: Enable Pages</div>
+          <p class="text-slate-400">Go to <strong>Settings ➜ Pages ➜ Branch: main (/root) ➜ Save</strong>. Your app goes live in seconds!</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="bg-slate-950 border-t border-slate-800/80 py-6 text-center text-xs text-slate-500">
+    <div class="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+      <div>
+        <strong class="text-slate-300">KVR Car Care</strong> • Palakaluru Road, Guntur, Andhra Pradesh • Contact: Venkat Reddy (93464 18994 / 70367 05454)
+      </div>
+      <div class="flex items-center space-x-3">
+        <a href="customer.html" class="hover:text-amber-400 transition-colors">Customer App</a>
+        <span>•</span>
+        <a href="owner.html" class="hover:text-amber-400 transition-colors">Owner App</a>
+        <span>•</span>
+        <a href="demo.html" class="hover:text-amber-400 transition-colors">Split Demo</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/audio.js"></script>
+  <script src="js/pwa.js"></script>
+  <script src="js/touch-bubbles.js"></script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KVR Car Care | Multi-Brand Workshop & Customer Service Platform</title>
+  <meta name="theme-color" content="#2c0924">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="KVR Car Care">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icon-owner-192.png">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="kvr-banner.png" type="image/png">
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col antialiased selection:bg-amber-400 selection:text-slate-950">
+
+  <!-- ================= TOP BRAND BANNER ================= -->
+  <header class="kvr-banner-box border-b border-purple-900/60 shadow-2xl">
+    <div class="max-w-6xl mx-auto px-4 py-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+      
+      <!-- Brand & The Animated Car on Red Line -->
+      <div class="flex items-center space-x-4">
+        <div class="flex flex-col select-none">
+          <div class="flex items-baseline space-x-2">
+            <span class="text-4xl sm:text-5xl font-black text-amber-400 tracking-tight leading-none drop-shadow-md">KVR</span>
+            <span class="text-sm sm:text-base font-black tracking-widest text-white uppercase opacity-95">CAR CARE</span>
+          </div>
+
+          <!-- THE SIGNATURE RED LINE WITH SLOW MOVING CAR -->
+          <div class="kvr-red-line-container" title="KVR Patrol Car - Click to Honk!" onclick="window.kvrAudio.carHorn()">
+            <div class="kvr-red-bar"></div>
+            <!-- Animated SVG Car patrolling only between the red line ends -->
+            <div class="kvr-moving-car">
+              <svg viewBox="0 0 40 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full drop-shadow">
+                <path d="M4 14L8 6C9 4 12 3 16 3H26C29 3 32 5 34 8L38 14C39 15 40 16 40 18C40 20 38 21 36 21H5C3 21 1 19 1 17C1 15 2 14 4 14Z" fill="#ffcc00"/>
+                <path d="M10 7L16 5H24L28 9L31 14H10L10 7Z" fill="#1e1b4b"/>
+                <rect x="2" y="14" width="37" height="2.5" fill="#e5252a"/>
+                <circle cx="9" cy="19" r="4" fill="#0f172a" stroke="#e2e8f0" stroke-width="1.5"/>
+                <circle cx="30" cy="19" r="4" fill="#0f172a" stroke="#e2e8f0" stroke-width="1.5"/>
+                <circle cx="38" cy="15" r="1.5" fill="#ffffff"/>
+              </svg>
+            </div>
+          </div>
+
+          <span class="text-xs text-amber-300 font-extrabold tracking-wider">PALAKALURU ROAD, GUNTUR • ANDHRA PRADESH</span>
+        </div>
+      </div>
+
+      <!-- Role choices and quick actions -->
+      <div class="flex flex-wrap items-center justify-end gap-2">
+        <a href="owner.html" class="rounded-xl border border-purple-400/60 bg-purple-950/80 px-4 py-2.5 text-xs font-black text-white shadow-lg kvr-btn">👑 Owner</a>
+        <a href="customer.html" class="rounded-xl bg-gradient-to-r from-amber-400 to-amber-300 px-4 py-2.5 text-xs font-black text-slate-950 shadow-lg kvr-btn">🚗 Customer</a>
+        <button id="pwa-install-top-button" type="button" onclick="window.kvrPwa.promptInstall()" class="rounded-xl border border-emerald-400/60 bg-emerald-950/70 px-4 py-2.5 text-xs font-black text-emerald-100 shadow-lg kvr-btn">📲 Install App</button>
+        <a href="demo.html" class="px-4 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-400 text-slate-950 text-xs font-black flex items-center space-x-2 shadow-lg kvr-btn">
+          <span>⚡</span>
+          <span>Live Split-Screen Demo</span>
+        </a>
+        <button onclick="window.kvrAudio.toggleMute(); this.innerText = window.kvrAudio.isMuted() ? '🔇 Audio Muted' : '🔊 Audio Active'" class="px-3 py-2 rounded-xl bg-slate-900/80 border border-slate-700 text-xs font-bold text-slate-200 flex items-center space-x-1.5 kvr-btn" title="Toggle Touch Pop Sounds">
+          🔊 Audio Active
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Official Contact Strip from Banner -->
+    <div class="kvr-contact-strip py-1.5 px-4 text-xs font-extrabold flex flex-col sm:flex-row items-center justify-between max-w-6xl mx-auto gap-1">
+      <div class="flex items-center space-x-2 truncate">
+        <span class="tracking-wider">CONTACT PERSON: Venkat Reddy</span>
+        <span class="opacity-40">•</span>
+        <span class="font-mono text-[11px]">Multi-Brand Car Care & AC Specialist</span>
+      </div>
+      <div class="flex items-center space-x-4 font-mono text-xs">
+        <a href="tel:9346418994" class="hover:underline flex items-center space-x-1">
+          <span>📞</span><span>93464 18994</span>
+        </a>
+        <a href="tel:7036705454" class="hover:underline flex items-center space-x-1">
+          <span>📞</span><span>70367 05454</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= HERO SECTION & 2 APPS LAUNCHPAD ================= -->
+  <main class="max-w-6xl mx-auto px-4 py-8 flex-1 w-full space-y-10">
+
+    <!-- Official Banner Preview -->
+    <div class="rounded-3xl overflow-hidden border-2 border-purple-900/60 shadow-2xl bg-gradient-to-r from-purple-950 via-slate-900 to-purple-950">
+      <img src="kvr-banner.png" alt="KVR Car Care Official Banner" class="w-full h-auto object-cover max-h-48 md:max-h-60">
+    </div>
+
+    <!-- 2 SEPARATE APP LINKS (Prominently Featured) -->
+    <section>
+      <div class="text-center max-w-2xl mx-auto mb-8">
+        <span class="px-3 py-1 rounded-full bg-amber-400/10 text-amber-400 text-xs font-extrabold tracking-wider border border-amber-400/20 uppercase">One KVR Car Care App</span>
+        <h2 class="text-2xl sm:text-3xl font-black text-white mt-2">Choose how you want to continue</h2>
+        <p class="text-xs sm:text-sm text-slate-400 mt-1">Install KVR once, then choose Customer or Owner / Staff whenever you open it.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+        <!-- APP 1: OWNER & WORKSHOP APP -->
+        <div class="bg-gradient-to-b from-slate-900 via-slate-900 to-purple-950/40 rounded-3xl p-6 border-2 border-purple-800/60 shadow-xl flex flex-col justify-between kvr-card relative overflow-hidden group">
+          <div class="absolute -right-6 -top-6 w-32 h-32 bg-purple-600/10 rounded-full blur-2xl pointer-events-none"></div>
+          
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <span class="px-3 py-1 rounded-full bg-purple-500/20 text-purple-300 font-extrabold text-[11px] border border-purple-500/30">APP 1 • WORKSHOP STAFF & OWNER</span>
+              <span class="text-2xl">👨‍🔧</span>
+            </div>
+
+            <h3 class="text-xl font-black text-white mb-2">KVR Owner & Staff Access</h3>
+            <p class="text-xs text-slate-300 mb-4 leading-relaxed">
+              Owner-only workshop tools and owner-approved staff access. Secure email OTP sign-in must be configured before staff can be added or the dashboard opened.
+            </p>
+
+            <div class="space-y-2 mb-6 text-xs text-slate-400">
+              <div class="flex items-center space-x-2">
+                <span class="text-amber-400">✓</span>
+                <span><strong>Job Board:</strong> Received ➜ Assigned ➜ In-Progress ➜ Resolved ➜ Completed</span>
+              </div>
+              <div class="flex items-center space-x-2">
+                <span class="text-amber-400">✓</span>
+                <span><strong>Invoice Generator:</strong> Format <code class="text-red-400 font-mono">KVR-DDMM-01</code> with PDF download</span>
+              </div>
+              <div class="flex items-center space-x-2">
+                <span class="text-amber-400">✓</span>
+                <span><strong>WhatsApp Integration:</strong> Automated invoice & pickup alert message</span>
+              </div>
+              <div class="flex items-center space-x-2">
+                <span class="text-amber-400">✓</span>
+                <span><strong>Modify Prices:</strong> Full CRUD owner control over service charges</span>
+              </div>
+              <div class="flex items-center space-x-2">
+                <span class="text-amber-400">✓</span>
+                <span><strong>Reports & Analytics:</strong> Download CSV audit report & revenue breakdown</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="pt-4 border-t border-slate-800/80 flex flex-col sm:flex-row items-center gap-3">
+            <a href="owner.html" class="w-full sm:flex-1 py-3 bg-gradient-to-r from-amber-500 to-amber-400 text-slate-950 font-black rounded-2xl text-xs flex items-center justify-center space-x-2 shadow-lg kvr-btn">
+              <span>🚀</span>
+              <span>Owner / Staff Sign-in</span>
+            </a>
+            <a href="owner.html" target="_blank" class="w-full sm:w-auto px-4 py-3 bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold rounded-2xl text-xs flex items-center justify-center space-x-1 kvr-btn" title="Open in new window">
+              <span>↗</span>
+              <span>New Window</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- APP 2: CUSTOMER APP -->
+        <div class="bg-gradient-to-b from-slate-900 via-slate-900 to-amber-950/20 rounded-3xl p-6 border-2 border-amber-500/40 shadow-xl flex flex-col justify-between kvr-card relative overflow-hidden group">
+          <div class="absolute -right-6 -top-6 w-32 h-32 bg-amber-500/10 rounded-full blur-2xl pointer-events-none"></div>
+
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <span class="px-3 py-1 rounded-full bg-amber-400/20 text-amber-300 font-extrabold text-[11px] border border-amber-400/30">APP 2 • VEHICLE OWNERS</span>
+              <span class="text-2xl">🚗</span>
+            </div>
+
+            <h3 class="text-xl font-black text-white mb-2">KVR Car Care Customer App</h3>
+            <p class="text-xs text-slate-300 mb-4 leading-relaxed">
               Mobile-first experience for car owners: choose email, SMS, or WhatsApp OTP, register vehicles, raise service requests with category selection, view live repair status, photo proofs, and instant invoice download.
             </p>
 
