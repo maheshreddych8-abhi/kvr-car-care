@@ -58,7 +58,7 @@
 
 ## Configure Customer and Owner OTP
 
-Email OTP delivery is not available until a Supabase project and email delivery are configured. The site does not generate or display pretend OTPs. A sender email address by itself does not connect the app to an email service. SMS and WhatsApp OTP sign-in are not enabled.
+Customers do not need a separate registration form: entering an email and requesting a code creates the Supabase account automatically when needed. The site does not generate or display pretend OTPs. A sender email address by itself does not connect the app to an email service. SMS and WhatsApp OTP sign-in are not enabled.
 
 1. Create a Supabase project. In `js/supabase-config.js`, set its Project URL and **public anon/publishable key**. Never put a service-role key in browser code.
 2. In Supabase Authentication > SMTP Settings, enable custom SMTP and configure the business sender. For Gmail, use `smtp.gmail.com`, port `465` (SSL) or `587` (STARTTLS), and `kvrcarcare11@gmail.com` as the sender address and SMTP username. Use a Google App Password as the SMTP password and enter it only in the Supabase dashboard; never add it to this repository or share it in chat. Gmail may impose sending limits.
