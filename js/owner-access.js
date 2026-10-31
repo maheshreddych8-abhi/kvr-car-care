@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
       isWorkshopSession: () => role === 'owner' || role === 'staff'
     };
     window.kvrDB.setOwnerSession({
-      name: staffMember?.full_name || user.user_metadata?.full_name || 'Venkat Reddy (Owner)',
+      name: staffMember?.full_name || user.user_metadata?.full_name || 'Venkat Reddy',
       email: user.email,
       phone: staffMember?.mobile || '9346418994',
       role: role === 'owner' ? 'Owner' : 'Staff',

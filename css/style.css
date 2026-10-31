@@ -354,3 +354,20 @@ body {
   0% { transform: scale(0.6) translateX(0); opacity: 0.8; }
   100% { transform: scale(1.8) translateX(-14px); opacity: 0; }
 }
+
+/* 3D Interactive Car Door Open Animation */
+.car-door-stage {
+  perspective: 900px;
+  transform-style: preserve-3d;
+}
+
+.car-door-wing {
+  transform-origin: 2% center;
+  transition: transform 0.65s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+  will-change: transform;
+}
+
+.car-door-wing.is-open {
+  transform: perspective(800px) rotateY(-65deg) translateZ(8px);
+}
+

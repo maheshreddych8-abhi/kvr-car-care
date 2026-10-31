@@ -6,8 +6,8 @@ class KVROwnerApp {
   constructor() {
     this.session = window.kvrDB.getOwnerSession() || {};
     const role = (this.session.role || '').toLowerCase();
-    this.isOwner = window.kvrSecureAuth ? window.kvrSecureAuth.isOwnerSession() : (role === 'owner' || !role);
-    this.isStaff = !this.isOwner;
+    this.isStaff = (role === 'staff');
+    this.isOwner = !this.isStaff;
     this.activeTab = 'jobs'; // 'jobs', 'pricing', 'customers', 'reports'
     this.statusFilter = 'ALL';
     this.searchQuery = '';
@@ -63,14 +63,16 @@ class KVROwnerApp {
   }
 
   setTab(tab) {
-    if (!this.isOwner && tab !== 'jobs') {
+    if (this.isStaff && tab !== 'jobs') {
       this.showToast('This section is available to the owner only.');
       return;
     }
     this.activeTab = tab;
     document.querySelectorAll('.owner-tab-content').forEach(el => el.classList.add('hidden'));
     const target = document.getElementById(`tab-${tab}`);
-    if (target) target.classList.remove('hidden');
+    if (target) {
+      target.classList.remove('hidden');
+    }
 
     document.querySelectorAll('.owner-nav-btn').forEach(btn => {
       const match = (btn.dataset.tab === tab);
@@ -95,9 +97,9 @@ class KVROwnerApp {
     document.querySelectorAll('.filter-btn').forEach(btn => {
       const match = (btn.dataset.status === status);
       if (match) {
-        btn.className = 'filter-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-amber-400 text-slate-950 kvr-btn';
+        btn.className = 'filter-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-amber-400 text-slate-950 shrink-0 kvr-btn';
       } else {
-        btn.className = 'filter-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 kvr-btn';
+        btn.className = 'filter-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 shrink-0 kvr-btn';
       }
     });
     this.renderJobsList();
@@ -1070,23 +1072,18 @@ Feedback: Reply to this message with your rating!`;
   setupListeners() {
     // Navigation tabs
     document.querySelectorAll('.owner-nav-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
+      btn.onclick = (e) => {
+        e.preventDefault();
         this.setTab(btn.dataset.tab);
-      });
+      };
     });
 
     // Status filter buttons
     document.querySelectorAll('.filter-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        this.statusFilter = btn.dataset.status;
-        document.querySelectorAll('.filter-btn').forEach(b => {
-          b.classList.remove('bg-amber-400', 'text-slate-950');
-          b.classList.add('bg-slate-800', 'text-slate-300');
-        });
-        btn.classList.add('bg-amber-400', 'text-slate-950');
-        btn.classList.remove('bg-slate-800', 'text-slate-300');
-        this.renderJobsList();
-      });
+      btn.onclick = (e) => {
+        e.preventDefault();
+        this.setStatusFilter(btn.dataset.status);
+      };
     });
 
     // Search query
@@ -1107,6 +1104,21 @@ Feedback: Reply to this message with your rating!`;
     }
   }
 }
+
+// Global Fail-Safe Tab & Filter Controllers
+window.kvrOwnerSetTab = function(tab) {
+  if (!window.kvrOwner) {
+    window.kvrOwner = new KVROwnerApp();
+  }
+  window.kvrOwner.setTab(tab);
+};
+
+window.kvrOwnerSetStatusFilter = function(status) {
+  if (!window.kvrOwner) {
+    window.kvrOwner = new KVROwnerApp();
+  }
+  window.kvrOwner.setStatusFilter(status);
+};
 
 // Ensure global instance registry ready
 window.KVROwnerApp = KVROwnerApp;

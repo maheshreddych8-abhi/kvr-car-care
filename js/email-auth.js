@@ -53,7 +53,7 @@ class KVREmailAuth {
             const email = (session.user.email || '').trim().toLowerCase();
             const isOwner = email === this.ownerEmail;
             window.kvrDB?.setOwnerSession({
-              name: isOwner ? 'Venkat Reddy (Owner)' : (session.user.user_metadata?.full_name || 'Staff Technician'),
+              name: isOwner ? 'Venkat Reddy' : (session.user.user_metadata?.full_name || 'Staff Technician'),
               email: email,
               role: isOwner ? 'Owner' : 'Staff',
               isLoggedIn: true

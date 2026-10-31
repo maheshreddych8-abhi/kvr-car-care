@@ -57,8 +57,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=v50-permanent-fix">
-  <link rel="icon" href="icon-192.png?v=v50-permanent-fix" type="image/png">
+  <link rel="stylesheet" href="css/style.css?v=v60-door-fix">
+  <link rel="icon" href="icon-192.png?v=v60-door-fix" type="image/png">
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col antialiased selection:bg-amber-400 selection:text-slate-950 pb-20 md:pb-6">
 
@@ -116,18 +116,19 @@
 
     </div>
 
-    <!-- Official Contact Strip -->
-    <div class="kvr-contact-strip py-1 px-4 text-xs font-extrabold flex items-center justify-between max-w-6xl mx-auto">
-      <div class="flex items-center space-x-2 truncate">
-        <span class="tracking-wider">CONTACT: Venkat Reddy</span>
+    <!-- Official Contact Strip (Responsive, Never Truncated on Mobile) -->
+    <div class="kvr-contact-strip py-1.5 px-3 sm:px-4 text-[11px] sm:text-xs font-extrabold max-w-6xl mx-auto flex flex-wrap items-center justify-between gap-x-2 gap-y-1">
+      <div class="flex flex-wrap items-center gap-x-1.5 gap-y-0.5 text-slate-950 font-black">
+        <span class="tracking-wide">CONTACT: Venkat Reddy</span>
         <span class="opacity-40">•</span>
-        <span class="font-mono text-[11px]">Palakaluru Road, Guntur, AP</span>
+        <span class="font-mono text-[10.5px] sm:text-xs text-slate-900 whitespace-nowrap">Palakaluru Road, Guntur, AP</span>
       </div>
-      <div class="flex items-center space-x-3 font-mono text-[11px]">
-        <a href="tel:9346418994" class="hover:underline flex items-center space-x-1">
+      <div class="flex items-center space-x-2.5 font-mono text-[11px] font-black text-slate-950 ml-auto sm:ml-0">
+        <a href="tel:9346418994" class="hover:underline flex items-center space-x-0.5">
           <span>📞</span><span>93464 18994</span>
         </a>
-        <a href="tel:7036705454" class="hidden sm:flex hover:underline items-center space-x-1">
+        <span class="opacity-40">•</span>
+        <a href="tel:7036705454" class="hover:underline flex items-center space-x-0.5">
           <span>📞</span><span>70367 05454</span>
         </a>
       </div>
@@ -320,14 +321,6 @@
             </div>
 
           </div>
-        </div>
-
-        <!-- 1-Tap Quick Demo Access -->
-        <div class="border-t border-slate-800/80 pt-3 text-center">
-          <button id="btn-gate-demo-customer" type="button" class="w-full py-2.5 rounded-xl border border-blue-400/40 bg-blue-950/40 hover:bg-blue-900/50 text-blue-300 font-bold text-xs flex items-center justify-center space-x-2 kvr-btn">
-            <span>⚡</span>
-            <span>1-Tap Instant Customer Login (Skip Email)</span>
-          </button>
         </div>
       </div>
 
@@ -628,23 +621,23 @@
 
       <!-- NAVIGATION TABS -->
       <nav class="flex items-center space-x-2 bg-slate-900/80 p-1.5 rounded-2xl border border-slate-800 mb-6 overflow-x-auto">
-        <button data-tab="jobs" onclick="window.kvrOwner?.setTab('jobs')" class="owner-nav-btn px-4 py-2 rounded-xl text-xs font-black transition-all bg-amber-400 text-slate-950 shrink-0 kvr-btn">📋 Service Job Board</button>
-        <button data-tab="pricing" onclick="window.kvrOwner?.setTab('pricing')" class="owner-nav-btn px-4 py-2 rounded-xl text-xs font-semibold text-slate-300 hover:bg-slate-800 transition-all shrink-0 kvr-btn">🏷️ Pricing & Services Manager</button>
-        <button data-tab="customers" onclick="window.kvrOwner?.setTab('customers')" class="owner-nav-btn px-4 py-2 rounded-xl text-xs font-semibold text-slate-300 hover:bg-slate-800 transition-all shrink-0 kvr-btn">👥 Registered Customers</button>
-        <button data-tab="staff" onclick="window.kvrOwner?.setTab('staff')" class="owner-nav-btn px-4 py-2 rounded-xl text-xs font-semibold text-slate-300 hover:bg-slate-800 transition-all shrink-0 kvr-btn">🧰 Staff Members</button>
-        <button data-tab="reports" onclick="window.kvrOwner?.setTab('reports')" class="owner-nav-btn px-4 py-2 rounded-xl text-xs font-semibold text-slate-300 hover:bg-slate-800 transition-all shrink-0 kvr-btn">📊 Reports & Analytics</button>
+        <button data-tab="jobs" onclick="window.kvrOwnerSetTab('jobs')" class="owner-nav-btn px-4 py-2 rounded-xl text-xs font-black transition-all bg-amber-400 text-slate-950 shrink-0 kvr-btn">📋 Service Job Board</button>
+        <button data-tab="pricing" onclick="window.kvrOwnerSetTab('pricing')" class="owner-nav-btn px-4 py-2 rounded-xl text-xs font-semibold text-slate-300 hover:bg-slate-800 transition-all shrink-0 kvr-btn">🏷️ Pricing & Services Manager</button>
+        <button data-tab="customers" onclick="window.kvrOwnerSetTab('customers')" class="owner-nav-btn px-4 py-2 rounded-xl text-xs font-semibold text-slate-300 hover:bg-slate-800 transition-all shrink-0 kvr-btn">👥 Registered Customers</button>
+        <button data-tab="staff" onclick="window.kvrOwnerSetTab('staff')" class="owner-nav-btn px-4 py-2 rounded-xl text-xs font-semibold text-slate-300 hover:bg-slate-800 transition-all shrink-0 kvr-btn">🧰 Staff Members</button>
+        <button data-tab="reports" onclick="window.kvrOwnerSetTab('reports')" class="owner-nav-btn px-4 py-2 rounded-xl text-xs font-semibold text-slate-300 hover:bg-slate-800 transition-all shrink-0 kvr-btn">📊 Reports & Analytics</button>
       </nav>
 
       <!-- TAB 1: SERVICE JOBS BOARD -->
       <section id="tab-jobs" class="owner-tab-content">
         <div class="bg-slate-900/90 p-4 rounded-2xl border border-slate-800 mb-4 flex flex-col md:flex-row md:items-center justify-between gap-3">
           <div class="flex items-center space-x-1.5 overflow-x-auto pb-1 md:pb-0">
-            <button data-status="ALL" onclick="window.kvrOwner?.setStatusFilter('ALL')" class="filter-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-amber-400 text-slate-950 shrink-0 kvr-btn">All</button>
-            <button data-status="Received" onclick="window.kvrOwner?.setStatusFilter('Received')" class="filter-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 shrink-0 kvr-btn">Received</button>
-            <button data-status="Assigned" onclick="window.kvrOwner?.setStatusFilter('Assigned')" class="filter-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 shrink-0 kvr-btn">Assigned</button>
-            <button data-status="Work In Progress" onclick="window.kvrOwner?.setStatusFilter('Work In Progress')" class="filter-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 shrink-0 kvr-btn">In Progress</button>
-            <button data-status="Issue Resolved" onclick="window.kvrOwner?.setStatusFilter('Issue Resolved')" class="filter-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 shrink-0 kvr-btn">Resolved</button>
-            <button data-status="Completed" onclick="window.kvrOwner?.setStatusFilter('Completed')" class="filter-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 shrink-0 kvr-btn">Completed</button>
+            <button data-status="ALL" onclick="window.kvrOwnerSetStatusFilter('ALL')" class="filter-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-amber-400 text-slate-950 shrink-0 kvr-btn">All</button>
+            <button data-status="Received" onclick="window.kvrOwnerSetStatusFilter('Received')" class="filter-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 shrink-0 kvr-btn">Received</button>
+            <button data-status="Assigned" onclick="window.kvrOwnerSetStatusFilter('Assigned')" class="filter-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 shrink-0 kvr-btn">Assigned</button>
+            <button data-status="Work In Progress" onclick="window.kvrOwnerSetStatusFilter('Work In Progress')" class="filter-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 shrink-0 kvr-btn">In Progress</button>
+            <button data-status="Issue Resolved" onclick="window.kvrOwnerSetStatusFilter('Issue Resolved')" class="filter-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 shrink-0 kvr-btn">Resolved</button>
+            <button data-status="Completed" onclick="window.kvrOwnerSetStatusFilter('Completed')" class="filter-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 shrink-0 kvr-btn">Completed</button>
           </div>
           <div class="relative w-full md:w-72">
             <input type="text" id="owner-search-input" placeholder="Search vehicle, reg no, phone..." class="w-full bg-slate-950 border border-slate-700 rounded-xl pl-9 pr-3 py-2 text-xs text-white placeholder-slate-500 focus:border-amber-400 focus:outline-none" />
@@ -680,6 +673,112 @@
 
 
   <!-- ================= MODALS & POPUPS ================= -->
+
+  <!-- Interactive 3D Car Door Open Animation Modal (Center of Screen) -->
+  <div id="car-door-animation-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md hidden transition-opacity duration-300 opacity-0 pointer-events-none" role="dialog" aria-modal="true">
+    <div id="car-door-card" class="bg-gradient-to-b from-slate-900 to-slate-950 border-2 border-blue-500/50 rounded-3xl p-6 max-w-sm w-full shadow-[0_0_50px_rgba(37,99,235,0.4)] text-center relative overflow-hidden transform scale-95 transition-transform duration-300">
+      
+      <!-- Ambient Glow Behind Car -->
+      <div class="absolute -top-12 -left-12 w-40 h-40 bg-blue-600/20 rounded-full blur-2xl pointer-events-none"></div>
+      <div class="absolute -bottom-12 -right-12 w-40 h-40 bg-amber-500/20 rounded-full blur-2xl pointer-events-none"></div>
+
+      <!-- Door Badge -->
+      <div class="inline-flex items-center space-x-2 px-3.5 py-1 rounded-full bg-blue-950/90 border border-blue-400/50 text-blue-300 text-xs font-black tracking-wide mb-3" id="car-door-badge">
+        <span>🚗</span>
+        <span id="car-door-badge-text">Opening Driver Door...</span>
+      </div>
+
+      <!-- 3D Car Door Stage -->
+      <div class="relative w-full h-36 mx-auto my-2 flex items-center justify-center overflow-visible" style="perspective: 900px;">
+        
+        <!-- Interior Warm Courtesy Cabin Glow (Illuminates when door opens) -->
+        <div id="car-cabin-glow" class="absolute w-24 h-16 bg-amber-400/35 rounded-2xl blur-md opacity-0 transition-opacity duration-500" style="left: 31%; top: 24%;"></div>
+
+        <!-- Base Car SVG (Body, Cabin, Interior Seat & Wheel, Rear/Front Rims) -->
+        <svg id="car-base-svg" class="w-64 h-32 drop-shadow-2xl" viewBox="0 0 260 120">
+          <defs>
+            <linearGradient id="bodyBlueGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#1d4ed8" />
+              <stop offset="50%" stop-color="#2563eb" />
+              <stop offset="100%" stop-color="#1e40af" />
+            </linearGradient>
+            <linearGradient id="kvrGoldGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#fbbf24" />
+              <stop offset="100%" stop-color="#f59e0b" />
+            </linearGradient>
+            <radialGradient id="rimGrad" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#94a3b8" />
+              <stop offset="60%" stop-color="#475569" />
+              <stop offset="100%" stop-color="#0f172a" />
+            </radialGradient>
+          </defs>
+
+          <!-- Ground Shadow -->
+          <ellipse cx="130" cy="106" rx="115" ry="8" fill="#020617" opacity="0.8" />
+
+          <!-- Cabin Interior (Illuminates when door swings open) -->
+          <rect x="75" y="38" width="65" height="35" rx="4" fill="#1e1b4b" />
+          <rect x="85" y="44" width="16" height="26" rx="4" fill="#312e81" stroke="#f59e0b" stroke-width="1" />
+          <circle cx="93" cy="40" r="4" fill="#4338ca" />
+          <!-- Steering Wheel -->
+          <ellipse cx="124" cy="54" rx="3.5" ry="9" fill="none" stroke="#e2e8f0" stroke-width="2" transform="rotate(-15 124 54)" />
+          <!-- Dashboard Ambient Strip -->
+          <line x1="82" y1="62" x2="134" y2="62" stroke="#fbbf24" stroke-width="1.5" opacity="0.9" />
+
+          <!-- Car Main Body Shell -->
+          <path d="M 15,82 L 30,55 L 68,26 L 165,26 L 210,55 L 245,63 L 252,82 L 252,94 L 226,94 A 20,20 0 0 1 186,94 L 84,94 A 20,20 0 0 1 44,94 L 15,94 Z" fill="url(#bodyBlueGrad)" stroke="#60a5fa" stroke-width="2" />
+          
+          <!-- Rear Window Tint -->
+          <path d="M 72,32 L 105,32 L 105,52 L 40,52 Z" fill="#090d16" stroke="#38bdf8" stroke-width="1" opacity="0.95" />
+          
+          <!-- Front Windshield Tint -->
+          <path d="M 160,32 L 200,52 L 115,52 L 115,32 Z" fill="#090d16" stroke="#38bdf8" stroke-width="1" opacity="0.95" />
+
+          <!-- Headlight (Glowing White-Cyan) -->
+          <polygon points="246,65 252,72 240,75" fill="#f8fafc" />
+          
+          <!-- Taillight (Ruby Red) -->
+          <polygon points="16,68 14,80 22,78" fill="#ef4444" />
+
+          <!-- KVR Brand Badge on Rear Quarter -->
+          <rect x="22" y="80" width="18" height="8" rx="2" fill="#0f172a" stroke="#f59e0b" stroke-width="0.8" />
+          <text x="31" y="86.5" font-size="5" font-weight="900" fill="#f59e0b" text-anchor="middle" font-family="sans-serif">KVR</text>
+
+          <!-- Wheels -->
+          <circle cx="64" cy="94" r="18" fill="#0f172a" stroke="#334155" stroke-width="2" />
+          <circle cx="64" cy="94" r="11" fill="url(#rimGrad)" stroke="#94a3b8" stroke-width="1.5" />
+          <circle cx="64" cy="94" r="4" fill="#38bdf8" />
+          
+          <circle cx="206" cy="94" r="18" fill="#0f172a" stroke="#334155" stroke-width="2" />
+          <circle cx="206" cy="94" r="11" fill="url(#rimGrad)" stroke="#94a3b8" stroke-width="1.5" />
+          <circle cx="206" cy="94" r="4" fill="#38bdf8" />
+        </svg>
+
+        <!-- 3D SWINGING DRIVER DOOR OVERLAY -->
+        <div id="car-swinging-door" class="absolute w-24 h-16 pointer-events-none" style="left: 31%; top: 27%; transform-origin: left center; transform: perspective(800px) rotateY(0deg); transition: transform 0.65s cubic-bezier(0.18, 0.89, 0.32, 1.28);">
+          <svg class="w-full h-full drop-shadow-xl" viewBox="0 0 95 62">
+            <!-- Door Panel Body -->
+            <path d="M 2,2 L 85,2 L 92,30 L 88,58 L 2,58 Z" fill="url(#bodyBlueGrad)" stroke="#93c5fd" stroke-width="1.5" />
+            <!-- Door Window Tint -->
+            <path d="M 6,5 L 80,5 L 84,26 L 6,26 Z" fill="#0b1329" stroke="#38bdf8" stroke-width="1" opacity="0.9" />
+            <!-- Center KVR Emblem on Door -->
+            <rect x="25" y="33" width="38" height="15" rx="3" fill="#0f172a" stroke="url(#kvrGoldGrad)" stroke-width="1.5" />
+            <text x="44" y="44" font-size="9" font-weight="900" fill="#fbbf24" text-anchor="middle" font-family="sans-serif" letter-spacing="1">KVR</text>
+            <!-- Chrome Door Handle -->
+            <rect x="70" y="35" width="12" height="3" rx="1.5" fill="#f8fafc" stroke="#64748b" stroke-width="0.8" />
+          </svg>
+        </div>
+
+      </div>
+
+      <!-- Interactive Sound & Status Note -->
+      <div class="mt-3">
+        <h4 class="text-sm font-black text-white" id="car-door-title">Welcome to KVR Car Care</h4>
+        <p class="text-[11px] text-amber-300 font-medium mt-0.5" id="car-door-subtitle">🔊 Door Open sound active • Loading portal...</p>
+      </div>
+
+    </div>
+  </div>
 
   <!-- Add Vehicle Modal -->
   <div id="add-vehicle-modal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur flex items-center justify-center p-4 hidden">
@@ -725,16 +824,16 @@
 
 
   <!-- ================= SCRIPTS & APP CONTROLLER ================= -->
-  <script src="js/audio.js?v=v50-permanent-fix"></script>
-  <script src="js/db.js?v=v50-permanent-fix"></script>
-  <script src="js/pdf-export.js?v=v50-permanent-fix"></script>
-  <script src="js/pwa.js?v=v50-permanent-fix"></script>
+  <script src="js/audio.js?v=v60-door-fix"></script>
+  <script src="js/db.js?v=v60-door-fix"></script>
+  <script src="js/pdf-export.js?v=v60-door-fix"></script>
+  <script src="js/pwa.js?v=v60-door-fix"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="js/supabase-config.js?v=v50-permanent-fix"></script>
-  <script src="js/email-auth.js?v=v50-permanent-fix"></script>
-  <script src="js/touch-bubbles.js?v=v50-permanent-fix"></script>
-  <script src="js/customer.js?v=v50-permanent-fix"></script>
-  <script src="js/owner.js?v=v50-permanent-fix"></script>
+  <script src="js/supabase-config.js?v=v60-door-fix"></script>
+  <script src="js/email-auth.js?v=v60-door-fix"></script>
+  <script src="js/touch-bubbles.js?v=v60-door-fix"></script>
+  <script src="js/customer.js?v=v60-door-fix"></script>
+  <script src="js/owner.js?v=v60-door-fix"></script>
 
   <!-- Unified App Flow Controller -->
   <script>
@@ -746,6 +845,80 @@
       const switchBtn = document.getElementById('btn-header-switch-role');
       const portalTag = document.getElementById('app-portal-tag');
 
+      // Global Fail-Safe Tab & Filter Controllers for Owner Portal
+      window.kvrOwnerSetTab = function(tab) {
+        if (!window.kvrOwner) {
+          window.kvrOwner = new KVROwnerApp();
+        }
+        window.kvrOwner.setTab(tab);
+      };
+
+      window.kvrOwnerSetStatusFilter = function(status) {
+        if (!window.kvrOwner) {
+          window.kvrOwner = new KVROwnerApp();
+        }
+        window.kvrOwner.setStatusFilter(status);
+      };
+
+      // Interactive 3D Car Door Open Animation with Synthesized Sound
+      window.triggerCarDoorAnimation = function(role, callback) {
+        // 1. Play realistic multi-oscillator synthesized car door open sound
+        window.kvrAudio?.carDoorOpen();
+
+        const modal = document.getElementById('car-door-animation-modal');
+        const card = document.getElementById('car-door-card');
+        const door = document.getElementById('car-swinging-door');
+        const glow = document.getElementById('car-cabin-glow');
+        const badgeText = document.getElementById('car-door-badge-text');
+        const title = document.getElementById('car-door-title');
+        const sub = document.getElementById('car-door-subtitle');
+
+        if (!modal || !door) {
+          if (callback) callback();
+          return;
+        }
+
+        // Update role badge and message
+        if (role === 'owner') {
+          if (badgeText) badgeText.textContent = '👑 Opening Workshop Door...';
+          if (title) title.textContent = 'KVR Workshop Owner Portal';
+          if (sub) sub.textContent = '🔊 Door unlocked • Loading workshop tools...';
+        } else {
+          if (badgeText) badgeText.textContent = '🚗 Opening Customer Door...';
+          if (title) title.textContent = 'Welcome to KVR Car Care';
+          if (sub) sub.textContent = '🔊 Door unlocked • Loading customer portal...';
+        }
+
+        // Reset door to initial closed state
+        door.style.transform = 'perspective(800px) rotateY(0deg)';
+        if (glow) glow.style.opacity = '0';
+        modal.classList.remove('hidden', 'pointer-events-none');
+
+        // Trigger smooth entrance and door swing open
+        requestAnimationFrame(() => {
+          modal.classList.remove('opacity-0');
+          if (card) card.classList.remove('scale-95');
+
+          // Swing door open at 90ms
+          setTimeout(() => {
+            door.style.transform = 'perspective(800px) rotateY(-65deg) translateZ(8px)';
+            if (glow) glow.style.opacity = '1';
+          }, 90);
+        });
+
+        // After 900ms, smoothly fade out modal and activate view
+        setTimeout(() => {
+          modal.classList.add('opacity-0');
+          if (card) card.classList.add('scale-95');
+          setTimeout(() => {
+            modal.classList.add('hidden', 'pointer-events-none');
+            door.style.transform = 'perspective(800px) rotateY(0deg)';
+            if (glow) glow.style.opacity = '0';
+            if (callback) callback();
+          }, 250);
+        }, 900);
+      };
+
       // Helper: Switch views
       window.kvrSwitchView = function(view) {
         gateView?.classList.add('hidden');
@@ -753,6 +926,7 @@
         ownerView?.classList.add('hidden');
         userBar?.classList.add('hidden');
         switchBtn?.classList.add('hidden');
+        localStorage.setItem('kvr_last_active_role', view);
 
         if (view === 'customer') {
           custView?.classList.remove('hidden');
@@ -781,7 +955,10 @@
           const isStaff = (ownerSession?.role?.toLowerCase() === 'staff');
           if (portalTag) portalTag.textContent = isStaff ? 'WORKSHOP STAFF PORTAL' : 'WORKSHOP OWNER PORTAL';
 
-          document.getElementById('active-user-name').textContent = ownerSession?.name || (isStaff ? 'Suresh (Technician)' : 'Venkat Reddy');
+          // Sanitize owner name: Strip any duplicate parenthetical role titles
+          const rawOwnerName = ownerSession?.name || (isStaff ? 'Suresh' : 'Venkat Reddy');
+          const cleanOwnerName = rawOwnerName.replace(/\s*\((Owner|Staff|Technician|Senior Technician)\)/gi, '').trim();
+          document.getElementById('active-user-name').textContent = cleanOwnerName;
           document.getElementById('active-user-role').textContent = isStaff ? '(Staff / Tech)' : '(Owner)';
 
           window.kvrSecureAuth = {
@@ -807,6 +984,7 @@
 
       // Switch to Auth Gate
       window.kvrAppSwitchToAuth = function() {
+        localStorage.removeItem('kvr_last_active_role');
         window.kvrDB.clearCustomerSession();
         window.kvrDB.clearOwnerSession();
         window.kvrEmailAuth?.signOut('customer');
@@ -818,7 +996,7 @@
       function showGateStatus(msg, isSuccess) {
         const statusEl = document.getElementById('gate-auth-status');
         if (!statusEl) return;
-        statusEl.textContent = msg;
+        statusEl.innerHTML = msg;
         statusEl.className = isSuccess 
           ? 'mb-4 rounded-xl border border-emerald-500/50 bg-emerald-950/70 p-3 text-xs text-emerald-200'
           : 'mb-4 rounded-xl border border-rose-500/50 bg-rose-950/70 p-3 text-xs text-rose-200';
@@ -826,26 +1004,28 @@
       }
 
       document.addEventListener('DOMContentLoaded', () => {
-        // Toggle Customer vs Owner buttons
+        // Toggle Customer vs Owner buttons with 3D Car Door Open Animation & Sound
         const btnCust = document.getElementById('btn-toggle-customer');
         const btnOwner = document.getElementById('btn-toggle-owner');
         const formCust = document.getElementById('gate-customer-form');
         const formOwner = document.getElementById('gate-owner-form');
 
         btnCust?.addEventListener('click', () => {
-          btnCust.className = 'role-switch-btn rounded-2xl border-2 border-amber-400 bg-amber-400/20 p-3.5 text-center transition-all shadow-md group kvr-btn';
+          btnCust.className = 'role-switch-btn rounded-2xl border-2 border-blue-500 bg-blue-950/60 p-3.5 text-center transition-all shadow-md group kvr-btn';
           btnOwner.className = 'role-switch-btn rounded-2xl border border-slate-700 bg-slate-950/60 p-3.5 text-center transition-all hover:border-purple-400 group kvr-btn';
-          formCust?.classList.remove('hidden');
-          formOwner?.classList.add('hidden');
-          window.kvrAudio?.pop();
+          window.triggerCarDoorAnimation('customer', () => {
+            formCust?.classList.remove('hidden');
+            formOwner?.classList.add('hidden');
+          });
         });
 
         btnOwner?.addEventListener('click', () => {
           btnOwner.className = 'role-switch-btn rounded-2xl border-2 border-purple-400 bg-purple-950/70 p-3.5 text-center transition-all shadow-md group kvr-btn';
-          btnCust.className = 'role-switch-btn rounded-2xl border border-slate-700 bg-slate-950/60 p-3.5 text-center transition-all hover:border-amber-400 group kvr-btn';
-          formOwner?.classList.remove('hidden');
-          formCust?.classList.add('hidden');
-          window.kvrAudio?.pop();
+          btnCust.className = 'role-switch-btn rounded-2xl border border-slate-700 bg-slate-950/60 p-3.5 text-center transition-all hover:border-blue-400 group kvr-btn';
+          window.triggerCarDoorAnimation('owner', () => {
+            formOwner?.classList.remove('hidden');
+            formCust?.classList.add('hidden');
+          });
         });
 
         // Sub-role toggle: Owner vs Staff
@@ -983,8 +1163,8 @@
             showGateStatus(`
               <div class="space-y-1.5">
                 <div class="font-bold text-emerald-300">✅ Sign-in link sent to <strong>${email}</strong>!</div>
-                <div class="text-slate-300">Open your inbox (or spam) and tap <strong>"Sign in"</strong> in the email to open the customer app automatically.</div>
-                <div class="text-amber-300 text-[11px] pt-1">⚡ Or use <strong>"1-Tap Instant Customer Login"</strong> below to test immediately!</div>
+                <div class="text-slate-300">Open your inbox and tap <strong>"Sign in"</strong> in the email to open the customer app automatically.</div>
+                <div class="text-amber-300 text-xs font-semibold pt-1">✨ Welcome to KVR Car Care, have a great day!</div>
               </div>
             `, true);
           } catch (err) {
@@ -993,24 +1173,6 @@
             btn.disabled = false;
             btn.innerHTML = '<span>📩</span><span>Resend Sign-In Link</span>';
           }
-        });
-
-        // 1-Tap Customer Instant Login
-        document.getElementById('btn-gate-demo-customer')?.addEventListener('click', () => {
-          const name = document.getElementById('gate-cust-name')?.value.trim() || 'Ramesh Kumar';
-          const phone = document.getElementById('gate-cust-phone')?.value.trim() || '9876543210';
-          const email = document.getElementById('gate-cust-email')?.value.trim() || 'ramesh.customer@kvrcarcare.com';
-
-          window.kvrDB.setCustomerSession({
-            name,
-            phone,
-            email,
-            authUserId: 'instant-cust-' + Date.now(),
-            authMethod: 'instant',
-            isLoggedIn: true
-          });
-          window.kvrAudio?.success();
-          window.kvrSwitchView('customer');
         });
 
         // 2. Send Owner / Staff Email Sign-in Link
@@ -1045,7 +1207,7 @@
         // 1-Tap Owner Demo Login
         document.getElementById('btn-gate-demo-owner')?.addEventListener('click', () => {
           window.kvrDB.setOwnerSession({
-            name: 'Venkat Reddy (Owner)',
+            name: 'Venkat Reddy',
             email: 'maheshch1810@gmail.com',
             role: 'Owner',
             isLoggedIn: true
@@ -1057,7 +1219,7 @@
         // 1-Tap Staff Demo Login
         document.getElementById('btn-gate-demo-staff')?.addEventListener('click', () => {
           window.kvrDB.setOwnerSession({
-            name: 'Suresh (Senior Technician)',
+            name: 'Suresh',
             email: 'suresh.tech@kvrcarcare.com',
             role: 'Staff',
             isLoggedIn: true
@@ -1086,21 +1248,28 @@
             } else {
               window.kvrSwitchView('customer');
             }
-          } else if (forcedRole === 'owner' && ownerSession && ownerSession.isLoggedIn) {
-            window.kvrSwitchView('owner');
-          } else if (forcedRole === 'customer' && custSession && custSession.isLoggedIn) {
-            window.kvrSwitchView('customer');
-          } else if (!forcedRole && ownerSession && ownerSession.isLoggedIn) {
-            window.kvrSwitchView('owner');
-          } else if (!forcedRole && custSession && custSession.isLoggedIn) {
-            window.kvrSwitchView('customer');
           } else {
-            // Unauthenticated: Always show the Welcome Gate
-            window.kvrSwitchView('auth');
-            if (forcedRole === 'owner') {
-              document.getElementById('btn-toggle-owner')?.click();
+            const lastRole = localStorage.getItem('kvr_last_active_role');
+            if (forcedRole === 'owner' && ownerSession && ownerSession.isLoggedIn) {
+              window.kvrSwitchView('owner');
+            } else if (forcedRole === 'customer' && custSession && custSession.isLoggedIn) {
+              window.kvrSwitchView('customer');
+            } else if (lastRole === 'customer' && custSession && custSession.isLoggedIn) {
+              window.kvrSwitchView('customer');
+            } else if (lastRole === 'owner' && ownerSession && ownerSession.isLoggedIn) {
+              window.kvrSwitchView('owner');
+            } else if (!forcedRole && custSession && custSession.isLoggedIn) {
+              window.kvrSwitchView('customer');
+            } else if (!forcedRole && ownerSession && ownerSession.isLoggedIn) {
+              window.kvrSwitchView('owner');
             } else {
-              document.getElementById('btn-toggle-customer')?.click();
+              // Unauthenticated: Always show the Welcome Gate
+              window.kvrSwitchView('auth');
+              if (forcedRole === 'owner') {
+                document.getElementById('btn-toggle-owner')?.click();
+              } else {
+                document.getElementById('btn-toggle-customer')?.click();
+              }
             }
           }
         } catch (initErr) {
