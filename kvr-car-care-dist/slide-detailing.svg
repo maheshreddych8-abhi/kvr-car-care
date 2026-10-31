@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 300" width="100%" height="100%">
+  <defs>
+    <linearGradient id="washBg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#022c22"/>
+      <stop offset="50%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#064e3b"/>
+    </linearGradient>
+  </defs>
+  <rect width="600" height="300" fill="url(#washBg)"/>
+  
+  <!-- Floor Grid with Water Reflection -->
+  <rect x="0" y="225" width="600" height="75" fill="#021c17"/>
+  <ellipse cx="300" cy="245" rx="260" ry="25" fill="#065f46" opacity="0.4"/>
+  
+  <!-- Sparkling Foam Droplets -->
+  <circle cx="210" cy="90" r="14" fill="#ffffff" opacity="0.6"/>
+  <circle cx="240" cy="70" r="18" fill="#ffffff" opacity="0.5"/>
+  <circle cx="340" cy="65" r="16" fill="#ffffff" opacity="0.6"/>
+  <circle cx="380" cy="85" r="12" fill="#ffffff" opacity="0.5"/>
+  <circle cx="280" cy="55" r="22" fill="#ffffff" opacity="0.7"/>
+  
+  <!-- Polished Shiny Blue Car -->
+  <g transform="translate(180, 105)">
+    <path d="M 10,85 L 35,55 L 70,25 L 160,25 L 210,55 L 260,65 L 275,85 L 275,105 L 250,105 A 18,18 0 0 1 214,105 L 85,105 A 18,18 0 0 1 49,105 L 10,105 Z" fill="#2563eb" stroke="#38bdf8" stroke-width="3"/>
+    <!-- Windows -->
+    <path d="M 75,32 L 115,32 L 115,55 L 55,55 Z" fill="#0f172a" stroke="#67e8f9" stroke-width="1.5"/>
+    <path d="M 122,32 L 155,32 L 195,55 L 122,55 Z" fill="#0f172a" stroke="#67e8f9" stroke-width="1.5"/>
+    <!-- KVR Nameplate on Door -->
+    <rect x="90" y="66" width="60" height="22" rx="4" fill="#0f172a" stroke="#f5b800" stroke-width="2"/>
+    <text x="120" y="82" font-family="sans-serif" font-size="14" font-weight="900" fill="#ffffff" text-anchor="middle">KVR</text>
+    <!-- Sparkling Highlights on Car Body -->
+    <polygon points="40,60 48,60 44,52" fill="#ffffff"/>
+    <polygon points="170,40 178,40 174,32" fill="#ffffff"/>
+    <polygon points="230,68 238,68 234,60" fill="#ffffff"/>
+    <circle cx="67" cy="105" r="16" fill="#0f172a" stroke="#e2e8f0" stroke-width="3"/>
+    <circle cx="232" cy="105" r="16" fill="#0f172a" stroke="#e2e8f0" stroke-width="3"/>
+  </g>
+  
+  <rect x="20" y="20" width="280" height="34" rx="8" fill="#0f172a" opacity="0.9" stroke="#10b981" stroke-width="1.5"/>
+  <text x="32" y="42" font-family="sans-serif" font-size="13" font-weight="900" fill="#34d399">✨ PREMIUM FOAM &amp; DETAILING BAY</text>
+  
+  <rect x="360" y="245" width="220" height="30" rx="6" fill="#1e293b" opacity="0.95" stroke="#10b981" stroke-width="1"/>
+  <text x="470" y="265" font-family="sans-serif" font-size="11" font-weight="bold" fill="#34d399" text-anchor="middle">Deep Foam &amp; Sanitization Care</text>
+</svg>
