@@ -147,17 +147,17 @@
       <!-- Car Garage Image Slides Carousel -->
       <div class="mb-4 relative rounded-2xl overflow-hidden border border-slate-800 bg-slate-950 shadow-xl group">
         <div id="garage-slides-container" class="relative w-full aspect-[16/9] overflow-hidden">
-          <!-- Slide 1: Main Workshop Front & Bays -->
+          <!-- Slide 1: Main Workshop Bays & Hydraulic Lifts (Clean 16:9 Vector - No Crop) -->
           <div class="garage-slide absolute inset-0 transition-opacity duration-700 opacity-100">
-            <img src="kvr-banner.png" alt="KVR Workshop Front & Service Bays" class="w-full h-full object-cover">
+            <img src="slide-workshop-bays.svg" alt="KVR Workshop Service Bays & Hydraulic Lifts" class="w-full h-full object-contain bg-slate-950">
             <div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-slate-950 via-slate-950/80 to-transparent p-2.5">
-              <div class="text-[10px] font-black uppercase text-amber-300">Workshop Bays</div>
-              <div class="text-xs font-bold text-white">Multi-brand service station & bays at Palakaluru Road</div>
+              <div class="text-[10px] font-black uppercase text-amber-300">Workshop Service Bays</div>
+              <div class="text-xs font-bold text-white">Hydraulic lift stations & multi-brand repair bays</div>
             </div>
           </div>
           <!-- Slide 2: AC Care & Refrigerant Station -->
           <div class="garage-slide absolute inset-0 transition-opacity duration-700 opacity-0 pointer-events-none">
-            <img src="slide-ac-bay.svg" alt="AC Care & Refrigerant Station" class="w-full h-full object-cover">
+            <img src="slide-ac-bay.svg" alt="AC Care & Refrigerant Station" class="w-full h-full object-contain bg-slate-950">
             <div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-slate-950 via-slate-950/80 to-transparent p-2.5">
               <div class="text-[10px] font-black uppercase text-sky-400">AC Overhaul Bay</div>
               <div class="text-xs font-bold text-white">R134a refrigerant recovery, leak testing & compressor overhaul</div>
@@ -165,7 +165,7 @@
           </div>
           <!-- Slide 3: Scanning & Diagnostics Station -->
           <div class="garage-slide absolute inset-0 transition-opacity duration-700 opacity-0 pointer-events-none">
-            <img src="slide-diagnostics.svg" alt="Scanning & Diagnostics Bay" class="w-full h-full object-cover">
+            <img src="slide-diagnostics.svg" alt="Scanning & Diagnostics Bay" class="w-full h-full object-contain bg-slate-950">
             <div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-slate-950 via-slate-950/80 to-transparent p-2.5">
               <div class="text-[10px] font-black uppercase text-amber-400">Computerized Diagnostics</div>
               <div class="text-xs font-bold text-white">OBD scanner inspection & precision electrical overhaul</div>
@@ -173,7 +173,7 @@
           </div>
           <!-- Slide 4: Detailing & Sanitization Bay -->
           <div class="garage-slide absolute inset-0 transition-opacity duration-700 opacity-0 pointer-events-none">
-            <img src="slide-detailing.svg" alt="Foam Wash & Detailing Bay" class="w-full h-full object-cover">
+            <img src="slide-detailing.svg" alt="Foam Wash & Detailing Bay" class="w-full h-full object-contain bg-slate-950">
             <div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-slate-950 via-slate-950/80 to-transparent p-2.5">
               <div class="text-[10px] font-black uppercase text-emerald-400">Detailing Bay</div>
               <div class="text-xs font-bold text-white">Deep foam wash, interior cleaning & sanitization</div>
@@ -182,8 +182,8 @@
         </div>
         <!-- Slide indicators / controls -->
         <div class="absolute top-2 right-2 flex space-x-1.5 z-10">
-          <button id="btn-slide-prev" type="button" class="w-6 h-6 rounded-full bg-slate-950/80 text-white text-xs flex items-center justify-center hover:bg-slate-800 border border-slate-700 shadow">‹</button>
-          <button id="btn-slide-next" type="button" class="w-6 h-6 rounded-full bg-slate-950/80 text-white text-xs flex items-center justify-center hover:bg-slate-800 border border-slate-700 shadow">›</button>
+          <button id="btn-slide-prev" type="button" class="w-7 h-7 rounded-full bg-slate-950/90 text-white font-bold text-sm flex items-center justify-center hover:bg-slate-800 border border-slate-700 shadow kvr-btn" title="Previous Slide">‹</button>
+          <button id="btn-slide-next" type="button" class="w-7 h-7 rounded-full bg-slate-950/90 text-white font-bold text-sm flex items-center justify-center hover:bg-slate-800 border border-slate-700 shadow kvr-btn" title="Next Slide">›</button>
         </div>
       </div>
 
@@ -1039,18 +1039,33 @@
         const custSession = window.kvrDB.getCustomerSession();
         const ownerSession = window.kvrDB.getOwnerSession();
 
-        if (window.location.hash && window.location.hash.includes('access_token=')) {
-          // Returning from Magic Link email click
-          if (forcedRole === 'owner') {
+        try {
+          if (window.location.hash && window.location.hash.includes('access_token=')) {
+            // Returning from Magic Link email click
+            if (forcedRole === 'owner') {
+              window.kvrSwitchView('owner');
+            } else {
+              window.kvrSwitchView('customer');
+            }
+          } else if (forcedRole === 'owner' && ownerSession && ownerSession.isLoggedIn) {
             window.kvrSwitchView('owner');
-          } else {
+          } else if (forcedRole === 'customer' && custSession && custSession.isLoggedIn) {
             window.kvrSwitchView('customer');
+          } else if (!forcedRole && ownerSession && ownerSession.isLoggedIn) {
+            window.kvrSwitchView('owner');
+          } else if (!forcedRole && custSession && custSession.isLoggedIn) {
+            window.kvrSwitchView('customer');
+          } else {
+            // Unauthenticated: Always show the Welcome Gate
+            window.kvrSwitchView('auth');
+            if (forcedRole === 'owner') {
+              document.getElementById('btn-toggle-owner')?.click();
+            } else {
+              document.getElementById('btn-toggle-customer')?.click();
+            }
           }
-        } else if (forcedRole === 'owner' || (!forcedRole && ownerSession && ownerSession.isLoggedIn)) {
-          window.kvrSwitchView('owner');
-        } else if (forcedRole === 'customer' || (!forcedRole && custSession && custSession.isLoggedIn)) {
-          window.kvrSwitchView('customer');
-        } else {
+        } catch (initErr) {
+          console.warn('Init fallback to auth gate:', initErr);
           window.kvrSwitchView('auth');
         }
       });

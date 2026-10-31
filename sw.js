@@ -1,5 +1,5 @@
 // KVR Car Care - Progressive Web App Service Worker
-const CACHE_NAME = 'kvr-car-care-v35-blue-car';
+const CACHE_NAME = 'kvr-car-care-v45-clean-slides';
 const ASSETS_TO_CACHE = [
   './',
   'index.html',
@@ -17,7 +17,7 @@ const ASSETS_TO_CACHE = [
   'js/customer.js',
   'js/owner.js',
   'js/pdf-export.js',
-  'kvr-banner.png',
+  'slide-workshop-bays.svg',
   'slide-ac-bay.svg',
   'slide-diagnostics.svg',
   'slide-detailing.svg',

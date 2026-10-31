@@ -15,7 +15,7 @@ New-Item -ItemType Directory -Path "$stage\js" | Out-Null
 $rootFiles = @(
     'index.html', 'customer.html', 'owner.html', '404.html', 'demo.html',
     'manifest.json', 'manifest-customer.json', 'manifest-owner.json', 'sw.js',
-    'kvr-banner.png', 'slide-ac-bay.svg', 'slide-diagnostics.svg', 'slide-detailing.svg',
+    'slide-workshop-bays.svg', 'slide-ac-bay.svg', 'slide-diagnostics.svg', 'slide-detailing.svg',
     'icon-192.png', 'icon-512.png', 'icon-customer-192.png', 'icon-customer-512.png',
     'icon-owner-192.png', 'icon-owner-512.png', 'festival-offer.svg',
     'supabase-staff-schema.sql', 'README.md'
