@@ -628,23 +628,23 @@
 
       <!-- NAVIGATION TABS -->
       <nav class="flex items-center space-x-2 bg-slate-900/80 p-1.5 rounded-2xl border border-slate-800 mb-6 overflow-x-auto">
-        <button data-tab="jobs" class="owner-nav-btn px-4 py-2 rounded-xl text-xs font-black transition-all bg-amber-400 text-slate-950 kvr-btn">📋 Service Job Board</button>
-        <button data-tab="pricing" class="owner-nav-btn px-4 py-2 rounded-xl text-xs font-semibold text-slate-300 hover:bg-slate-800 transition-all kvr-btn">🏷️ Pricing & Services Manager</button>
-        <button data-tab="customers" class="owner-nav-btn px-4 py-2 rounded-xl text-xs font-semibold text-slate-300 hover:bg-slate-800 transition-all kvr-btn">👥 Registered Customers</button>
-        <button data-tab="staff" class="owner-nav-btn px-4 py-2 rounded-xl text-xs font-semibold text-slate-300 hover:bg-slate-800 transition-all kvr-btn">🧰 Staff Members</button>
-        <button data-tab="reports" class="owner-nav-btn px-4 py-2 rounded-xl text-xs font-semibold text-slate-300 hover:bg-slate-800 transition-all kvr-btn">📊 Reports & Analytics</button>
+        <button data-tab="jobs" onclick="window.kvrOwner?.setTab('jobs')" class="owner-nav-btn px-4 py-2 rounded-xl text-xs font-black transition-all bg-amber-400 text-slate-950 shrink-0 kvr-btn">📋 Service Job Board</button>
+        <button data-tab="pricing" onclick="window.kvrOwner?.setTab('pricing')" class="owner-nav-btn px-4 py-2 rounded-xl text-xs font-semibold text-slate-300 hover:bg-slate-800 transition-all shrink-0 kvr-btn">🏷️ Pricing & Services Manager</button>
+        <button data-tab="customers" onclick="window.kvrOwner?.setTab('customers')" class="owner-nav-btn px-4 py-2 rounded-xl text-xs font-semibold text-slate-300 hover:bg-slate-800 transition-all shrink-0 kvr-btn">👥 Registered Customers</button>
+        <button data-tab="staff" onclick="window.kvrOwner?.setTab('staff')" class="owner-nav-btn px-4 py-2 rounded-xl text-xs font-semibold text-slate-300 hover:bg-slate-800 transition-all shrink-0 kvr-btn">🧰 Staff Members</button>
+        <button data-tab="reports" onclick="window.kvrOwner?.setTab('reports')" class="owner-nav-btn px-4 py-2 rounded-xl text-xs font-semibold text-slate-300 hover:bg-slate-800 transition-all shrink-0 kvr-btn">📊 Reports & Analytics</button>
       </nav>
 
       <!-- TAB 1: SERVICE JOBS BOARD -->
       <section id="tab-jobs" class="owner-tab-content">
         <div class="bg-slate-900/90 p-4 rounded-2xl border border-slate-800 mb-4 flex flex-col md:flex-row md:items-center justify-between gap-3">
           <div class="flex items-center space-x-1.5 overflow-x-auto pb-1 md:pb-0">
-            <button data-status="ALL" class="filter-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-amber-400 text-slate-950 kvr-btn">All</button>
-            <button data-status="Received" class="filter-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 kvr-btn">Received</button>
-            <button data-status="Assigned" class="filter-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 kvr-btn">Assigned</button>
-            <button data-status="Work In Progress" class="filter-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 kvr-btn">In Progress</button>
-            <button data-status="Issue Resolved" class="filter-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 kvr-btn">Resolved</button>
-            <button data-status="Completed" class="filter-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 kvr-btn">Completed</button>
+            <button data-status="ALL" onclick="window.kvrOwner?.setStatusFilter('ALL')" class="filter-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-amber-400 text-slate-950 shrink-0 kvr-btn">All</button>
+            <button data-status="Received" onclick="window.kvrOwner?.setStatusFilter('Received')" class="filter-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 shrink-0 kvr-btn">Received</button>
+            <button data-status="Assigned" onclick="window.kvrOwner?.setStatusFilter('Assigned')" class="filter-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 shrink-0 kvr-btn">Assigned</button>
+            <button data-status="Work In Progress" onclick="window.kvrOwner?.setStatusFilter('Work In Progress')" class="filter-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 shrink-0 kvr-btn">In Progress</button>
+            <button data-status="Issue Resolved" onclick="window.kvrOwner?.setStatusFilter('Issue Resolved')" class="filter-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 shrink-0 kvr-btn">Resolved</button>
+            <button data-status="Completed" onclick="window.kvrOwner?.setStatusFilter('Completed')" class="filter-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 shrink-0 kvr-btn">Completed</button>
           </div>
           <div class="relative w-full md:w-72">
             <input type="text" id="owner-search-input" placeholder="Search vehicle, reg no, phone..." class="w-full bg-slate-950 border border-slate-700 rounded-xl pl-9 pr-3 py-2 text-xs text-white placeholder-slate-500 focus:border-amber-400 focus:outline-none" />

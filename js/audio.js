@@ -150,6 +150,60 @@ class KVRSoundEffects {
     } catch (e) {}
   }
 
+  // Realistic Car Door Open Sound: Handle click, latch release & heavy door swing
+  carDoorOpen() {
+    if (this.isMuted()) return;
+    try {
+      this.init();
+      if (!this.ctx) return;
+
+      const now = this.ctx.currentTime;
+
+      // 1. Handle Latch Snap / Click (High metallic impulse)
+      const osc1 = this.ctx.createOscillator();
+      const gain1 = this.ctx.createGain();
+      osc1.type = 'triangle';
+      osc1.frequency.setValueAtTime(1600, now);
+      osc1.frequency.exponentialRampToValueAtTime(450, now + 0.04);
+      gain1.gain.setValueAtTime(0.3, now);
+      gain1.gain.exponentialRampToValueAtTime(0.001, now + 0.04);
+      osc1.connect(gain1);
+      gain1.connect(this.ctx.destination);
+      osc1.start(now);
+      osc1.stop(now + 0.04);
+
+      // 2. Door Lock Mechanism Release (Clack)
+      const osc2 = this.ctx.createOscillator();
+      const gain2 = this.ctx.createGain();
+      const t2 = now + 0.045;
+      osc2.type = 'sine';
+      osc2.frequency.setValueAtTime(380, t2);
+      osc2.frequency.exponentialRampToValueAtTime(95, t2 + 0.07);
+      gain2.gain.setValueAtTime(0.32, t2);
+      gain2.gain.exponentialRampToValueAtTime(0.001, t2 + 0.07);
+      osc2.connect(gain2);
+      gain2.connect(this.ctx.destination);
+      osc2.start(t2);
+      osc2.stop(t2 + 0.07);
+
+      // 3. Heavy Door Hinge Swing & Seal Thud (Low resonant thump)
+      const osc3 = this.ctx.createOscillator();
+      const gain3 = this.ctx.createGain();
+      const t3 = now + 0.11;
+      osc3.type = 'sine';
+      osc3.frequency.setValueAtTime(110, t3);
+      osc3.frequency.exponentialRampToValueAtTime(35, t3 + 0.18);
+      gain3.gain.setValueAtTime(0.38, t3);
+      gain3.gain.exponentialRampToValueAtTime(0.001, t3 + 0.18);
+      osc3.connect(gain3);
+      gain3.connect(this.ctx.destination);
+      osc3.start(t3);
+      osc3.stop(t3 + 0.18);
+    } catch (e) {
+      console.warn('Audio carDoorOpen error:', e);
+    }
+  }
+
   // Playful car horn "beep beep"
   carHorn() {
     if (this.isMuted()) return;

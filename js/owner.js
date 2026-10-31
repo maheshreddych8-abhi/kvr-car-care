@@ -73,7 +73,8 @@ class KVROwnerApp {
     if (target) target.classList.remove('hidden');
 
     document.querySelectorAll('.owner-nav-btn').forEach(btn => {
-      if (btn.dataset.tab === tab) {
+      const match = (btn.dataset.tab === tab);
+      if (match) {
         btn.classList.add('bg-amber-400', 'text-slate-950', 'font-black');
         btn.classList.remove('text-slate-300', 'hover:bg-slate-800');
       } else {
@@ -86,6 +87,21 @@ class KVROwnerApp {
     if (this.isOwner && tab === 'customers') this.renderCustomers();
     if (this.isOwner && tab === 'staff') this.renderStaffManager();
     if (this.isOwner && tab === 'reports') this.renderReports();
+    window.kvrAudio?.pop();
+  }
+
+  setStatusFilter(status) {
+    this.statusFilter = status;
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      const match = (btn.dataset.status === status);
+      if (match) {
+        btn.className = 'filter-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-amber-400 text-slate-950 kvr-btn';
+      } else {
+        btn.className = 'filter-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 kvr-btn';
+      }
+    });
+    this.renderJobsList();
+    window.kvrAudio?.pop();
   }
 
   showToast(message, type = 'info') {
@@ -1092,7 +1108,5 @@ Feedback: Reply to this message with your rating!`;
   }
 }
 
-// Global Owner App instance
-document.addEventListener('DOMContentLoaded', () => {
-  window.kvrOwner = null;
-});
+// Ensure global instance registry ready
+window.KVROwnerApp = KVROwnerApp;
