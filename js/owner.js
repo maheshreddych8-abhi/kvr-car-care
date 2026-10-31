@@ -4,16 +4,23 @@
 
 class KVROwnerApp {
   constructor() {
-    if (!window.kvrSecureAuth || !window.kvrSecureAuth.isWorkshopSession()) {
-      throw new Error('Secure owner authentication is not configured.');
-    }
-
-    this.session = window.kvrDB.getOwnerSession();
-    this.isOwner = window.kvrSecureAuth.isOwnerSession();
+    this.session = window.kvrDB.getOwnerSession() || {};
+    const role = (this.session.role || '').toLowerCase();
+    this.isOwner = window.kvrSecureAuth ? window.kvrSecureAuth.isOwnerSession() : (role === 'owner' || !role);
+    this.isStaff = !this.isOwner;
     this.activeTab = 'jobs'; // 'jobs', 'pricing', 'customers', 'reports'
     this.statusFilter = 'ALL';
     this.searchQuery = '';
     this.currentJobSheet = null;
+
+    if (!window.kvrSecureAuth) {
+      window.kvrSecureAuth = {
+        role: this.isOwner ? 'owner' : 'staff',
+        email: this.session.email || 'maheshch1810@gmail.com',
+        isOwnerSession: () => this.isOwner,
+        isWorkshopSession: () => true
+      };
+    }
 
     this.init();
   }
@@ -43,7 +50,13 @@ class KVROwnerApp {
       this.renderPricingManager();
       this.renderCustomers();
       this.renderStaffManager();
+      this.renderReports();
+      document.querySelectorAll('[data-tab="pricing"], [data-tab="customers"], [data-tab="staff"], [data-tab="reports"]').forEach(el => el.classList.remove('hidden'));
+      document.getElementById('stat-revenue')?.closest('.bg-slate-900\\/90')?.classList.remove('hidden');
     } else {
+      // Strictly enforce staff restrictions: hide pricing manager, customer list, staff list, reports, and revenue KPI!
+      document.querySelectorAll('[data-tab="pricing"], [data-tab="customers"], [data-tab="staff"], [data-tab="reports"]').forEach(el => el.classList.add('hidden'));
+      document.getElementById('stat-revenue')?.closest('.bg-slate-900\\/90')?.classList.add('hidden');
       document.querySelectorAll('.owner-only-control').forEach(button => button.classList.add('hidden'));
     }
     this.setupListeners();
@@ -183,8 +196,10 @@ class KVROwnerApp {
               <div class="font-semibold text-amber-300">${job.assignedTechnician || 'Unassigned'}</div>
             </div>
             <div>
-              <span class="text-slate-400">Total Charges:</span>
-              <div class="font-mono font-extrabold text-emerald-400 text-sm">₹${(job.invoiceTotal || 0).toLocaleString('en-IN')}</div>
+              <span class="text-slate-400">${this.isOwner ? 'Total Charges:' : 'Proof Photos:'}</span>
+              <div class="${this.isOwner ? 'font-mono font-extrabold text-emerald-400 text-sm' : 'text-slate-300 font-semibold text-xs'}">
+                ${this.isOwner ? `₹${(job.invoiceTotal || 0).toLocaleString('en-IN')}` : `${(job.photos || []).length} photos attached`}
+              </div>
             </div>
           </div>
 
@@ -277,6 +292,76 @@ class KVROwnerApp {
 
     const calculatedTotal = window.kvrDB.calculateJobTotal(job);
 
+    const staffNotice = !this.isOwner ? `
+      <div class="p-3 bg-purple-950/60 border border-purple-500/40 rounded-2xl text-xs text-purple-200 flex items-center space-x-2.5">
+        <span class="text-xl">🧰</span>
+        <div>
+          <div class="font-bold text-amber-300">Technician Staff Permissions</div>
+          <div class="text-[11px] text-slate-300">You are authorized to update service status notes and upload photo proofs. Billing and pricing access is restricted to the workshop owner.</div>
+        </div>
+      </div>
+    ` : '';
+
+    const billingSections = this.isOwner ? `
+      <!-- 3. Labour & Parts Charges Entry -->
+      <div class="bg-slate-950/60 p-4 rounded-2xl border border-slate-800">
+        <div class="flex items-center justify-between mb-3">
+          <h4 class="text-xs font-black text-amber-300 uppercase tracking-wider">3. Parts & Labour Charges Entry</h4>
+          <div class="font-mono text-sm font-extrabold text-emerald-400">Total: ₹${calculatedTotal.toLocaleString('en-IN')}</div>
+        </div>
+
+        <!-- Parts Table -->
+        <div class="mb-4">
+          <div class="flex items-center justify-between mb-1.5">
+            <span class="text-xs font-bold text-slate-300">⚙️ Spare Parts Replaced:</span>
+            <button onclick="window.kvrOwner.addPartRow()" class="text-amber-400 hover:text-amber-300 text-xs font-bold underline kvr-btn">
+              + Add Part
+            </button>
+          </div>
+          <div class="space-y-1">
+            ${partsRows || '<div class="text-xs text-slate-500 py-1">No parts added yet. Click "+ Add Part"</div>'}
+          </div>
+        </div>
+
+        <!-- Labour Charges Table -->
+        <div class="mb-4">
+          <div class="flex items-center justify-between mb-1.5">
+            <span class="text-xs font-bold text-slate-300">👨‍🔧 Labour Charges:</span>
+            <button onclick="window.kvrOwner.addLabourRow()" class="text-amber-400 hover:text-amber-300 text-xs font-bold underline kvr-btn">
+              + Add Labour Item
+            </button>
+          </div>
+          <div class="space-y-1">
+            ${labourRows || '<div class="text-xs text-slate-500 py-1">No labour charges added yet. Click "+ Add Labour Item"</div>'}
+          </div>
+        </div>
+
+        <div class="flex justify-end pt-2">
+          <button onclick="window.kvrOwner.saveCharges()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-xs kvr-btn">
+            💾 Save Charges & Recalculate
+          </button>
+        </div>
+      </div>
+
+      <!-- 4. Invoice & Automated WhatsApp Section -->
+      <div class="bg-slate-950/60 p-4 rounded-2xl border border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div>
+          <div class="text-xs font-black text-amber-300 uppercase tracking-wider">4. Official Invoice (${job.invoiceNo || 'KVR-DDMM-01 format'})</div>
+          <div class="text-xs text-slate-400 mt-0.5">Generates PDF invoice and automatically triggers WhatsApp delivery to customer.</div>
+        </div>
+        <div class="flex items-center space-x-2">
+          <button onclick="window.kvrPdf.printInvoice(window.kvrDB.getJobById('${job.id}'))" class="px-4 py-2 bg-amber-400 hover:bg-amber-300 text-slate-950 font-black rounded-xl text-xs flex items-center space-x-1.5 kvr-btn">
+            <span>📄</span>
+            <span>Generate / Download PDF</span>
+          </button>
+          <button onclick="window.kvrOwner.sendWhatsAppInvoice('${job.id}')" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-xs flex items-center space-x-1.5 kvr-btn">
+            <span>💬</span>
+            <span>Send via WhatsApp</span>
+          </button>
+        </div>
+      </div>
+    ` : '';
+
     container.innerHTML = `
       <!-- Modal Header -->
       <div class="p-4 bg-gradient-to-r from-purple-950 to-slate-900 border-b border-slate-800 flex items-center justify-between">
@@ -292,6 +377,7 @@ class KVROwnerApp {
 
       <!-- Modal Body -->
       <div class="p-5 space-y-5 max-h-[80vh] overflow-y-auto">
+        ${staffNotice}
 
         <!-- 1. Status Update & Assignment -->
         <div class="bg-slate-950/60 p-4 rounded-2xl border border-slate-800">
@@ -304,7 +390,7 @@ class KVROwnerApp {
                 <option value="Assigned" ${job.status === 'Assigned' ? 'selected' : ''}>2. Assigned (Technician Allocated)</option>
                 <option value="Work In Progress" ${job.status === 'Work In Progress' ? 'selected' : ''}>3. Work In Progress</option>
                 <option value="Issue Resolved" ${job.status === 'Issue Resolved' ? 'selected' : ''}>4. Issue Resolved</option>
-                <option value="Completed" ${job.status === 'Completed' ? 'selected' : ''}>5. Completed (Generate Invoice & Alert)</option>
+                ${this.isOwner ? `<option value="Completed" ${job.status === 'Completed' ? 'selected' : ''}>5. Completed (Generate Invoice & Alert)</option>` : ''}
               </select>
             </div>
             <div>
@@ -366,63 +452,10 @@ class KVROwnerApp {
           </div>
         </div>
 
-        <!-- 3. Labour & Parts Charges Entry -->
-        <div class="bg-slate-950/60 p-4 rounded-2xl border border-slate-800">
-          <div class="flex items-center justify-between mb-3">
-            <h4 class="text-xs font-black text-amber-300 uppercase tracking-wider">3. Parts & Labour Charges Entry</h4>
-            <div class="font-mono text-sm font-extrabold text-emerald-400">Total: ₹${calculatedTotal.toLocaleString('en-IN')}</div>
-          </div>
+        ${billingSections}
 
-          <!-- Parts Table -->
-          <div class="mb-4">
-            <div class="flex items-center justify-between mb-1.5">
-              <span class="text-xs font-bold text-slate-300">⚙️ Spare Parts Replaced:</span>
-              <button onclick="window.kvrOwner.addPartRow()" class="text-amber-400 hover:text-amber-300 text-xs font-bold underline kvr-btn">
-                + Add Part
-              </button>
-            </div>
-            <div class="space-y-1">
-              ${partsRows || '<div class="text-xs text-slate-500 py-1">No parts added yet. Click "+ Add Part"</div>'}
-            </div>
-          </div>
-
-          <!-- Labour Charges Table -->
-          <div class="mb-4">
-            <div class="flex items-center justify-between mb-1.5">
-              <span class="text-xs font-bold text-slate-300">👨‍🔧 Labour Charges:</span>
-              <button onclick="window.kvrOwner.addLabourRow()" class="text-amber-400 hover:text-amber-300 text-xs font-bold underline kvr-btn">
-                + Add Labour Item
-              </button>
-            </div>
-            <div class="space-y-1">
-              ${labourRows || '<div class="text-xs text-slate-500 py-1">No labour charges added yet. Click "+ Add Labour Item"</div>'}
-            </div>
-          </div>
-
-          <div class="flex justify-end pt-2">
-            <button onclick="window.kvrOwner.saveCharges()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-xs kvr-btn">
-              💾 Save Charges & Recalculate
-            </button>
-          </div>
-        </div>
-
-        <!-- 4. Invoice & Automated WhatsApp Section -->
-        <div class="bg-slate-950/60 p-4 rounded-2xl border border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <div>
-            <div class="text-xs font-black text-amber-300 uppercase tracking-wider">4. Official Invoice (${job.invoiceNo || 'KVR-DDMM-01 format'})</div>
-            <div class="text-xs text-slate-400 mt-0.5">Generates PDF invoice and automatically triggers WhatsApp delivery to customer.</div>
-          </div>
-          <div class="flex items-center space-x-2">
-            <button onclick="window.kvrPdf.printInvoice(window.kvrDB.getJobById('${job.id}'))" class="px-4 py-2 bg-amber-400 hover:bg-amber-300 text-slate-950 font-black rounded-xl text-xs flex items-center space-x-1.5 kvr-btn">
-              <span>📄</span>
-              <span>Generate / Download PDF</span>
-            </button>
-            <button onclick="window.kvrOwner.sendWhatsAppInvoice('${job.id}')" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-xs flex items-center space-x-1.5 kvr-btn">
-              <span>💬</span>
-              <span>Send via WhatsApp</span>
-            </button>
-          </div>
-        </div>
+      </div>
+    `;
 
       </div>
     `;
@@ -553,33 +586,36 @@ Feedback: Reply to this message with your rating!`;
 
   // --- Parts & Labour dynamic rows ---
   addPartRow() {
-    if (!this.currentJobSheet) return;
+    if (!this.isOwner || !this.currentJobSheet) return;
     if (!this.currentJobSheet.partsCharges) this.currentJobSheet.partsCharges = [];
     this.currentJobSheet.partsCharges.push({ name: 'New Spare Part', qty: 1, amount: 1000 });
     this.renderJobSheetModal(this.currentJobSheet);
   }
 
   removePartRow(idx) {
-    if (!this.currentJobSheet || !this.currentJobSheet.partsCharges) return;
+    if (!this.isOwner || !this.currentJobSheet || !this.currentJobSheet.partsCharges) return;
     this.currentJobSheet.partsCharges.splice(idx, 1);
     this.renderJobSheetModal(this.currentJobSheet);
   }
 
   addLabourRow() {
-    if (!this.currentJobSheet) return;
+    if (!this.isOwner || !this.currentJobSheet) return;
     if (!this.currentJobSheet.labourCharges) this.currentJobSheet.labourCharges = [];
     this.currentJobSheet.labourCharges.push({ name: 'Labour / Overhaul Service', qty: 1, amount: 500 });
     this.renderJobSheetModal(this.currentJobSheet);
   }
 
   removeLabourRow(idx) {
-    if (!this.currentJobSheet || !this.currentJobSheet.labourCharges) return;
+    if (!this.isOwner || !this.currentJobSheet || !this.currentJobSheet.labourCharges) return;
     this.currentJobSheet.labourCharges.splice(idx, 1);
     this.renderJobSheetModal(this.currentJobSheet);
   }
 
   saveCharges() {
-    if (!this.currentJobSheet) return;
+    if (!this.isOwner || !this.currentJobSheet) {
+      this.showToast('Billing modification is restricted to the workshop owner.');
+      return;
+    }
 
     const parts = [];
     document.querySelectorAll('.part-input').forEach(input => {

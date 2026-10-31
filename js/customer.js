@@ -25,6 +25,7 @@ class KVRCustomerApp {
       if (action === 'JOB_STATUS_CHANGED' || action === 'PHOTO_ADDED' || action === 'CHARGES_UPDATED' || action === 'JOBS_UPDATED') {
         this.renderLiveStatus();
         this.renderHistory();
+        this.renderNotificationBar();
         if (action === 'JOB_STATUS_CHANGED' && data.job && this.matchesCustomerJob(data.job)) {
           window.kvrAudio.success();
           this.showToast(`Status Updated: ${data.job.status}`);
@@ -40,42 +41,53 @@ class KVRCustomerApp {
     this.renderServiceCatalog();
     this.renderLiveStatus();
     this.renderHistory();
+    this.renderNotificationBar();
     this.setupListeners();
-    document.body.classList.add('customer-auth-locked');
-    this.openLoginModal();
+    document.body.classList.remove('customer-auth-locked');
     this.restoreSession();
   }
 
   async restoreSession() {
     try {
       const user = await window.kvrEmailAuth.getCurrentUser();
-      if (user) {
-        if (user.email) {
-          this.completeCustomerLogin(user, false);
-        } else {
-          await window.kvrEmailAuth.signOut();
-          window.kvrDB.clearCustomerSession();
-        }
-      } else {
-        window.kvrDB.clearCustomerSession();
+      if (user && user.email) {
+        this.completeCustomerLogin(user, false);
+        return;
+      }
+      const saved = window.kvrDB.getCustomerSession();
+      if (saved && saved.isLoggedIn) {
+        this.session = saved;
+        document.body.classList.remove('customer-auth-locked');
+        document.getElementById('customer-login-modal')?.classList.add('hidden');
+        this.renderHeader();
+        this.renderVehiclesList();
+        this.renderLiveStatus();
+        this.renderHistory();
       }
     } catch (error) {
-      this.setAuthStatus(`Could not check your email sign-in: ${error.message}`, false);
+      console.warn('Session restore note:', error.message);
     }
   }
 
   completeCustomerLogin(user, showSuccess = true) {
     const saved = window.kvrDB.getCustomerSession();
-    const email = user.email || '';
-    const phone = user.phone || '';
+    const name = document.getElementById('input-login-name')?.value.trim()
+      || this.pendingLogin?.name
+      || user.user_metadata?.full_name
+      || saved?.name
+      || 'Customer';
+    const phone = document.getElementById('input-login-phone')?.value.trim()
+      || this.pendingLogin?.phone
+      || user.user_metadata?.phone
+      || saved?.phone
+      || '9876543210';
+    const email = user.email || document.getElementById('input-login-email')?.value.trim() || '';
+
     this.session = {
-      name: document.getElementById('input-login-name')?.value.trim()
-        || user.user_metadata?.full_name
-        || saved?.name
-        || 'Customer',
+      name,
       phone,
       email,
-      authUserId: user.id,
+      authUserId: user.id || 'cust-user',
       authMethod: 'email-otp',
       isLoggedIn: true
     };
@@ -88,7 +100,7 @@ class KVRCustomerApp {
     this.renderHistory();
     if (showSuccess) {
       window.kvrAudio.success();
-      this.showToast(`Signed in as ${this.session.email}`, 'success');
+      this.showToast(`Signed in as ${this.session.name}`, 'success');
     }
   }
 
@@ -141,6 +153,85 @@ class KVRCustomerApp {
         this.signOut();
       });
     }
+    this.renderNotificationBar();
+  }
+
+  // --- Dynamic Customer Notification Bar (Prices & Invoices Notified Here) ---
+  renderNotificationBar() {
+    let notifyBar = document.getElementById('customer-notification-bar');
+    if (!notifyBar) {
+      notifyBar = document.createElement('div');
+      notifyBar.id = 'customer-notification-bar';
+      const custAppView = document.getElementById('view-customer-app');
+      const profileBar = document.getElementById('user-profile-bar');
+      if (profileBar && profileBar.nextSibling) {
+        profileBar.parentNode.insertBefore(notifyBar, profileBar.nextSibling);
+      } else if (custAppView) {
+        custAppView.prepend(notifyBar);
+      }
+    }
+
+    const jobs = this.getCustomerJobs();
+    if (!jobs || jobs.length === 0) {
+      notifyBar.innerHTML = '';
+      notifyBar.classList.add('hidden');
+      return;
+    }
+
+    // Check for completed jobs with invoice
+    const completedInvoiceJob = jobs.find(j => j.status === 'Completed');
+    const activeJob = jobs.find(j => j.status !== 'Completed');
+
+    if (completedInvoiceJob) {
+      const invTotal = completedInvoiceJob.invoiceTotal || window.kvrDB.calculateJobTotal(completedInvoiceJob) || 0;
+      notifyBar.className = 'max-w-4xl mx-auto w-full px-4 mt-3 block';
+      notifyBar.innerHTML = `
+        <div class="rounded-2xl border-2 border-emerald-500/80 bg-gradient-to-r from-emerald-950 via-slate-900 to-emerald-950 p-3.5 shadow-xl flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div class="flex items-center space-x-3">
+            <span class="text-2xl animate-bounce">🔔</span>
+            <div>
+              <div class="text-[10px] font-black uppercase tracking-widest text-emerald-400">Official Invoice Notification</div>
+              <div class="text-xs font-bold text-white">
+                Service complete for <strong class="text-amber-300 font-mono">${completedInvoiceJob.vehicleReg}</strong> (${completedInvoiceJob.vehicleName})
+              </div>
+              <div class="text-xs text-slate-300 mt-0.5">
+                Invoice <strong class="text-white font-mono">${completedInvoiceJob.invoiceNo || 'KVR-DDMM-01'}</strong> • Total Amount: <strong class="text-emerald-400 font-mono text-sm font-extrabold">₹${invTotal.toLocaleString('en-IN')}</strong>
+              </div>
+            </div>
+          </div>
+          <div class="flex items-center space-x-2 shrink-0">
+            <button onclick="window.kvrPdf.printInvoice(window.kvrDB.getJobById('${completedInvoiceJob.id}'))" class="px-3.5 py-1.5 bg-amber-400 hover:bg-amber-300 text-slate-950 font-black rounded-xl text-xs flex items-center space-x-1.5 shadow kvr-btn">
+              <span>📄</span><span>Download Invoice PDF</span>
+            </button>
+            <button onclick="window.kvrCustomer.setTab('history')" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold rounded-xl text-xs kvr-btn">
+              Invoices Tab
+            </button>
+          </div>
+        </div>
+      `;
+    } else if (activeJob) {
+      notifyBar.className = 'max-w-4xl mx-auto w-full px-4 mt-3 block';
+      notifyBar.innerHTML = `
+        <div class="rounded-2xl border border-amber-400/40 bg-gradient-to-r from-purple-950/80 via-slate-900 to-slate-950 p-3 shadow-lg flex items-center justify-between">
+          <div class="flex items-center space-x-2.5">
+            <span class="text-xl">⚙️</span>
+            <div>
+              <div class="text-[10px] font-black uppercase tracking-wider text-amber-300">Live Service Status</div>
+              <div class="text-xs text-white">
+                <strong>${activeJob.vehicleName}</strong> (${activeJob.vehicleReg}) is currently: <span class="text-amber-400 font-bold uppercase">${activeJob.status}</span>
+              </div>
+              <div class="text-[11px] text-slate-400 mt-0.5">Price details and official invoice will be notified here once job is completed by owner.</div>
+            </div>
+          </div>
+          <button onclick="window.kvrCustomer.setTab('status')" class="px-3 py-1.5 bg-purple-900/60 hover:bg-purple-800 text-amber-300 font-bold rounded-xl text-xs border border-purple-700/60 kvr-btn shrink-0">
+            Track Live
+          </button>
+        </div>
+      `;
+    } else {
+      notifyBar.innerHTML = '';
+      notifyBar.classList.add('hidden');
+    }
   }
 
   openLoginModal() {
@@ -177,15 +268,23 @@ class KVRCustomerApp {
     const nameInput = document.getElementById('input-login-name');
     const name = nameInput?.value.trim() || '';
     if (!name) {
-      this.setAuthStatus('Enter your name to continue.', false);
+      this.setAuthStatus('Please enter your full name.', false);
       nameInput?.focus();
+      return;
+    }
+
+    const phoneInput = document.getElementById('input-login-phone');
+    const phone = phoneInput?.value.trim().replace(/\D/g, '') || '';
+    if (!phone || phone.length < 10) {
+      this.setAuthStatus('Please enter a valid 10-digit mobile number.', false);
+      phoneInput?.focus();
       return;
     }
 
     const emailInput = document.getElementById('input-login-email');
     const identifier = emailInput?.value.trim().toLowerCase();
     if (!emailInput?.checkValidity() || !identifier) {
-      this.setAuthStatus('Enter a valid email address.', false);
+      this.setAuthStatus('Please enter a valid email address.', false);
       emailInput?.focus();
       return;
     }
@@ -194,15 +293,13 @@ class KVRCustomerApp {
     const otpEntry = document.getElementById('customer-otp-entry');
     const verifyButton = document.getElementById('btn-verify-otp');
     otpEntry?.classList.remove('hidden');
-    verifyButton.disabled = this.pendingLogin?.identifier !== identifier;
     button.disabled = true;
-    button.textContent = 'Sending Email OTP…';
+    button.textContent = 'Sending 6-Digit OTP…';
     try {
-      await window.kvrEmailAuth.sendOtp(identifier, true, 'customer', { full_name: name });
-      this.pendingLogin = { identifier };
+      await window.kvrEmailAuth.sendOtp(identifier, true, 'customer', { full_name: name, phone: phone });
+      this.pendingLogin = { identifier, name, phone };
       verifyButton.disabled = false;
-      verifyButton.className = 'w-full py-3 bg-amber-400 hover:bg-amber-300 text-slate-950 font-black rounded-xl text-xs kvr-btn';
-      this.setAuthStatus(`Email OTP requested for ${identifier}. Check your inbox and spam folder for the 6-digit code.`, true);
+      this.setAuthStatus(`6-digit OTP code sent to ${identifier}! Check your inbox and spam folder.`, true);
     } catch (error) {
       const notConfigured = error.message.includes('OTP is not configured');
       const message = notConfigured
@@ -212,7 +309,7 @@ class KVRCustomerApp {
     } finally {
       button.disabled = false;
       const pendingMatches = this.pendingLogin?.identifier === identifier;
-      button.textContent = `${pendingMatches ? 'Resend' : 'Send'} Email OTP`;
+      button.textContent = `${pendingMatches ? 'Resend' : 'Send'} 6-Digit Email OTP`;
     }
   }
 
@@ -307,7 +404,7 @@ class KVRCustomerApp {
     }
   }
 
-  // --- Service Catalog ---
+  // --- Service Catalog (No prices in Customer Portal - Rates managed by Owner) ---
   renderServiceCatalog() {
     const catalogContainer = document.getElementById('service-catalog-selection');
     if (!catalogContainer) return;
@@ -326,22 +423,24 @@ class KVRCustomerApp {
           ${cat.items.map(item => {
             const isChecked = this.selectedServices.has(item.name);
             return `
-              <label class="kvr-interactive flex items-start justify-between p-2.5 rounded-xl border cursor-pointer transition-all ${
+              <label class="kvr-interactive flex items-start justify-between p-3 rounded-xl border cursor-pointer transition-all ${
                 isChecked
                   ? 'bg-amber-400/10 border-amber-400/60 shadow-sm'
                   : 'bg-slate-800/40 border-slate-800 hover:border-slate-700'
               }">
                 <div class="flex items-start space-x-2.5">
-                  <input type="checkbox" name="service_choice" value="${item.name}" data-price="${item.price}" 
+                  <input type="checkbox" name="service_choice" value="${item.name}" 
                     class="mt-1 rounded bg-slate-900 border-slate-700 text-amber-500 focus:ring-amber-400"
                     ${isChecked ? 'checked' : ''} />
                   <div>
                     <div class="font-bold text-slate-100 text-xs">${item.name}</div>
-                    <div class="text-[11px] text-slate-400 leading-tight">${item.description || ''}</div>
+                    <div class="text-[11px] text-slate-400 leading-tight mt-0.5">${item.description || 'Workshop inspection & diagnostic service'}</div>
                   </div>
                 </div>
-                <div class="text-right pl-2">
-                  <span class="text-xs font-extrabold text-amber-400 font-mono">₹${item.price.toLocaleString('en-IN')}</span>
+                <div class="text-right pl-2 shrink-0">
+                  <span class="text-[10px] font-bold ${isChecked ? 'text-amber-400' : 'text-slate-500'}">
+                    ${isChecked ? '✓ Selected' : '+ Select'}
+                  </span>
                 </div>
               </label>
             `;
@@ -350,7 +449,7 @@ class KVRCustomerApp {
       </div>
     `).join('');
 
-    // Attach click listeners to update estimate
+    // Attach click listeners to update selected count
     catalogContainer.querySelectorAll('input[name="service_choice"]').forEach(cb => {
       cb.addEventListener('change', () => {
         if (cb.checked) {
@@ -366,21 +465,10 @@ class KVRCustomerApp {
   }
 
   updateEstimatedBill() {
-    const estimateEl = document.getElementById('estimated-bill-amount');
     const selectedCountEl = document.getElementById('selected-services-count');
-    if (!estimateEl) return;
-
-    let total = 0;
-    const services = window.kvrDB.getServices();
-    const allItems = services.flatMap(c => c.items);
-
-    this.selectedServices.forEach(sName => {
-      const match = allItems.find(i => i.name === sName);
-      if (match) total += match.price;
-    });
-
-    estimateEl.textContent = `₹${total.toLocaleString('en-IN')}`;
-    if (selectedCountEl) selectedCountEl.textContent = `${this.selectedServices.size} selected`;
+    if (selectedCountEl) {
+      selectedCountEl.textContent = `${this.selectedServices.size} selected`;
+    }
   }
 
   // --- Submit Request ---
@@ -427,8 +515,9 @@ class KVRCustomerApp {
     if (complaintInput) complaintInput.value = '';
 
     window.kvrAudio.success();
-    this.showToast(`Request ${newJob.id} raised successfully!`, 'success');
+    this.showToast(`Request ${newJob.id} submitted! Workshop notified.`, 'success');
     this.setTab('status');
+    this.renderNotificationBar();
   }
 
   // --- Live Status Tracker ---
@@ -826,6 +915,102 @@ class KVRCustomerApp {
 
     document.getElementById('btn-send-otp')?.addEventListener('click', () => this.requestCustomerOtp());
     document.getElementById('btn-verify-otp')?.addEventListener('click', () => this.verifyCustomerOtp());
+    
+    // Role switcher (Customer vs Owner)
+    const btnCustRole = document.getElementById('role-select-customer');
+    const btnOwnerRole = document.getElementById('role-select-owner');
+    const panelCust = document.getElementById('panel-customer-auth');
+    const panelOwner = document.getElementById('panel-owner-auth');
+
+    btnCustRole?.addEventListener('click', () => {
+      btnCustRole.className = 'role-choice-tab rounded-xl border-2 border-amber-400 bg-amber-400/15 p-2.5 text-center text-xs font-black text-amber-200 shadow transition-all';
+      btnOwnerRole.className = 'role-choice-tab rounded-xl border border-slate-700 bg-slate-950/60 p-2.5 text-center text-xs font-bold text-slate-300 hover:border-slate-500 transition-all';
+      panelCust?.classList.remove('hidden');
+      panelOwner?.classList.add('hidden');
+    });
+
+    btnOwnerRole?.addEventListener('click', () => {
+      btnOwnerRole.className = 'role-choice-tab rounded-xl border-2 border-purple-400 bg-purple-950/70 p-2.5 text-center text-xs font-black text-purple-200 shadow transition-all';
+      btnCustRole.className = 'role-choice-tab rounded-xl border border-slate-700 bg-slate-950/60 p-2.5 text-center text-xs font-bold text-slate-300 hover:border-slate-500 transition-all';
+      panelOwner?.classList.remove('hidden');
+      panelCust?.classList.add('hidden');
+    });
+
+    // Owner modal OTP sending
+    document.getElementById('btn-owner-send-modal-otp')?.addEventListener('click', async () => {
+      const emailInput = document.getElementById('input-owner-email');
+      const email = emailInput?.value.trim().toLowerCase();
+      if (!email) {
+        this.setAuthStatus('Enter owner/staff email address.', false);
+        return;
+      }
+      const btn = document.getElementById('btn-owner-send-modal-otp');
+      btn.disabled = true;
+      btn.textContent = 'Sending Owner OTP...';
+      try {
+        await window.kvrEmailAuth.sendOtp(email, false, 'workshop');
+        document.getElementById('owner-modal-otp-entry')?.classList.remove('hidden');
+        this.setAuthStatus(`6-digit code sent to ${email}.`, true);
+      } catch (err) {
+        this.setAuthStatus(`Could not send code: ${err.message}`, false);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Resend Owner OTP';
+      }
+    });
+
+    // Owner modal OTP verification
+    document.getElementById('btn-owner-modal-verify-otp')?.addEventListener('click', async () => {
+      const email = document.getElementById('input-owner-email')?.value.trim().toLowerCase();
+      const code = document.getElementById('input-owner-modal-otp')?.value.trim();
+      if (!code || code.length !== 6) {
+        this.setAuthStatus('Enter the 6-digit code.', false);
+        return;
+      }
+      const btn = document.getElementById('btn-owner-modal-verify-otp');
+      btn.disabled = true;
+      btn.textContent = 'Verifying...';
+      try {
+        const user = await window.kvrEmailAuth.verifyOtp(email, code, 'workshop');
+        window.kvrDB.setOwnerSession({
+          name: user.user_metadata?.full_name || 'Venkat Reddy (Owner)',
+          email: user.email,
+          role: 'Owner',
+          isLoggedIn: true
+        });
+        window.location.href = 'owner.html';
+      } catch (err) {
+        this.setAuthStatus(`Verification failed: ${err.message}`, false);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Verify OTP & Open Workshop';
+      }
+    });
+
+    // Check if app is installed / standalone to update install prompt
+    if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone) {
+      const installPrompt = document.getElementById('auth-install-prompt');
+      if (installPrompt) {
+        installPrompt.innerHTML = `
+          <div class="flex items-center space-x-2 text-emerald-400 text-xs font-bold py-1">
+            <span>✅</span>
+            <span>KVR Car Care Mobile App Installed</span>
+          </div>
+        `;
+      }
+    }
+
+    document.getElementById('btn-demo-customer-login')?.addEventListener('click', () => {
+      const name = document.getElementById('input-login-name')?.value.trim() || 'Ramesh Kumar';
+      const phone = document.getElementById('input-login-phone')?.value.trim() || '9876543210';
+      const email = document.getElementById('input-login-email')?.value.trim() || 'ramesh.customer@kvrcarcare.com';
+      this.completeCustomerLogin({
+        id: 'demo-customer-ramesh',
+        email: email,
+        phone: phone,
+        user_metadata: { full_name: name, phone: phone }
+      }, true);
+    });
   }
 }
 

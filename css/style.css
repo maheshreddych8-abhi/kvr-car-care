@@ -118,13 +118,7 @@ body {
   }
 }
 
-body.owner-auth-locked > :not(#owner-auth-gate):not(.kvr-touch-bubble):not(script) {
-  display: none !important;
-}
-
-body.customer-auth-locked > :not(#customer-login-modal):not(.kvr-touch-bubble):not(script) {
-  display: none !important;
-}
+/* Unified View Management: Views are displayed via .hidden class toggles on #view-auth-gate, #view-customer-app, #view-owner-app */
 
 /* -------------------------------------------------------------
    KVR Brand Banner & The "Slow Car Moving On Red Line" Feature
@@ -331,4 +325,32 @@ body.customer-auth-locked > :not(#customer-login-modal):not(.kvr-touch-bubble):n
 }
 ::-webkit-scrollbar-thumb:hover {
   background: #94a3b8;
+}
+
+/* Garage Image Slides Transitions */
+.garage-slide {
+  transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Express Link Car Drive Track */
+.kvr-road-track {
+  background: linear-gradient(180deg, #090d16 0%, #1e293b 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.kvr-car-exhaust {
+  position: absolute;
+  left: -12px;
+  top: 10px;
+  width: 8px;
+  height: 8px;
+  background: radial-gradient(circle, rgba(148, 163, 184, 0.8) 0%, transparent 70%);
+  border-radius: 50%;
+  animation: exhaustPuff 0.4s infinite;
+}
+
+@keyframes exhaustPuff {
+  0% { transform: scale(0.6) translateX(0); opacity: 0.8; }
+  100% { transform: scale(1.8) translateX(-14px); opacity: 0; }
 }

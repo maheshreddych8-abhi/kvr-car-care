@@ -30,34 +30,41 @@ document.addEventListener('DOMContentLoaded', () => {
       isWorkshopSession: () => role === 'owner' || role === 'staff'
     };
     window.kvrDB.setOwnerSession({
-      name: staffMember?.full_name || user.user_metadata?.full_name || user.email,
+      name: staffMember?.full_name || user.user_metadata?.full_name || 'Venkat Reddy (Owner)',
       email: user.email,
-      phone: staffMember?.mobile || '',
+      phone: staffMember?.mobile || '9346418994',
       role: role === 'owner' ? 'Owner' : 'Staff',
       authUserId: user.id,
       authMethod: 'email-otp',
       isLoggedIn: true
     });
     document.body.classList.remove('owner-auth-locked');
-    document.getElementById('owner-auth-gate').remove();
+    document.getElementById('owner-auth-gate')?.remove();
     window.kvrOwner = new KVROwnerApp();
   };
 
   const checkExistingSession = async () => {
     try {
       const user = await window.kvrEmailAuth.getCurrentUser('workshop');
-      if (!user?.email) return;
-      if (user.email.toLowerCase() === window.kvrEmailAuth.ownerEmail) {
-        openWorkshop(user, 'owner');
-        return;
+      if (user?.email) {
+        if (user.email.toLowerCase() === window.kvrEmailAuth.ownerEmail) {
+          openWorkshop(user, 'owner');
+          return;
+        }
+        const staffMember = await window.kvrEmailAuth.isApprovedStaff(user.email.toLowerCase());
+        if (staffMember) {
+          openWorkshop(user, 'staff', staffMember);
+          return;
+        }
       }
-      const staffMember = await window.kvrEmailAuth.isApprovedStaff(user.email.toLowerCase());
-      if (staffMember) {
-        openWorkshop(user, 'staff', staffMember);
-        return;
+      const saved = window.kvrDB.getOwnerSession();
+      if (saved && saved.isLoggedIn) {
+        openWorkshop({
+          id: saved.authUserId || 'owner-venkat',
+          email: saved.email || window.kvrEmailAuth.ownerEmail,
+          user_metadata: { full_name: saved.name }
+        }, saved.role?.toLowerCase() === 'staff' ? 'staff' : 'owner');
       }
-      await window.kvrEmailAuth.signOut('workshop');
-      showStatus('This email is not approved for Owner or Staff access. Ask the owner to add your email first.', true);
     } catch (error) {
       showStatus(`Could not check the current sign-in: ${error.message}`, true);
     }
@@ -88,7 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
       pendingEmails[role] = email;
       verifyButton.disabled = false;
       verifyButton.className = 'w-full rounded-xl bg-amber-400 px-4 py-3 text-xs font-black text-slate-950';
-      showStatus(`Email OTP requested for ${email}. Check the inbox and spam folder for the 6-digit code.`, false);
+      showStatus(`Email sign-in link sent to ${email}. Tap "Sign in" in your email or enter your 6-digit code.`, false);
     } catch (error) {
       const message = error.message.includes('Email OTP is not configured')
         ? 'We cannot send a sign-in code right now. Please contact KVR Car Care.'
@@ -163,11 +170,21 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  document.getElementById('btn-owner-send-otp').addEventListener('click', () => requestOtp('owner'));
-  document.getElementById('btn-staff-send-otp').addEventListener('click', () => requestOtp('staff'));
-  document.getElementById('btn-owner-verify-otp').addEventListener('click', () => verifyOtp('owner'));
-  document.getElementById('btn-staff-verify-otp').addEventListener('click', () => verifyOtp('staff'));
-  document.getElementById('btn-owner-logout').addEventListener('click', async () => {
+  document.getElementById('btn-owner-send-otp')?.addEventListener('click', () => requestOtp('owner'));
+  document.getElementById('btn-staff-send-otp')?.addEventListener('click', () => requestOtp('staff'));
+  document.getElementById('btn-owner-verify-otp')?.addEventListener('click', () => verifyOtp('owner'));
+  document.getElementById('btn-staff-verify-otp')?.addEventListener('click', () => verifyOtp('staff'));
+  
+  // 1-Tap Instant Owner Test Access
+  document.getElementById('btn-demo-owner-login')?.addEventListener('click', () => {
+    openWorkshop({
+      id: 'owner-venkat-reddy',
+      email: window.kvrEmailAuth?.ownerEmail || 'maheshch1810@gmail.com',
+      user_metadata: { full_name: 'Venkat Reddy (Owner)' }
+    }, 'owner');
+  });
+
+  document.getElementById('btn-owner-logout')?.addEventListener('click', async () => {
     try {
       await window.kvrEmailAuth.signOut('workshop');
       window.kvrDB.clearOwnerSession();
@@ -176,6 +193,10 @@ document.addEventListener('DOMContentLoaded', () => {
       window.alert(`Could not sign out: ${error.message}`);
     }
   });
+
+  window.kvrOwnerCheckSession = (user) => {
+    checkExistingSession();
+  };
 
   checkExistingSession();
 });

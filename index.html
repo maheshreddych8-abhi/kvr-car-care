@@ -6,20 +6,59 @@
   <title>KVR Car Care | Multi-Brand Workshop & Customer Service Platform</title>
   
   <!-- PWA & Mobile App Support -->
-  <link rel="manifest" href="manifest.json?v=blue-car-v35">
+  <link rel="manifest" href="manifest.json?v=v50-permanent-fix">
   <meta name="theme-color" content="#0f172a">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="KVR Car Care">
-  <link rel="apple-touch-icon" href="icon-192.png?v=blue-car-v35">
+  <link rel="apple-touch-icon" href="icon-192.png?v=v50-permanent-fix">
+
+  <script>
+    // 1. Force unregister any legacy service workers and purge stale caches immediately
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistrations().then(function(registrations) {
+        for (let registration of registrations) {
+          registration.unregister();
+        }
+      });
+    }
+    if ('caches' in window) {
+      caches.keys().then(function(names) {
+        for (let name of names) {
+          caches.delete(name);
+        }
+      });
+    }
+  </script>
+
+  <style>
+    /* Critical safety: Prevent any legacy CSS rule from hiding view-auth-gate or body */
+    body, body > * {
+      display: revert;
+    }
+    #view-auth-gate:not(.hidden) {
+      display: flex !important;
+    }
+    #view-customer-app:not(.hidden), #view-owner-app:not(.hidden) {
+      display: flex !important;
+    }
+    .hidden {
+      display: none !important;
+    }
+    /* Explicitly neutralize any legacy lock that hid everything */
+    body.customer-auth-locked > *,
+    body.owner-auth-locked > * {
+      display: revert !important;
+    }
+  </style>
 
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=blue-car-v35">
-  <link rel="icon" href="icon-192.png?v=blue-car-v35" type="image/png">
+  <link rel="stylesheet" href="css/style.css?v=v50-permanent-fix">
+  <link rel="icon" href="icon-192.png?v=v50-permanent-fix" type="image/png">
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col antialiased selection:bg-amber-400 selection:text-slate-950 pb-20 md:pb-6">
 
@@ -686,16 +725,16 @@
 
 
   <!-- ================= SCRIPTS & APP CONTROLLER ================= -->
-  <script src="js/audio.js?v=blue-car-v35"></script>
-  <script src="js/db.js?v=blue-car-v35"></script>
-  <script src="js/pdf-export.js?v=blue-car-v35"></script>
-  <script src="js/pwa.js?v=blue-car-v35"></script>
+  <script src="js/audio.js?v=v50-permanent-fix"></script>
+  <script src="js/db.js?v=v50-permanent-fix"></script>
+  <script src="js/pdf-export.js?v=v50-permanent-fix"></script>
+  <script src="js/pwa.js?v=v50-permanent-fix"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="js/supabase-config.js?v=blue-car-v35"></script>
-  <script src="js/email-auth.js?v=blue-car-v35"></script>
-  <script src="js/touch-bubbles.js?v=blue-car-v35"></script>
-  <script src="js/customer.js?v=blue-car-v35"></script>
-  <script src="js/owner.js?v=blue-car-v35"></script>
+  <script src="js/supabase-config.js?v=v50-permanent-fix"></script>
+  <script src="js/email-auth.js?v=v50-permanent-fix"></script>
+  <script src="js/touch-bubbles.js?v=v50-permanent-fix"></script>
+  <script src="js/customer.js?v=v50-permanent-fix"></script>
+  <script src="js/owner.js?v=v50-permanent-fix"></script>
 
   <!-- Unified App Flow Controller -->
   <script>
